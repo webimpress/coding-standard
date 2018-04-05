@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<ruleset name="Zend Framework Coding Standard"
+<ruleset name="Webimpress Coding Standard"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
-    <rule ref="src/ZendCodingStandard/ruleset.xml"/>
+    <rule ref="src/WebimpressCodingStandard/ruleset.xml"/>
 
     <file>src</file>
     <file>test</file>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs;
+namespace WebimpressCodingStandardTest\Sniffs;
 
 use DirectoryIterator;
 use PHP_CodeSniffer\Config;
@@ -10,7 +10,7 @@ use PHP_CodeSniffer\Exceptions\RuntimeException;
 use PHP_CodeSniffer\Files\LocalFile;
 use PHP_CodeSniffer\Util\Common;
 use PHP_CodeSniffer\Util\Tokens;
-use ZendCodingStandardTest\Ruleset;
+use WebimpressCodingStandardTest\Ruleset;
 
 use function array_merge;
 use function basename;

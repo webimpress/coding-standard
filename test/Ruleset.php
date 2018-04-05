@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest;
+namespace WebimpressCodingStandardTest;
 
 use function str_replace;
 

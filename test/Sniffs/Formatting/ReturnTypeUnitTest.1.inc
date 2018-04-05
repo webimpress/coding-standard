@@ -1,7 +1,7 @@
 <?php
-// @phpcs:set ZendCodingStandard.Formatting.ReturnType spacesBeforeColon 1
-// @phpcs:set ZendCodingStandard.Formatting.ReturnType spacesAfterColon 2
-// @phpcs:set ZendCodingStandard.Formatting.ReturnType spacesAfterNullable 0
+// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesBeforeColon 1
+// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterColon 2
+// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterNullable 0
 
 function a() : int {}
 function b(): ?  int {}
@@ -10,9 +10,9 @@ function c()
 function d():
     ?int{}
 
-// @phpcs:set ZendCodingStandard.Formatting.ReturnType spacesBeforeColon 2
-// @phpcs:set ZendCodingStandard.Formatting.ReturnType spacesAfterColon 0
-// @phpcs:set ZendCodingStandard.Formatting.ReturnType spacesAfterNullable 1
+// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesBeforeColon 2
+// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterColon 0
+// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterNullable 1
 
 function e() : bool {}
 function f(): ?  bool {}

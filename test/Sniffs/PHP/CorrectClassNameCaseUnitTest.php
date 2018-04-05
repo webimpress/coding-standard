@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\PHP;
+namespace WebimpressCodingStandardTest\Sniffs\PHP;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class CorrectClassNameCaseUnitTest extends TestCase
 {

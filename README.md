@@ -1,25 +1,22 @@
-# Zend Framework Coding Standard
+# Webimpress Coding Standard
 
-[![Build Status](https://travis-ci.org/zendframework/zend-coding-standard.svg?branch=master)](https://travis-ci.org/zendframework/zend-coding-standard)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-coding-standard/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-coding-standard?branch=master)
-
-Repository with all coding standard ruleset for Zend Framework repositories.
-
+[![Build Status](https://travis-ci.org/webimpress/coding-standard.svg?branch=master)](https://travis-ci.org/webimpress/coding-standard)
+[![Coverage Status](https://coveralls.io/repos/github/webimpress/coding-standard/badge.svg?branch=master)](https://coveralls.io/github/webimpress/coding-standard?branch=master)
 
 ## Installation
 
 1. Install the module via composer by running:
 
    ```bash
-   $ composer require --dev zendframework/zend-coding-standard
+   $ composer require --dev webimpress/coding-standard
    ```
 
 2. Add composer scripts into your `composer.json`:
 
    ```json
    "scripts": {
-     "cs-check": "phpcs",
-     "cs-fix": "phpcbf"
+       "cs-check": "phpcs",
+       "cs-fix": "phpcbf"
    }
    ```
 
@@ -27,15 +24,10 @@ Repository with all coding standard ruleset for Zend Framework repositories.
 
    ```xml
    <?xml version="1.0"?>
-   <ruleset name="Zend Framework Coding Standard"
+   <ruleset name="Webimpress Coding Standard"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
-       <rule ref="./vendor/zendframework/zend-coding-standard/ruleset.xml"/>
-
-       <!-- Paths to check -->
-       <file>config</file>
-       <file>src</file>
-       <file>test</file>
+            xsi:noNamespaceSchemaLocation="./vendor/squizlabs/php_codesniffer/phpcs.xsd">
+       <rule ref="./vendor/webimpress/coding-standard/ruleset.xml"/>
    </ruleset>
    ```
 

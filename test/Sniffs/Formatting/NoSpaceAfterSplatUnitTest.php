@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Formatting;
+namespace WebimpressCodingStandardTest\Sniffs\Formatting;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class NoSpaceAfterSplatUnitTest extends TestCase
 {

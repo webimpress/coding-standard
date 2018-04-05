@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Classes;
+namespace WebimpressCodingStandardTest\Sniffs\Classes;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class TraitUsageUnitTest extends TestCase
 {

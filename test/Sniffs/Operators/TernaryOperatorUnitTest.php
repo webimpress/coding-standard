@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Operators;
+namespace WebimpressCodingStandardTest\Sniffs\Operators;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class TernaryOperatorUnitTest extends TestCase
 {

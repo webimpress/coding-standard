@@ -1,11 +1,13 @@
 {
-    "name": "zendframework/zend-coding-standard",
-    "description": "Zend Framework coding standard",
-    "license": "BSD-3-Clause",
+    "name": "webimpress/coding-standard",
+    "description": "Webimpress Coding Standard",
+    "license": "BSD-2-Clause",
     "keywords": [
-        "zf",
-        "zendframework",
-        "coding standard"
+        "webimpress",
+        "coding standard",
+        "phpcs",
+        "psr-2",
+        "psr-12"
     ],
     "require": {
         "php": "^7.1",
@@ -16,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ZendCodingStandard\\": "src/ZendCodingStandard/"
+            "WebimpressCodingStandard\\": "src/WebimpressCodingStandard/"
         }
     },
     "autoload-dev": {
@@ -25,7 +27,7 @@
         ],
         "psr-4": {
             "PHP_CodeSniffer\\": "vendor/squizlabs/php_codesniffer/src/",
-            "ZendCodingStandardTest\\": "test/"
+            "WebimpressCodingStandardTest\\": "test/"
         }
     },
     "scripts": {

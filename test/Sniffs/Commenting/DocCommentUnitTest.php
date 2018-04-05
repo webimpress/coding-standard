@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Commenting;
+namespace WebimpressCodingStandardTest\Sniffs\Commenting;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class DocCommentUnitTest extends TestCase
 {

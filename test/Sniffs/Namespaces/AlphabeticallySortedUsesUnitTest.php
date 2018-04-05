@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Namespaces;
+namespace WebimpressCodingStandardTest\Sniffs\Namespaces;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class AlphabeticallySortedUsesUnitTest extends TestCase
 {

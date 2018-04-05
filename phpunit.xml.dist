@@ -5,7 +5,7 @@
          bootstrap="vendor/autoload.php"
          colors="true">
     <testsuites>
-        <testsuite name="ZendCodingStandard Test Suite">
+        <testsuite name="WebimpressCodingStandard Test Suite">
             <directory>./test</directory>
         </testsuite>
     </testsuites>

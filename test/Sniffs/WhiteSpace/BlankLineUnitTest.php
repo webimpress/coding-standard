@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\WhiteSpace;
+namespace WebimpressCodingStandardTest\Sniffs\WhiteSpace;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class BlankLineUnitTest extends TestCase
 {

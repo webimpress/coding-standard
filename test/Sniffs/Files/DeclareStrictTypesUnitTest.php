@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Files;
+namespace WebimpressCodingStandardTest\Sniffs\Files;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class DeclareStrictTypesUnitTest extends TestCase
 {

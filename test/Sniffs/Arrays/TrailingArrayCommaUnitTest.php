@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Arrays;
+namespace WebimpressCodingStandardTest\Sniffs\Arrays;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class TrailingArrayCommaUnitTest extends TestCase
 {

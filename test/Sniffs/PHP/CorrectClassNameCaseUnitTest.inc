@@ -1,6 +1,6 @@
 <?php
 
-namespace ZendCodingStandardTest\Sniffs\PHP;
+namespace WebimpressCodingStandardTest\Sniffs\PHP;
 
 use Arrayobject;
 use Datetime;
@@ -9,7 +9,7 @@ use Runtimeexception;
 use Some\BarClass;
 use Some\FooClass as Foo;
 use Some\MyTrait;
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class MyClass
     extends Testcase
@@ -68,12 +68,12 @@ class MyClass
     }
 
     /**
-     * @see https://zendframework.com/
+     * @see https://webimpress.com/
      * @param int $a
      * @param array|\TraverSable|\ArRAyObJeCt $b
      * @param callable $c
      * @param testCase|CorrectclassnamecaseUnitTest|null $testCase
-     * @return \zendcodingstandardtest\sniffs\testcase
+     * @return \WebimpressCodingStandardtest\sniffs\testcase
      * @throws \Rangeexception
      */
     public function method3(
@@ -81,7 +81,7 @@ class MyClass
         $b,
         callable $c,
         testcase $testCase = null
-    ) : \zendcodingstandardtest\sniffs\testcase {
+    ) : \WebimpressCodingStandardtest\sniffs\testcase {
         throw new \RangeException;
     }
 

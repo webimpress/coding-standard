@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Methods;
+namespace WebimpressCodingStandardTest\Sniffs\Methods;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class LineAfterUnitTest extends TestCase
 {

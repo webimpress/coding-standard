@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\Strings;
+namespace WebimpressCodingStandardTest\Sniffs\Strings;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class NoConcatenationAtTheEndUnitTest extends TestCase
 {

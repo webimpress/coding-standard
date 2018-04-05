@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ZendCodingStandardTest\Sniffs\NamingConventions;
+namespace WebimpressCodingStandardTest\Sniffs\NamingConventions;
 
-use ZendCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\TestCase;
 
 class ValidVariableNameUnitTest extends TestCase
 {

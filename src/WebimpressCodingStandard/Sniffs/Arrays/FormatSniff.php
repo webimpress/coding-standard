@@ -20,13 +20,6 @@ use const T_WHITESPACE;
 class FormatSniff extends AbstractArraySniff
 {
     /**
-     * The number of spaces code should be indented.
-     *
-     * @var int
-     */
-    public $indent = 4;
-
-    /**
      * Processes a single-line array definition.
      *
      * @param File $phpcsFile The current file being checked.
@@ -108,11 +101,6 @@ class FormatSniff extends AbstractArraySniff
             }
         }
 
-        $first = $phpcsFile->findFirstOnLine([], $arrayStart, true);
-        $indent = $tokens[$first]['code'] === T_WHITESPACE
-            ? strlen($tokens[$first]['content'])
-            : 0;
-
         $previousLine = $tokens[$arrayStart]['line'];
         $next = $arrayStart;
         while ($next = $phpcsFile->findNext(T_WHITESPACE, $next + 1, $arrayEnd, true)) {
@@ -170,6 +158,11 @@ class FormatSniff extends AbstractArraySniff
                 $fix = $phpcsFile->addFixableError($error, $arrayEnd, 'ClosingBracketInNewLine');
 
                 if ($fix) {
+                    $first = $phpcsFile->findFirstOnLine([], $arrayStart, true);
+                    $indent = $tokens[$first]['code'] === T_WHITESPACE
+                        ? strlen($tokens[$first]['content'])
+                        : 0;
+
                     $phpcsFile->fixer->beginChangeset();
                     if ($indent > 0) {
                         $phpcsFile->fixer->addContentBefore($arrayEnd, str_repeat(' ', $indent));

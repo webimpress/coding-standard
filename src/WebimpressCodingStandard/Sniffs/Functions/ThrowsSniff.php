@@ -7,7 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\Functions;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\Methods;
+use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_reverse;
 use function array_unique;
@@ -40,7 +40,7 @@ use const T_VARIABLE;
 
 class ThrowsSniff implements Sniff
 {
-    use Methods;
+    use MethodsTrait;
 
     /**
      * @var string[]

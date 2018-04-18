@@ -6,7 +6,7 @@ namespace WebimpressCodingStandard\Sniffs\Functions;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use WebimpressCodingStandard\Helper\Methods;
+use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_filter;
 use function array_merge;
@@ -35,7 +35,7 @@ use const T_STRING;
 
 class ParamSniff implements Sniff
 {
-    use Methods;
+    use MethodsTrait;
 
     /**
      * Method parameters.

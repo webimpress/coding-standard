@@ -7,7 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\PHP;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\Namespaces;
+use WebimpressCodingStandard\Helper\NamespacesTrait;
 
 use function array_flip;
 use function get_defined_functions;
@@ -27,7 +27,7 @@ use const T_STRING;
 
 class ImportInternalFunctionSniff implements Sniff
 {
-    use Namespaces;
+    use NamespacesTrait;
 
     /**
      * @var array Hash map of all php built in function names.

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\Arrays;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class FormatUnitTest extends TestCase
+class FormatUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

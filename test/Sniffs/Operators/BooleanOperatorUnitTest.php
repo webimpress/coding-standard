@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\Operators;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class BooleanOperatorUnitTest extends TestCase
+class BooleanOperatorUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

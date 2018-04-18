@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\WhiteSpace;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class BlankLineUnitTest extends TestCase
+class BlankLineUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

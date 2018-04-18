@@ -7,7 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\Commenting;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\Methods;
+use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_filter;
 use function array_shift;
@@ -34,7 +34,7 @@ use const T_DOC_COMMENT_WHITESPACE;
 
 class TagWithTypeSniff implements Sniff
 {
-    use Methods;
+    use MethodsTrait;
 
     /**
      * @var string[]

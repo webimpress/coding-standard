@@ -9,10 +9,10 @@ use Runtimeexception;
 use Some\BarClass;
 use Some\FooClass as Foo;
 use Some\MyTrait;
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
 class MyClass
-    extends Testcase
+    extends AbstractTestcase
     implements
         \PHP_codesniffer\sniffs\sniff,
         Arrayobject
@@ -72,16 +72,16 @@ class MyClass
      * @param int $a
      * @param array|\TraverSable|\ArRAyObJeCt $b
      * @param callable $c
-     * @param testCase|CorrectclassnamecaseUnitTest|null $testCase
-     * @return \WebimpressCodingStandardtest\sniffs\testcase
+     * @param abstractTestCase|CorrectclassnamecaseUnitTest|null $testCase
+     * @return \WebimpressCodingStandardtest\sniffs\abstracttestcase
      * @throws \Rangeexception
      */
     public function method3(
         int $a,
         $b,
         callable $c,
-        testcase $testCase = null
-    ) : \WebimpressCodingStandardtest\sniffs\testcase {
+        abstracttestcase $testCase = null
+    ) : \WebimpressCodingStandardtest\sniffs\abstracttestcase {
         throw new \RangeException;
     }
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\Classes;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class ConstVisibilityUnitTest extends TestCase
+class ConstVisibilityUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

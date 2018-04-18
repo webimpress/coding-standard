@@ -7,7 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\PHP;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\Namespaces;
+use WebimpressCodingStandard\Helper\NamespacesTrait;
 
 use function array_map;
 use function array_merge;
@@ -57,7 +57,7 @@ use const T_WHITESPACE;
  */
 class CorrectClassNameCaseSniff implements Sniff
 {
-    use Namespaces;
+    use NamespacesTrait;
 
     /**
      * @var array

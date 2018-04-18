@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\Commenting;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class CodingStandardTagsUnitTest extends TestCase
+class CodingStandardTagsUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

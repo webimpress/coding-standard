@@ -37,9 +37,9 @@ use const T_WHITESPACE;
 /**
  * @internal
  */
-trait Methods
+trait MethodsTrait
 {
-    use Namespaces;
+    use NamespacesTrait;
 
     /**
      * @var File

@@ -28,7 +28,7 @@ use const T_WHITESPACE;
 /**
  * @internal
  */
-trait Namespaces
+trait NamespacesTrait
 {
     private function getNamespace(File $phpcsFile, int $stackPtr) : string
     {

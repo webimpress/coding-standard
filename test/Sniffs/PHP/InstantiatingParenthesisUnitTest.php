@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\PHP;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class InstantiatingParenthesisUnitTest extends TestCase
+class InstantiatingParenthesisUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

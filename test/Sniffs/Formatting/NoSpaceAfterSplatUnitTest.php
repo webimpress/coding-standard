@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\Formatting;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class NoSpaceAfterSplatUnitTest extends TestCase
+class NoSpaceAfterSplatUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

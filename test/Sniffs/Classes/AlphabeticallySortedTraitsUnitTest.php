@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest\Sniffs\Classes;
 
-use WebimpressCodingStandardTest\Sniffs\TestCase;
+use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class AlphabeticallySortedTraitsUnitTest extends TestCase
+class AlphabeticallySortedTraitsUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {

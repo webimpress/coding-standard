@@ -7,7 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\PHP;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\Namespaces;
+use WebimpressCodingStandard\Helper\NamespacesTrait;
 
 use function array_walk_recursive;
 use function get_defined_constants;
@@ -28,7 +28,7 @@ use const T_STRING;
 
 class ImportInternalConstantSniff implements Sniff
 {
-    use Namespaces;
+    use NamespacesTrait;
 
     /**
      * @var array Hash map of all php built in constant names.

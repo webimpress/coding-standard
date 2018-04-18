@@ -10,6 +10,7 @@ use PHP_CodeSniffer\Exceptions\RuntimeException;
 use PHP_CodeSniffer\Files\LocalFile;
 use PHP_CodeSniffer\Util\Common;
 use PHP_CodeSniffer\Util\Tokens;
+use PHPUnit\Framework\TestCase;
 use WebimpressCodingStandardTest\Ruleset;
 
 use function array_merge;
@@ -32,7 +33,7 @@ use function trim;
 use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+abstract class AbstractTestCase extends TestCase
 {
     /**
      * The path to the standard's main directory.

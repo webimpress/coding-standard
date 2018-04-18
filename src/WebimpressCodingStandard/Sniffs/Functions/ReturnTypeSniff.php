@@ -7,7 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\Functions;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\Methods;
+use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_filter;
 use function array_intersect;
@@ -71,7 +71,7 @@ use const T_YIELD_FROM;
 
 class ReturnTypeSniff implements Sniff
 {
-    use Methods;
+    use MethodsTrait;
 
     /**
      * @var string

@@ -22,7 +22,6 @@ use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_OBJECT_OPERATOR;
 use const T_OPEN_PARENTHESIS;
-use const T_OPEN_TAG;
 use const T_STRING;
 
 class ImportInternalFunctionSniff implements Sniff
@@ -173,16 +172,12 @@ class ImportInternalFunctionSniff implements Sniff
             $ptr = $phpcsFile->findEndOfStatement($this->lastUse);
         } else {
             $nsStart = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr);
-            if ($nsStart) {
-                $tokens = $phpcsFile->getTokens();
-                if (isset($tokens[$nsStart]['scope_opener'])) {
-                    $ptr = $tokens[$nsStart]['scope_opener'];
-                } else {
-                    $ptr = $phpcsFile->findEndOfStatement($nsStart);
-                    $phpcsFile->fixer->addNewline($ptr);
-                }
+            $tokens = $phpcsFile->getTokens();
+            if (isset($tokens[$nsStart]['scope_opener'])) {
+                $ptr = $tokens[$nsStart]['scope_opener'];
             } else {
-                $ptr = $phpcsFile->findPrevious(T_OPEN_TAG, $stackPtr - 1);
+                $ptr = $phpcsFile->findEndOfStatement($nsStart);
+                $phpcsFile->fixer->addNewline($ptr);
             }
         }
 

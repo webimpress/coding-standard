@@ -7,13 +7,18 @@ namespace WebimpressCodingStandard\Sniffs\PHP;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
+use WebimpressCodingStandard\CodingStandard;
 use WebimpressCodingStandard\Helper\NamespacesTrait;
+use WebimpressCodingStandard\Sniffs\Namespaces\UnusedUseStatementSniff;
 
 use function array_flip;
 use function get_defined_functions;
+use function in_array;
+use function ltrim;
 use function sprintf;
 use function strtolower;
 
+use const T_AS;
 use const T_BITWISE_AND;
 use const T_DOUBLE_COLON;
 use const T_FUNCTION;
@@ -22,11 +27,19 @@ use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_OBJECT_OPERATOR;
 use const T_OPEN_PARENTHESIS;
+use const T_SEMICOLON;
 use const T_STRING;
+use const T_USE;
+use const T_WHITESPACE;
 
 class ImportInternalFunctionSniff implements Sniff
 {
     use NamespacesTrait;
+
+    /**
+     * @var string[] Array of functions to exclude from importing.
+     */
+    public $exclude = [];
 
     /**
      * @var array Hash map of all php built in function names.
@@ -77,13 +90,34 @@ class ImportInternalFunctionSniff implements Sniff
             $this->currentNamespace = null;
         }
 
+        $tokens = $phpcsFile->getTokens();
+
         $namespace = $this->getNamespace($phpcsFile, $stackPtr);
         if ($namespace && $this->currentNamespace !== $namespace) {
             $this->currentNamespace = $namespace;
             $this->importedFunctions = $this->getImportedFunctions($phpcsFile, $stackPtr, $this->lastUse);
-        }
 
-        $tokens = $phpcsFile->getTokens();
+            foreach ($this->importedFunctions as $func) {
+                $fqn = strtolower($func['fqn']);
+
+                if (in_array($fqn, $this->exclude, true)) {
+                    $error = 'Function %s cannot be imported';
+                    $data = [$func['fqn']];
+                    $fix = $phpcsFile->addFixableError($error, $func['ptr'], 'ExcludeImported', $data);
+
+                    if ($fix) {
+                        $phpcsFile->fixer->beginChangeset();
+                        for ($i = $func['ptr']; $i <= $func['eos']; ++$i) {
+                            $phpcsFile->fixer->replaceToken($i, '');
+                        }
+                        if ($tokens[$i + 1]['code'] === T_WHITESPACE) {
+                            $phpcsFile->fixer->replaceToken($i + 1, '');
+                        }
+                        $phpcsFile->fixer->endChangeset();
+                    }
+                }
+            }
+        }
 
         // Make sure this is a function call.
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
@@ -123,6 +157,16 @@ class ImportInternalFunctionSniff implements Sniff
                 if ($fix) {
                     $phpcsFile->fixer->replaceToken($prev, '');
                 }
+            } elseif (in_array($content, $this->exclude, true)) {
+                $error = 'FQN for PHP internal function "%s" is not allowed here';
+                $data = [
+                    $content,
+                ];
+
+                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'ExcludeRedundantFQN', $data);
+                if ($fix) {
+                    $phpcsFile->fixer->replaceToken($prev, '');
+                }
             } elseif (isset($this->importedFunctions[$content])) {
                 if (strtolower($this->importedFunctions[$content]['fqn']) === $content) {
                     $error = 'FQN for PHP internal function "%s" is not needed here, function is already imported';
@@ -150,7 +194,9 @@ class ImportInternalFunctionSniff implements Sniff
                 }
             }
         } elseif ($namespace) {
-            if (! isset($this->importedFunctions[$content])) {
+            if (! isset($this->importedFunctions[$content])
+                && ! in_array($content, $this->exclude, true)
+            ) {
                 $error = 'PHP internal function "%s" must be imported';
                 $data = [
                     $content,
@@ -191,5 +237,83 @@ class ImportInternalFunctionSniff implements Sniff
             'name' => $functionName,
             'fqn' => $functionName,
         ];
+    }
+
+    /**
+     * @return array Array of imported functions {
+     *     @var array $_ Key is lowercase function name {
+     *         @var string $name Original function name
+     *         @var string $fqn Fully qualified function name without leading slashes
+     *         @var int $ptr The position of use declaration
+     *         @var int $eos The position of the end of the use statement
+     *     }
+     * }
+     */
+    private function getImportedFunctions(File $phpcsFile, int $stackPtr, ?int &$lastUse) : array
+    {
+        $first = 0;
+        $last = $phpcsFile->numTokens;
+
+        $tokens = $phpcsFile->getTokens();
+
+        $nsStart = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr);
+        if ($nsStart && isset($tokens[$nsStart]['scope_opener'])) {
+            $first = $tokens[$nsStart]['scope_opener'];
+            $last = $tokens[$nsStart]['scope_closer'];
+        }
+
+        $lastUse = null;
+        $functions = [];
+
+        $use = $first;
+        while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
+            if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
+                continue;
+            }
+
+            // Check if the statement is not planned to be removed.
+            if (isset($phpcsFile->getMetrics()[UnusedUseStatementSniff::class]['values'][$use])) {
+                continue;
+            }
+
+            if ($next = $this->isFunctionUse($phpcsFile, $use)) {
+                $start = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $next + 1);
+                $end = $phpcsFile->findPrevious(
+                    T_STRING,
+                    $phpcsFile->findNext([T_AS, T_SEMICOLON], $start + 1) - 1
+                );
+                $endOfStatement = $phpcsFile->findEndOfStatement($next);
+                $name = $phpcsFile->findPrevious(T_STRING, $endOfStatement - 1);
+                $fullName = $phpcsFile->getTokensAsString($start, $end - $start + 1);
+
+                $functions[strtolower($tokens[$name]['content'])] = [
+                    'name' => $tokens[$name]['content'],
+                    'fqn' => ltrim($fullName, '\\'),
+                    'ptr' => $use,
+                    'eos' => $endOfStatement,
+                ];
+            }
+
+            $lastUse = $use;
+        }
+
+        return $functions;
+    }
+
+    /**
+     * @return false|int
+     */
+    private function isFunctionUse(File $phpcsFile, int $stackPtr)
+    {
+        $tokens = $phpcsFile->getTokens();
+        $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
+
+        if ($tokens[$next]['code'] === T_STRING
+            && strtolower($tokens[$next]['content']) === 'function'
+        ) {
+            return $next;
+        }
+
+        return false;
     }
 }

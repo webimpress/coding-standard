@@ -33,6 +33,13 @@ class ImportInternalConstantUnitTest extends AbstractTestCase
                     5 => 1,
                     8 => 1,
                 ];
+            case 'ImportInternalConstantUnitTest.5.inc':
+                return [
+                    7 => 1,
+                    12 => 1,
+                    15 => 1,
+                    17 => 1,
+                ];
         }
 
         return [

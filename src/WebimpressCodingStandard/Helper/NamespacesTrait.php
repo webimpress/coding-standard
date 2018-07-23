@@ -6,21 +6,17 @@ namespace WebimpressCodingStandard\Helper;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\CodingStandard;
 use WebimpressCodingStandard\Sniffs\Namespaces\UnusedUseStatementSniff;
 
 use function in_array;
-use function ltrim;
 use function strrchr;
 use function strtolower;
-use function strtoupper;
 use function substr;
 use function trim;
 
 use const T_AS;
 use const T_NAMESPACE;
 use const T_NS_SEPARATOR;
-use const T_SEMICOLON;
 use const T_STRING;
 use const T_USE;
 use const T_WHITESPACE;
@@ -105,151 +101,5 @@ trait NamespacesTrait
         }
 
         return $imports;
-    }
-
-    /**
-     * @return false|int
-     */
-    private function isFunctionUse(File $phpcsFile, int $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-        $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
-
-        if ($tokens[$next]['code'] === T_STRING
-            && strtolower($tokens[$next]['content']) === 'function'
-        ) {
-            return $next;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return false|int
-     */
-    private function isConstUse(File $phpcsFile, int $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-        $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
-
-        if ($tokens[$next]['code'] === T_STRING
-            && strtolower($tokens[$next]['content']) === 'const'
-        ) {
-            return $next;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return array Array of imported constants {
-     *     @var array $_ Key is lowercase constant name {
-     *         @var string $name Original constant name
-     *         @var string $fqn Fully qualified constant name without leading slashes
-     *     }
-     * }
-     */
-    private function getImportedConstants(File $phpcsFile, int $stackPtr, ?int &$lastUse) : array
-    {
-        $first = 0;
-        $last = $phpcsFile->numTokens;
-
-        $tokens = $phpcsFile->getTokens();
-
-        $nsStart = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr);
-        if ($nsStart && isset($tokens[$nsStart]['scope_opener'])) {
-            $first = $tokens[$nsStart]['scope_opener'];
-            $last = $tokens[$nsStart]['scope_closer'];
-        }
-
-        $lastUse = null;
-        $constants = [];
-
-        $use = $first;
-        while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
-            if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
-                continue;
-            }
-
-            if (isset($phpcsFile->getMetrics()[UnusedUseStatementSniff::class]['values'][$use])) {
-                continue;
-            }
-
-            if ($next = $this->isConstUse($phpcsFile, $use)) {
-                $start = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $next + 1);
-                $end = $phpcsFile->findPrevious(
-                    T_STRING,
-                    $phpcsFile->findNext([T_AS, T_SEMICOLON], $start + 1) - 1
-                );
-                $endOfStatement = $phpcsFile->findEndOfStatement($next);
-                $name = $phpcsFile->findPrevious(T_STRING, $endOfStatement - 1);
-                $fullName = $phpcsFile->getTokensAsString($start, $end - $start + 1);
-
-                $constants[strtoupper($tokens[$name]['content'])] = [
-                    'name' => $tokens[$name]['content'],
-                    'fqn' => ltrim($fullName, '\\'),
-                ];
-            }
-
-            $lastUse = $use;
-        }
-
-        return $constants;
-    }
-
-    /**
-     * @return array Array of imported functions {
-     *     @var array $_ Key is lowercase function name {
-     *         @var string $name Original function name
-     *         @var string $fqn Fully qualified function name without leading slashes
-     *     }
-     * }
-     */
-    private function getImportedFunctions(File $phpcsFile, int $stackPtr, ?int &$lastUse) : array
-    {
-        $first = 0;
-        $last = $phpcsFile->numTokens;
-
-        $tokens = $phpcsFile->getTokens();
-
-        $nsStart = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr);
-        if ($nsStart && isset($tokens[$nsStart]['scope_opener'])) {
-            $first = $tokens[$nsStart]['scope_opener'];
-            $last = $tokens[$nsStart]['scope_closer'];
-        }
-
-        $lastUse = null;
-        $functions = [];
-
-        $use = $first;
-        while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
-            if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
-                continue;
-            }
-
-            if (isset($phpcsFile->getMetrics()[UnusedUseStatementSniff::class]['values'][$use])) {
-                continue;
-            }
-
-            if ($next = $this->isFunctionUse($phpcsFile, $use)) {
-                $start = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $next + 1);
-                $end = $phpcsFile->findPrevious(
-                    T_STRING,
-                    $phpcsFile->findNext([T_AS, T_SEMICOLON], $start + 1) - 1
-                );
-                $endOfStatement = $phpcsFile->findEndOfStatement($next);
-                $name = $phpcsFile->findPrevious(T_STRING, $endOfStatement - 1);
-                $fullName = $phpcsFile->getTokensAsString($start, $end - $start + 1);
-
-                $functions[strtolower($tokens[$name]['content'])] = [
-                    'name' => $tokens[$name]['content'],
-                    'fqn' => ltrim($fullName, '\\'),
-                ];
-            }
-
-            $lastUse = $use;
-        }
-
-        return $functions;
     }
 }

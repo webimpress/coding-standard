@@ -50,6 +50,34 @@ class ImportInternalFunctionUnitTest extends AbstractTestCase
                     12 => 1,
                     19 => 1,
                 ];
+            case 'ImportInternalFunctionUnitTest.6.inc':
+                return [
+                    6 => 3,
+                    7 => 5,
+                    8 => 1,
+                    9 => 1,
+                    10 => 1,
+                    11 => 1,
+                    12 => 7,
+                    13 => 4,
+                    15 => 2,
+                    16 => 1,
+                    17 => 3,
+                    18 => 3,
+                    19 => 1,
+                    20 => 1,
+                    22 => 7,
+                    24 => 4,
+                    25 => 4,
+                    26 => 4,
+                    27 => 4,
+                    28 => 4,
+                    29 => 4,
+                    30 => 4,
+                    31 => 4,
+                    32 => 4,
+                    34 => 5,
+                ];
         }
 
         return [

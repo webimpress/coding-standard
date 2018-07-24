@@ -1,8 +1,8 @@
 <?php
 
 namespace A {
-use function range;
 use function count;
+use function range;
 
     $arr = range(1, 10);
     $count = Count($arr);

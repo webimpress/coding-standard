@@ -3,8 +3,8 @@
 
 namespace ImportInternalFunction;
 
-use function range;
 use function array_keys;
+use function range;
 
 
 $arr = range(1, 10);

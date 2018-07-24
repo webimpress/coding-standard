@@ -8,18 +8,17 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use WebimpressCodingStandard\CodingStandard;
-use WebimpressCodingStandard\Helper\NamespacesTrait;
 use WebimpressCodingStandard\Sniffs\Namespaces\UnusedUseStatementSniff;
 
 use function array_flip;
 use function get_defined_functions;
 use function in_array;
 use function ltrim;
+use function sort;
 use function sprintf;
 use function strtolower;
 
 use const T_AS;
-use const T_BITWISE_AND;
 use const T_DOUBLE_COLON;
 use const T_FUNCTION;
 use const T_NAMESPACE;
@@ -34,8 +33,6 @@ use const T_WHITESPACE;
 
 class ImportInternalFunctionSniff implements Sniff
 {
-    use NamespacesTrait;
-
     /**
      * @var string[] Array of functions to exclude from importing.
      */
@@ -47,24 +44,9 @@ class ImportInternalFunctionSniff implements Sniff
     private $builtInFunctions;
 
     /**
-     * @var File Currently processed file.
-     */
-    private $currentFile;
-
-    /**
-     * @var string Currently processed namespace.
-     */
-    private $currentNamespace;
-
-    /**
      * @var array Array of imported function in current namespace.
      */
     private $importedFunctions;
-
-    /**
-     * @var null|int Last use statement position.
-     */
-    private $lastUse;
 
     public function __construct()
     {
@@ -82,56 +64,80 @@ class ImportInternalFunctionSniff implements Sniff
 
     /**
      * @param int $stackPtr
+     * @return int
      */
     public function process(File $phpcsFile, $stackPtr)
     {
-        if ($this->currentFile !== $phpcsFile) {
-            $this->currentFile = $phpcsFile;
-            $this->currentNamespace = null;
-        }
-
         $tokens = $phpcsFile->getTokens();
 
-        $namespace = $this->getNamespace($phpcsFile, $stackPtr);
-        if ($namespace && $this->currentNamespace !== $namespace) {
-            $this->currentNamespace = $namespace;
-            $this->importedFunctions = $this->getImportedFunctions($phpcsFile, $stackPtr, $this->lastUse);
+        $currentNamespacePtr = null;
+        $functionsToImport = [];
+        $lastUse = null;
 
-            foreach ($this->importedFunctions as $func) {
-                $fqn = strtolower($func['fqn']);
+        do {
+            $namespacePtr = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr - 1) ?: null;
 
-                if (in_array($fqn, $this->exclude, true)) {
-                    $error = 'Function %s cannot be imported';
-                    $data = [$func['fqn']];
-                    $fix = $phpcsFile->addFixableError($error, $func['ptr'], 'ExcludeImported', $data);
+            if ($namespacePtr !== $currentNamespacePtr) {
+                if ($currentNamespacePtr) {
+                    $this->importFunctions($phpcsFile, $currentNamespacePtr, $lastUse, $functionsToImport);
+                }
 
-                    if ($fix) {
-                        $phpcsFile->fixer->beginChangeset();
-                        for ($i = $func['ptr']; $i <= $func['eos']; ++$i) {
-                            $phpcsFile->fixer->replaceToken($i, '');
+                $currentNamespacePtr = $namespacePtr;
+                $functionsToImport = [];
+                $lastUse = null;
+                $this->importedFunctions = $this->getImportedFunctions($phpcsFile, $namespacePtr, $lastUse);
+
+                foreach ($this->importedFunctions as $func) {
+                    $fqn = strtolower($func['fqn']);
+
+                    if (in_array($fqn, $this->exclude, true)) {
+                        $error = 'Function %s cannot be imported';
+                        $data = [$func['fqn']];
+                        $fix = $phpcsFile->addFixableError($error, $func['ptr'], 'ExcludeImported', $data);
+
+                        if ($fix) {
+                            $phpcsFile->fixer->beginChangeset();
+                            for ($i = $func['ptr']; $i <= $func['eos']; ++$i) {
+                                $phpcsFile->fixer->replaceToken($i, '');
+                            }
+                            if ($tokens[$i + 1]['code'] === T_WHITESPACE) {
+                                $phpcsFile->fixer->replaceToken($i + 1, '');
+                            }
+                            $phpcsFile->fixer->endChangeset();
                         }
-                        if ($tokens[$i + 1]['code'] === T_WHITESPACE) {
-                            $phpcsFile->fixer->replaceToken($i + 1, '');
-                        }
-                        $phpcsFile->fixer->endChangeset();
                     }
                 }
             }
+
+            if ($functionName = $this->processString($phpcsFile, $stackPtr, $namespacePtr ?: null)) {
+                $functionsToImport[] = $functionName;
+            }
+        } while ($stackPtr = $phpcsFile->findNext($this->register(), $stackPtr + 1));
+
+        if ($currentNamespacePtr) {
+            $this->importFunctions($phpcsFile, $currentNamespacePtr, $lastUse, $functionsToImport);
         }
+
+        return $phpcsFile->numTokens + 1;
+    }
+
+    private function processString(File $phpcsFile, int $stackPtr, ?int $namespacePtr) : ?string
+    {
+        $tokens = $phpcsFile->getTokens();
 
         // Make sure this is a function call.
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
         if (! $next || $tokens[$next]['code'] !== T_OPEN_PARENTHESIS) {
-            return;
+            return null;
         }
 
         $content = strtolower($tokens[$stackPtr]['content']);
         if (! isset($this->builtInFunctions[$content])) {
-            return;
+            return null;
         }
 
         $prev = $phpcsFile->findPrevious(
-            Tokens::$emptyTokens + [T_BITWISE_AND => T_BITWISE_AND, T_NS_SEPARATOR => T_NS_SEPARATOR],
+            Tokens::$emptyTokens + [T_NS_SEPARATOR => T_NS_SEPARATOR],
             $stackPtr - 1,
             null,
             true
@@ -142,12 +148,12 @@ class ImportInternalFunctionSniff implements Sniff
             || $tokens[$prev]['code'] === T_DOUBLE_COLON
             || $tokens[$prev]['code'] === T_OBJECT_OPERATOR
         ) {
-            return;
+            return null;
         }
 
         $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $stackPtr - 1, null, true);
         if ($tokens[$prev]['code'] === T_NS_SEPARATOR) {
-            if (! $namespace) {
+            if (! $namespacePtr) {
                 $error = 'FQN for PHP internal function "%s" is not needed here, file does not have defined namespace';
                 $data = [
                     $content,
@@ -189,11 +195,12 @@ class ImportInternalFunctionSniff implements Sniff
                 if ($fix) {
                     $phpcsFile->fixer->beginChangeset();
                     $phpcsFile->fixer->replaceToken($prev, '');
-                    $this->importFunction($phpcsFile, $stackPtr, $content);
                     $phpcsFile->fixer->endChangeset();
+
+                    return $this->importFunction($content);
                 }
             }
-        } elseif ($namespace) {
+        } elseif ($namespacePtr) {
             if (! isset($this->importedFunctions[$content])
                 && ! in_array($content, $this->exclude, true)
             ) {
@@ -204,39 +211,60 @@ class ImportInternalFunctionSniff implements Sniff
 
                 $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Import', $data);
                 if ($fix) {
-                    $phpcsFile->fixer->beginChangeset();
-                    $this->importFunction($phpcsFile, $stackPtr, $content);
-                    $phpcsFile->fixer->endChangeset();
+                    return $this->importFunction($content);
                 }
             }
         }
+
+        return null;
     }
 
-    private function importFunction(File $phpcsFile, int $stackPtr, string $functionName) : void
+    private function importFunction(string $functionName) : string
     {
-        if ($this->lastUse) {
-            $ptr = $phpcsFile->findEndOfStatement($this->lastUse);
-        } else {
-            $nsStart = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr);
-            $tokens = $phpcsFile->getTokens();
-            if (isset($tokens[$nsStart]['scope_opener'])) {
-                $ptr = $tokens[$nsStart]['scope_opener'];
-            } else {
-                $ptr = $phpcsFile->findEndOfStatement($nsStart);
-                $phpcsFile->fixer->addNewline($ptr);
-            }
-        }
-
-        $phpcsFile->fixer->addNewline($ptr);
-        $phpcsFile->fixer->addContent($ptr, sprintf('use function %s;', $functionName));
-        if (! $this->lastUse && (! $nsStart || isset($tokens[$nsStart]['scope_opener']))) {
-            $phpcsFile->fixer->addNewline($ptr);
-        }
-
         $this->importedFunctions[$functionName] = [
             'name' => $functionName,
             'fqn' => $functionName,
         ];
+
+        return $functionName;
+    }
+
+    /**
+     * @param string[] $functionNames
+     */
+    private function importFunctions(File $phpcsFile, int $namespacePtr, ?int $lastUse, array $functionNames) : void
+    {
+        if (! $functionNames) {
+            return;
+        }
+
+        sort($functionNames);
+
+        $phpcsFile->fixer->beginChangeset();
+
+        if ($lastUse) {
+            $ptr = $phpcsFile->findEndOfStatement($lastUse);
+        } else {
+            $tokens = $phpcsFile->getTokens();
+            if (isset($tokens[$namespacePtr]['scope_opener'])) {
+                $ptr = $tokens[$namespacePtr]['scope_opener'];
+            } else {
+                $ptr = $phpcsFile->findEndOfStatement($namespacePtr);
+                $phpcsFile->fixer->addNewline($ptr);
+            }
+        }
+
+        $content = '';
+        foreach ($functionNames as $functionName) {
+            $content .= sprintf('%suse function %s;', $phpcsFile->eolChar, $functionName);
+        }
+
+        $phpcsFile->fixer->addContent($ptr, $content);
+        if (! $lastUse && isset($tokens[$namespacePtr]['scope_opener'])) {
+            $phpcsFile->fixer->addNewline($ptr);
+        }
+
+        $phpcsFile->fixer->endChangeset();
     }
 
     /**
@@ -249,20 +277,18 @@ class ImportInternalFunctionSniff implements Sniff
      *     }
      * }
      */
-    private function getImportedFunctions(File $phpcsFile, int $stackPtr, ?int &$lastUse) : array
+    private function getImportedFunctions(File $phpcsFile, ?int $namespacePtr, ?int &$lastUse) : array
     {
         $first = 0;
         $last = $phpcsFile->numTokens;
 
         $tokens = $phpcsFile->getTokens();
 
-        $nsStart = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr);
-        if ($nsStart && isset($tokens[$nsStart]['scope_opener'])) {
-            $first = $tokens[$nsStart]['scope_opener'];
-            $last = $tokens[$nsStart]['scope_closer'];
+        if ($namespacePtr && isset($tokens[$namespacePtr]['scope_opener'])) {
+            $first = $tokens[$namespacePtr]['scope_opener'];
+            $last = $tokens[$namespacePtr]['scope_closer'];
         }
 
-        $lastUse = null;
         $functions = [];
 
         $use = $first;

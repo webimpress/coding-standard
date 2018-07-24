@@ -2,12 +2,12 @@
 
 namespace ImportInternalConstant;
 
-use const SEEK_END;
-use const E_WARNING;
 use const E_ALL;
 use const E_NOTICE;
-use const T_WHITESPACE;
+use const E_WARNING;
+use const SEEK_END;
 use const T_VAR;
+use const T_WHITESPACE;
 
 $a = SEEK_END;
 

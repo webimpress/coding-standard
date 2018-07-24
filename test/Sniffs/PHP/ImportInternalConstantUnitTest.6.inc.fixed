@@ -1,0 +1,72 @@
+<?php
+// @phpcs:set WebimpressCodingStandard.PHP.ImportInternalConstant exclude[]
+
+namespace ImportInternalConstant;
+
+use const T_AND_EQUAL;
+use const T_ARRAY_CAST;
+use const T_BOOLEAN_AND;
+use const T_BOOLEAN_OR;
+use const T_BOOL_CAST;
+use const T_CLONE;
+use const T_COALESCE;
+use const T_CONCAT_EQUAL;
+use const T_DEC;
+use const T_DIV_EQUAL;
+use const T_DOUBLE_ARROW;
+use const T_DOUBLE_CAST;
+use const T_ELSE;
+use const T_ELSEIF;
+use const T_ENDIF;
+use const T_EVAL;
+use const T_INC;
+use const T_INCLUDE;
+use const T_INCLUDE_ONCE;
+use const T_INSTANCEOF;
+use const T_INT_CAST;
+use const T_IS_EQUAL;
+use const T_IS_GREATER_OR_EQUAL;
+use const T_IS_IDENTICAL;
+use const T_IS_NOT_EQUAL;
+use const T_IS_NOT_IDENTICAL;
+use const T_IS_SMALLER_OR_EQUAL;
+use const T_LOGICAL_AND;
+use const T_LOGICAL_OR;
+use const T_LOGICAL_XOR;
+use const T_MINUS_EQUAL;
+use const T_MOD_EQUAL;
+use const T_MUL_EQUAL;
+use const T_NEW;
+use const T_OBJECT_CAST;
+use const T_OR_EQUAL;
+use const T_PLUS_EQUAL;
+use const T_POW;
+use const T_POW_EQUAL;
+use const T_PRINT;
+use const T_PRIVATE;
+use const T_PROTECTED;
+use const T_PUBLIC;
+use const T_REQUIRE;
+use const T_REQUIRE_ONCE;
+use const T_SL;
+use const T_SL_EQUAL;
+use const T_SPACESHIP;
+use const T_SR;
+use const T_SR_EQUAL;
+use const T_STRING_CAST;
+use const T_UNSET_CAST;
+use const T_XOR_EQUAL;
+use const T_YIELD;
+use const T_YIELD_FROM;
+
+T_REQUIRE_ONCE & T_REQUIRE & T_EVAL & T_INCLUDE_ONCE & T_INCLUDE
+    & T_LOGICAL_AND & T_LOGICAL_OR & T_LOGICAL_XOR & T_PRINT & T_YIELD
+    & T_DOUBLE_ARROW & T_YIELD_FROM & T_POW_EQUAL & T_SR_EQUAL & T_SL_EQUAL
+    & T_XOR_EQUAL & T_OR_EQUAL & T_AND_EQUAL & T_MOD_EQUAL & T_CONCAT_EQUAL
+    & T_DIV_EQUAL & T_MUL_EQUAL & T_MINUS_EQUAL & T_PLUS_EQUAL & T_COALESCE
+    & T_BOOLEAN_OR & T_BOOLEAN_AND & T_SPACESHIP & T_IS_NOT_IDENTICAL & T_IS_IDENTICAL
+    & T_IS_NOT_EQUAL & T_IS_EQUAL & T_IS_GREATER_OR_EQUAL & T_IS_SMALLER_OR_EQUAL & T_SR
+    & T_SL & T_INSTANCEOF & T_UNSET_CAST & T_BOOL_CAST & T_OBJECT_CAST
+    & T_ARRAY_CAST & T_STRING_CAST & T_DOUBLE_CAST & T_INT_CAST & T_DEC
+    & T_INC & T_POW & T_CLONE & T_NEW & T_ELSEIF
+    & T_ELSE & T_ENDIF & T_PUBLIC & T_PROTECTED & T_PRIVATE;

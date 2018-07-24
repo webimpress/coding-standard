@@ -1,0 +1,92 @@
+<?php
+// @phpcs:set WebimpressCodingStandard.PHP.ImportInternalFunction exclude[]
+
+namespace ImportInternalFunction;
+
+use function array_chunk;
+use function array_column;
+use function array_combine;
+use function array_flip;
+use function array_product;
+use function array_rand;
+use function array_unique;
+use function asort;
+use function chmod;
+use function chown;
+use function count;
+use function current;
+use function end;
+use function fclose;
+use function file_put_contents;
+use function fileatime;
+use function fileowner;
+use function fileperms;
+use function flock;
+use function fopen;
+use function fputs;
+use function fwrite;
+use function is_array;
+use function is_bool;
+use function is_callable;
+use function is_dir;
+use function is_double;
+use function is_executable;
+use function is_file;
+use function is_finite;
+use function is_float;
+use function is_infinite;
+use function is_int;
+use function is_iterable;
+use function is_object;
+use function is_readable;
+use function is_string;
+use function is_uploaded_file;
+use function is_writable;
+use function key;
+use function krsort;
+use function ksort;
+use function mt_rand;
+use function next;
+use function prev;
+use function print_r;
+use function random_bytes;
+use function random_int;
+use function range;
+use function shuffle;
+use function sizeof;
+use function sort;
+use function str_replace;
+use function sys_get_temp_dir;
+use function tempnam;
+use function tmpfile;
+use function var_dump;
+
+echo print_r(array_chunk([], random_int(1, 10)), true);
+$a = array_column(array_combine(array_flip([]), array_rand([])), array_product([]));
+sort($a);
+asort($a);
+ksort($a);
+krsort($a);
+$b = current($a) || key($a) || end($a) || next($a) || sizeof($a) || count($a) || prev($a);
+var_dump(array_unique(shuffle(range(1, 20, $b))));
+
+$fp = fopen(tmpfile(), 'r');
+flock($fp, LOCK_EX);
+fwrite($fp, fileowner(tmpfile()));
+fputs($fp, fileperms(tmpfile()));
+flock($fp, LOCK_UN);
+fclose($fp);
+
+file_put_contents(tempnam(sys_get_temp_dir(), random_bytes(mt_rand())), fileatime(tmpfile()));
+
+is_dir(tmpfile()) || is_file(tmpfile())
+    || is_uploaded_file(tmpfile()) || is_writable(tmpfile())
+    || is_readable(tmpfile()) || is_readable(tmpfile())
+    || is_callable(tmpfile()) || is_object(tmpfile())
+    || is_infinite(tmpfile()) || is_array(tmpfile())
+    || is_int(tmpfile()) || is_bool(tmpfile())
+    || is_double(tmpfile()) || is_executable(tmpfile())
+    || is_float(tmpfile()) || is_finite(tmpfile())
+    || is_iterable(tmpfile()) || is_string(tmpfile());
+
+chmod(tmpfile(), chown(tmpfile(), str_replace('', '', '')));

@@ -2,12 +2,12 @@
 
 namespace ImportInternalFunction;
 
-use function range;
 use function array_keys;
-use function count;
-use function reset;
 use function array_rand;
+use function count;
 use function mt_rand;
+use function range;
+use function reset;
 
 $array = range(1, 10);
 

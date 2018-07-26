@@ -28,6 +28,17 @@ use Used14;
 use Unused5\Used15;
 use Used16 as AliasUsed16;
 use FooBar\Used17;
+use FooBar\Used18;
+use FooBar\Unused8;
+use FooBar\Unused9;
+use FooBaz\Unused10;
+use BarBaz\Unused11;
+use BarBaz\Unused12;
+use BarBaz\Unused13;
+use BarBaz\Unused14;
+use Unused15;
+use Used19;
+use Used20;
 
 /**
  * @Used10
@@ -91,5 +102,25 @@ class Foo
     protected function test8() : AliasUsed16
     {
         $this->unused2 = new \Unused1();
+    }
+
+    protected function test9() : Hey\Unused8\Foo
+    {
+        /** @var Bar\Unused9 $x */
+        $x = new Bar\Unused10();
+    }
+
+    /**
+     * @param
+     * @Used19
+     * @todo
+     * @Used20
+     * @todo Unused15
+     */
+    protected function test10() : Hey\ /* hey */ Unused11 /** comment */ \ Unused12
+    {
+        new Hey \ /** @todo */ Unused13();
+        new /** hey */ Used18 \ World();
+        MyClass::Unused14;
     }
 }

@@ -20,10 +20,10 @@ use function trim;
 use const T_AS;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
+use const T_DOUBLE_COLON;
 use const T_NAMESPACE;
 use const T_NS_SEPARATOR;
 use const T_OBJECT_OPERATOR;
-use const T_RETURN_TYPE;
 use const T_SEMICOLON;
 use const T_STRING;
 use const T_USE;
@@ -44,7 +44,6 @@ class UnusedUseStatementSniff implements Sniff
      */
     private $checkInTokens = [
         T_STRING,
-        T_RETURN_TYPE,
         T_DOC_COMMENT_STRING,
         T_DOC_COMMENT_TAG,
     ];
@@ -139,32 +138,34 @@ class UnusedUseStatementSniff implements Sniff
         unset($emptyTokens[T_DOC_COMMENT_TAG]);
 
         while ($classUsed !== false) {
-            if ((in_array($tokens[$classUsed]['code'], [T_STRING, T_RETURN_TYPE], true)
-                    && strtolower($tokens[$classUsed]['content']) === $lowerClassName)
+            $isStringToken = $tokens[$classUsed]['code'] === T_STRING;
+
+            if (($isStringToken && strtolower($tokens[$classUsed]['content']) === $lowerClassName)
                 || ($tokens[$classUsed]['code'] === T_DOC_COMMENT_STRING
                     && preg_match(
-                        '/(\s|\||^)' . preg_quote($lowerClassName) . '(\s|\||\\\\|$|\[\])/i',
+                        '/(\s|\||^)' . preg_quote($lowerClassName, '/') . '(\s|\||\\\\|$|\[\])/i',
                         $tokens[$classUsed]['content']
                     ))
                 || ($tokens[$classUsed]['code'] === T_DOC_COMMENT_TAG
                     && preg_match(
-                        '/@' . preg_quote($lowerClassName) . '(\(|\\\\|$)/i',
+                        '/@' . preg_quote($lowerClassName, '/') . '(\(|\\\\|$)/i',
                         $tokens[$classUsed]['content']
                     ))
             ) {
                 $beforeUsage = $phpcsFile->findPrevious(
-                    $emptyTokens,
+                    $isStringToken ? Tokens::$emptyTokens : $emptyTokens,
                     $classUsed - 1,
                     null,
                     true
                 );
 
-                if (in_array($tokens[$classUsed]['code'], [T_STRING, T_RETURN_TYPE], true)) {
+                if ($isStringToken) {
                     // If a backslash is used before the class name then this is some other
                     // use statement.
                     if ($tokens[$beforeUsage]['code'] !== T_USE
                         && $tokens[$beforeUsage]['code'] !== T_NS_SEPARATOR
                         && $tokens[$beforeUsage]['code'] !== T_OBJECT_OPERATOR
+                        && $tokens[$beforeUsage]['code'] !== T_DOUBLE_COLON
                     ) {
                         return;
                     }
@@ -175,14 +176,16 @@ class UnusedUseStatementSniff implements Sniff
                     ) {
                         return;
                     }
-                } elseif ($tokens[$beforeUsage]['code'] === T_DOC_COMMENT_TAG
-                    && in_array(
-                        $tokens[$beforeUsage]['content'],
-                        ['@var', '@param', '@return', '@throws', '@method'],
-                        true
-                    )
-                ) {
-                    return;
+                } elseif ($tokens[$classUsed]['code'] === T_DOC_COMMENT_STRING) {
+                    if ($tokens[$beforeUsage]['code'] === T_DOC_COMMENT_TAG
+                        && in_array(
+                            $tokens[$beforeUsage]['content'],
+                            ['@var', '@param', '@return', '@throws', '@method'],
+                            true
+                        )
+                    ) {
+                        return;
+                    }
                 } else {
                     return;
                 }

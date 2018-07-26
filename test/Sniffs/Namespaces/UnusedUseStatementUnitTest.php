@@ -22,6 +22,14 @@ class UnusedUseStatementUnitTest extends AbstractTestCase
             19 => 1,
             20 => 1,
             21 => 1,
+            32 => 1,
+            33 => 1,
+            34 => 1,
+            35 => 1,
+            36 => 1,
+            37 => 1,
+            38 => 1,
+            39 => 1,
         ];
     }
 }

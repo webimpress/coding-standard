@@ -34,6 +34,7 @@ use const T_ARRAY;
 use const T_ARRAY_CAST;
 use const T_BOOL_CAST;
 use const T_BOOLEAN_NOT;
+use const T_CLOSE_PARENTHESIS;
 use const T_CLOSURE;
 use const T_COLON;
 use const T_CONSTANT_ENCAPSED_STRING;
@@ -58,7 +59,6 @@ use const T_OPEN_SHORT_ARRAY;
 use const T_OPEN_SQUARE_BRACKET;
 use const T_PARENT;
 use const T_RETURN;
-use const T_RETURN_TYPE;
 use const T_SELF;
 use const T_SEMICOLON;
 use const T_STATIC;
@@ -145,20 +145,18 @@ class ReturnTypeSniff implements Sniff
         $this->processReturnStatements($phpcsFile, $stackPtr);
     }
 
-    /**
-     * @return bool|int
-     */
-    private function getReturnType(File $phpcsFile, int $stackPtr)
+    private function getReturnType(File $phpcsFile, int $stackPtr) : ?int
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (isset($tokens[$stackPtr]['scope_opener'])) {
-            $to = $tokens[$stackPtr]['scope_opener'];
-        } else {
-            $to = $phpcsFile->findEndOfStatement($stackPtr, [T_COLON]);
+        $eol = $phpcsFile->findNext([T_SEMICOLON, T_OPEN_CURLY_BRACKET], $stackPtr + 1);
+        $last = $phpcsFile->findPrevious(Tokens::$emptyTokens, $eol - 1, null, true);
+
+        if ($tokens[$last]['code'] === T_CLOSE_PARENTHESIS) {
+            return null;
         }
 
-        return $phpcsFile->findNext(T_RETURN_TYPE, $stackPtr + 1, $to);
+        return $last;
     }
 
     private function processReturnDoc(File $phpcsFile, int $commentStart) : void

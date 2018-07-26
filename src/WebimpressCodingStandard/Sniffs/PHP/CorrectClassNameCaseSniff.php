@@ -41,10 +41,11 @@ use const T_IMPLEMENTS;
 use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_NULLABLE;
+use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_PARENTHESIS;
 use const T_PARENT;
-use const T_RETURN_TYPE;
 use const T_SELF;
+use const T_SEMICOLON;
 use const T_STATIC;
 use const T_STRING;
 use const T_USE;
@@ -84,11 +85,9 @@ class CorrectClassNameCaseSniff implements Sniff
             T_DOUBLE_COLON,
             T_IMPLEMENTS,
             T_EXTENDS,
-            // params of function/closures
+            // params of function/closures and return type declaration
             T_FUNCTION,
             T_CLOSURE,
-            // return type (PHP 7)
-            T_RETURN_TYPE,
             // PHPDocs tags
             T_DOC_COMMENT_TAG,
         ];
@@ -114,8 +113,6 @@ class CorrectClassNameCaseSniff implements Sniff
             case T_FUNCTION:
             case T_CLOSURE:
                 $this->checkFunctionParams($phpcsFile, $stackPtr);
-                return;
-            case T_RETURN_TYPE:
                 $this->checkReturnType($phpcsFile, $stackPtr);
                 return;
             case T_DOC_COMMENT_TAG:
@@ -238,10 +235,13 @@ class CorrectClassNameCaseSniff implements Sniff
      */
     private function checkReturnType(File $phpcsFile, int $stackPtr) : void
     {
-        $before = $phpcsFile->findPrevious([T_COLON, T_NULLABLE], $stackPtr - 1);
-        $first = $phpcsFile->findNext(Tokens::$emptyTokens, $before + 1, null, true);
+        $eol = $phpcsFile->findNext([T_SEMICOLON, T_OPEN_CURLY_BRACKET], $stackPtr + 1);
+        if ($before = $phpcsFile->findPrevious([T_COLON, T_NULLABLE], $eol - 1)) {
+            $first = $phpcsFile->findNext(Tokens::$emptyTokens, $before + 1, null, true);
+            $last = $phpcsFile->findPrevious(Tokens::$emptyTokens, $eol - 1, null, true);
 
-        $this->checkClass($phpcsFile, $first, $stackPtr + 1);
+            $this->checkClass($phpcsFile, $first, $last + 1);
+        }
     }
 
     /**

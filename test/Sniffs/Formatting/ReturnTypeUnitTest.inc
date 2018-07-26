@@ -94,4 +94,6 @@ class NonFixable
     public function c(): // comment
     int {}
     public function d(): /* comment */ int {}
+
+    public function e() {}
 }

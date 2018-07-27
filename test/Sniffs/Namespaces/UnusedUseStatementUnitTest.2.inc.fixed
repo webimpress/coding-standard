@@ -1,0 +1,10 @@
+<?php
+
+namespace MyApp\ /* comment */ MyNamespace;
+
+use MyApp\ /* comment */ MyClass1 ;
+use \Hello\MyClass2;
+
+new MyClass1();
+new MyClass2();
+new MyClass3();

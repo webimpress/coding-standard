@@ -15,6 +15,24 @@ class UnusedUseStatementUnitTest extends AbstractTestCase
 
     public function getWarningList(string $testFile = '') : array
     {
+        switch ($testFile) {
+            case 'UnusedUseStatementUnitTest.1.inc':
+                return [
+                    3 => 1,
+                    6 => 1,
+                    9 => 1,
+                ];
+            case 'UnusedUseStatementUnitTest.2.inc':
+                return [
+                    7 => 1,
+                    8 => 1,
+                    9 => 1,
+                    10 => 1,
+                    11 => 1,
+                    12 => 1,
+                ];
+        }
+
         return [
             6 => 1,
             11 => 1,

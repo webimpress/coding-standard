@@ -1,0 +1,10 @@
+<?php
+
+use ArrayObject as AO;
+
+use function array_keys as k;
+
+use const T_ARRAY as TA;
+
+count([new DateTime(), T_WHITESPACE]);
+k([new AO(), TA]);

@@ -12,12 +12,14 @@ use WebimpressCodingStandard\CodingStandard;
 use function in_array;
 use function preg_match;
 use function preg_quote;
-use function rtrim;
 use function strcasecmp;
+use function strrpos;
 use function strtolower;
+use function substr;
 use function trim;
 
 use const T_AS;
+use const T_CURLY_OPEN;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_DOUBLE_COLON;
@@ -36,6 +38,7 @@ use const T_WHITESPACE;
  * @see https://github.com/squizlabs/PHP_CodeSniffer/pull/1106
  *     - added checks in annotations
  *     - added checks in return type (PHP 7.0+)
+ *     - remove unused use statements in files without namespace
  */
 class UnusedUseStatementSniff implements Sniff
 {
@@ -97,39 +100,21 @@ class UnusedUseStatementSniff implements Sniff
         // is allowed even in the same namespace.
         $aliasUsed = $phpcsFile->findPrevious(T_AS, $classPtr - 1, $stackPtr);
 
-        if ($namespacePtr !== false && $aliasUsed === false) {
-            $nsEnd = $phpcsFile->findNext(
-                [
-                    T_NS_SEPARATOR,
-                    T_STRING,
-                    T_DOC_COMMENT_STRING,
-                    T_WHITESPACE,
-                ],
-                $namespacePtr + 1,
-                null,
-                true
-            );
-            $namespace = trim($phpcsFile->getTokensAsString($namespacePtr + 1, $nsEnd - $namespacePtr - 1));
-
+        if ($aliasUsed === false) {
             $useNamespacePtr = $phpcsFile->findNext(T_STRING, $stackPtr + 1);
-            $useNamespaceEnd = $phpcsFile->findNext(
-                [
-                    T_NS_SEPARATOR,
-                    T_STRING,
-                ],
-                $useNamespacePtr + 1,
-                null,
-                true
-            );
-            $useNamespace = rtrim(
-                $phpcsFile->getTokensAsString(
-                    $useNamespacePtr,
-                    $useNamespaceEnd - $useNamespacePtr - 1
-                ),
-                '\\'
-            );
+            if (in_array(strtolower($tokens[$useNamespacePtr]['content']), ['const', 'function'], true)) {
+                ++$useNamespacePtr;
+            }
+            $useNamespace = $this->getNamespace($phpcsFile, $useNamespacePtr, [T_AS, T_CURLY_OPEN, T_SEMICOLON]);
+            $useNamespace = substr($useNamespace, 0, strrpos($useNamespace, '\\') ?: 0);
 
-            if (strcasecmp($namespace, $useNamespace) === 0) {
+            if ($namespacePtr !== false) {
+                $namespace = $this->getNamespace($phpcsFile, $namespacePtr + 1, [T_CURLY_OPEN, T_SEMICOLON]);
+
+                if (strcasecmp($namespace, $useNamespace) === 0) {
+                    $classUsed = false;
+                }
+            } elseif ($namespacePtr === false && $useNamespace === '') {
                 $classUsed = false;
             }
         }
@@ -214,5 +199,21 @@ class UnusedUseStatementSniff implements Sniff
 
             $phpcsFile->recordMetric($stackPtr, __CLASS__, $stackPtr);
         }
+    }
+
+    private function getNamespace(File $phpcsFile, int $ptr, array $stop) : string
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        $result = '';
+        while (! in_array($tokens[$ptr]['code'], $stop, true)) {
+            if (in_array($tokens[$ptr]['code'], [T_STRING, T_NS_SEPARATOR], true)) {
+                $result .= $tokens[$ptr]['content'];
+            }
+
+            ++$ptr;
+        }
+
+        return trim(trim($result), '\\');
     }
 }

@@ -380,15 +380,21 @@ class DocCommentSniff implements Sniff
                 || ($tokens[$next + 1]['code'] === T_DOC_COMMENT_WHITESPACE
                     && strpos($tokens[$next + 1]['content'], $phpcsFile->eolChar) === false)
             ) {
+                $openNestingTokens = [];
+
                 $nested = 0;
                 if ($firstTag) {
                     $prev = $next;
-                    while ($prev = $phpcsFile->findPrevious(T_DOC_COMMENT_STRING, $prev - 1, $firstTag)) {
-                        if ($tokens[$prev]['content'][0] === '}') {
+                    $expectedTokens = [T_DOC_COMMENT_STRING, T_DOC_COMMENT_TAG];
+                    while ($prev = $phpcsFile->findPrevious($expectedTokens, $prev - 1, $firstTag)) {
+                        if (in_array($tokens[$prev]['content'][0], ['}', ')'], true)) {
                             --$nested;
                         }
-                        if (substr($tokens[$prev]['content'], -1) === '{') {
+
+                        $last = substr(trim($tokens[$prev]['content']), -1);
+                        if (in_array($last, ['{', '('], true)) {
                             ++$nested;
+                            $openNestingTokens[] = $prev;
                         }
                     }
                 }
@@ -433,9 +439,22 @@ class DocCommentSniff implements Sniff
                         true
                     );
 
-                    if ($tokens[$next + 2]['content'][0] === '}') {
+                    // could be doc string or tag
+                    $prev2 = $phpcsFile->findPrevious(
+                        [
+                            T_DOC_COMMENT_WHITESPACE,
+                            T_DOC_COMMENT_STAR,
+                        ],
+                        $next - 1,
+                        $prev,
+                        true
+                    );
+
+                    if (in_array($tokens[$next + 2]['content'][0], ['}', ')'], true)) {
                         $expectedSpaces -= $this->indent;
-                    } else {
+                    } elseif (! in_array($prev2, $openNestingTokens, true)
+                        && ! in_array($prev, $openNestingTokens, true)
+                    ) {
                         $expectedSpaces += $this->indent;
                     }
 
@@ -450,17 +469,6 @@ class DocCommentSniff implements Sniff
                             || ($spaces > $expectedSpaces
                                 && $tokens[$prev]['line'] === $tokens[$next + 1]['line'] - 1))
                     ) {
-                        // could be doc string or tag
-                        $prev2 = $phpcsFile->findPrevious(
-                            [
-                                T_DOC_COMMENT_WHITESPACE,
-                                T_DOC_COMMENT_STAR,
-                            ],
-                            $next - 1,
-                            $prev,
-                            true
-                        );
-
                         if ($tokens[$prev2]['line'] === $tokens[$next]['line'] - 1) {
                             if (isset($replaces[$prev][$spaces]) && $replaces[$prev][$spaces] !== $spaces) {
                                 $expectedSpaces = $replaces[$prev][$spaces];

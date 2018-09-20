@@ -7,11 +7,26 @@ namespace WebimpressCodingStandard\Sniffs\Arrays;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractArraySniff;
 use PHP_CodeSniffer\Util\Common;
+use PHP_CodeSniffer\Util\Tokens;
+
+use function abs;
+use function str_repeat;
 
 use const T_WHITESPACE;
 
 class DoubleArrowSniff extends AbstractArraySniff
 {
+    /**
+     * The maximum amount od f padding before the alignment is ignored.
+     *
+     * If the amount of padding required to align this assignment with the
+     * surrounding assignments exceeds this number, the assignment will be
+     * ignored and no errors or warnings will be thrown.
+     *
+     * @var int
+     */
+    public $maxPadding = 1;
+
     /**
      * Processes a single-line array definition.
      *
@@ -49,7 +64,9 @@ class DoubleArrowSniff extends AbstractArraySniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        foreach ($indices as $data) {
+        $spaces = $this->calculateExpectedSpaces($phpcsFile, $indices);
+
+        foreach ($indices as $k => $data) {
             if (! isset($data['arrow'])) {
                 continue;
             }
@@ -80,25 +97,113 @@ class DoubleArrowSniff extends AbstractArraySniff
 
             $index = $tokens[$data['index_end']];
             if ($index['line'] === $arrow['line']) {
-                $this->checkSpace($phpcsFile, $data);
+                $this->checkSpace($phpcsFile, $data, $spaces[$k] ?? 1);
             }
         }
     }
 
-    private function checkSpace(File $phpcsFile, array $element) : void
+    private function calculateExpectedSpaces(File $phpcsFile, array $indices) : array
+    {
+        if ($this->maxPadding <= 1) {
+            return [];
+        }
+
+        $tokens = $phpcsFile->getTokens();
+
+        $chars = [];
+        foreach ($indices as $k => $data) {
+            if (! isset($data['arrow'])) {
+                continue;
+            }
+
+            $arrow = $tokens[$data['arrow']];
+            $index = $tokens[$data['index_end']];
+
+            if ($arrow['line'] !== $index['line']) {
+                continue;
+            }
+
+            $chars[$k] = $index['column'] + $index['length'] - 1;
+        }
+
+        $res = [];
+        $i = null;
+        $min = null;
+        $current = null;
+        foreach ($chars as $k => $length) {
+            if ($min === null) {
+                $min = $length;
+                $current = $length;
+            }
+
+            if (abs($length - $min) > $this->maxPadding) {
+                $res[$i] = $current;
+                $min = $length;
+                $current = $length;
+            }
+
+            if ($k > 0) {
+                $valueEnd = $phpcsFile->findPrevious(
+                    Tokens::$emptyTokens,
+                    $indices[$k]['index_start'] - 1,
+                    null,
+                    true
+                );
+
+                if ($valueEnd && $tokens[$valueEnd]['line'] < $tokens[$indices[$k]['index_start']]['line'] - 1) {
+                    $res[$i] = $current;
+                    $min = $length;
+                    $current = $length;
+                }
+            }
+
+            if ($length < $min) {
+                $min = $length;
+            }
+
+            if ($length > $current) {
+                $current = $length;
+            }
+
+            if (! isset($chars[$k + 1])) {
+                $res[$k] = $current;
+                $min = null;
+                $current = null;
+            }
+
+            $i = $k;
+        }
+
+        $spaces = [];
+        foreach ($chars as $k => $length) {
+            foreach ($res as $i => $max) {
+                if ($k <= $i) {
+                    break;
+                }
+            }
+
+            $spaces[$k] = $max - $length + 1;
+        }
+
+        return $spaces;
+    }
+
+    private function checkSpace(File $phpcsFile, array $element, int $expectedSpaces = 1) : void
     {
         $tokens = $phpcsFile->getTokens();
 
         $space = $tokens[$element['arrow'] - 1];
-        if ($space['code'] === T_WHITESPACE && $space['content'] !== ' ') {
-            $error = 'Expected 1 space before "=>"; "%s" found';
+        $expected = str_repeat(' ', $expectedSpaces);
+        if ($space['code'] === T_WHITESPACE && $space['content'] !== $expected) {
+            $error = 'Expected "%s" before "=>"; "%s" found';
             $data = [
+                Common::prepareForOutput($expected),
                 Common::prepareForOutput($space['content']),
             ];
-            $fix = $phpcsFile->addFixableError($error, $element['arrow'], 'SpaceBefore', $data);
+            $fix = $phpcsFile->addFixableError($error, $element['arrow'], 'SpacesBefore', $data);
 
             if ($fix) {
-                $phpcsFile->fixer->replaceToken($element['arrow'] - 1, ' ');
+                $phpcsFile->fixer->replaceToken($element['arrow'] - 1, $expected);
             }
         }
     }

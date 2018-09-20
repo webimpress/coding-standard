@@ -1,4 +1,4 @@
-<?php
+<?php // @phpcs:set WebimpressCodingStandard.Arrays.DoubleArrow maxPadding 1
 
 $s = ['a' => 'b', 'c'=>'d'];
 $m = [

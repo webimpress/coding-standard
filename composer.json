@@ -1,5 +1,6 @@
 {
     "name": "webimpress/coding-standard",
+    "type": "phpcodesniffer-standard",
     "description": "Webimpress Coding Standard",
     "license": "BSD-2-Clause",
     "keywords": [

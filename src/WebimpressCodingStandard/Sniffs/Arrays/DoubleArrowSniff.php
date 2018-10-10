@@ -17,7 +17,7 @@ use const T_WHITESPACE;
 class DoubleArrowSniff extends AbstractArraySniff
 {
     /**
-     * The maximum amount od f padding before the alignment is ignored.
+     * The maximum amount of padding before the alignment is ignored.
      *
      * If the amount of padding required to align this assignment with the
      * surrounding assignments exceeds this number, the assignment will be

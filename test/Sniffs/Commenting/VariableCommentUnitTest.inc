@@ -1,4 +1,4 @@
-<?php
+<?php // @phpcs:set WebimpressCodingStandard.Commenting.VariableComment allowedAnnotations[]
 
 class Foo {
     // @var int
@@ -53,4 +53,10 @@ new class () {
 
     /** @const float */
     public $const;
+
+    /**
+     * @var null|string
+     * @ORM\NotAllowed
+     */
+    public $annotationsNotAllowed;
 };

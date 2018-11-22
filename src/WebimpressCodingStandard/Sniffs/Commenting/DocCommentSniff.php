@@ -480,15 +480,22 @@ class DocCommentSniff implements Sniff
                             }
                             $replaces[$prev][$spaces] = $expectedSpaces;
 
-                            $error = 'Invalid indent before description; expected %d spaces, found %d';
-                            $data = [
-                                $expectedSpaces,
-                                $spaces,
-                            ];
-                            $fix = $phpcsFile->addFixableError($error, $next + 1, 'InvalidDescriptionIndent', $data);
+                            if ($spaces !== $expectedSpaces) {
+                                $error = 'Invalid indent before description; expected %d spaces, found %d';
+                                $data = [
+                                    $expectedSpaces,
+                                    $spaces,
+                                ];
+                                $fix = $phpcsFile->addFixableError(
+                                    $error,
+                                    $next + 1,
+                                    'InvalidDescriptionIndent',
+                                    $data
+                                );
 
-                            if ($fix) {
-                                $phpcsFile->fixer->replaceToken($next + 1, str_repeat(' ', $expectedSpaces));
+                                if ($fix) {
+                                    $phpcsFile->fixer->replaceToken($next + 1, str_repeat(' ', $expectedSpaces));
+                                }
                             }
                         } else {
                             $error = 'Additional description is not allowed after tag.'

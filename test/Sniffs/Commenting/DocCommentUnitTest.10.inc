@@ -18,6 +18,15 @@ namespace MyApp\MyNamespace;
  *         )
  *     }
  * )
+ * @ORM\Table(
+ *     name="foo",
+ *     indexes={
+ *         @ORM\Index(name="foo_idx", columns={"foo"})
+ *     },
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="unique_idx", columns={"unique"})
+ *     }
+ * )
  */
 class Foo
 {

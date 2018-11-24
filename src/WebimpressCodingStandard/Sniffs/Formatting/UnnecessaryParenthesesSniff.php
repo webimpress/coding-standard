@@ -15,6 +15,7 @@ use const T_BITWISE_AND;
 use const T_BITWISE_OR;
 use const T_BITWISE_XOR;
 use const T_BOOLEAN_NOT;
+use const T_BREAK;
 use const T_CLONE;
 use const T_CLOSE_CURLY_BRACKET;
 use const T_CLOSE_PARENTHESIS;
@@ -24,6 +25,7 @@ use const T_CLOSE_TAG;
 use const T_COALESCE;
 use const T_COLON;
 use const T_COMMA;
+use const T_CONTINUE;
 use const T_DOUBLE_ARROW;
 use const T_ECHO;
 use const T_EMPTY;
@@ -96,6 +98,8 @@ class UnnecessaryParenthesesSniff implements Sniff
      * @var int[]
      */
     private $spaceTokens = [
+        T_BREAK,
+        T_CONTINUE,
         T_CLONE,
         T_ECHO,
         T_RETURN,

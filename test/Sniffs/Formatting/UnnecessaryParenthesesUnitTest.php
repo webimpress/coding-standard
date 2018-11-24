@@ -52,6 +52,16 @@ class UnnecessaryParenthesesUnitTest extends AbstractTestCase
             150 => 1,
             151 => 1,
             152 => 1,
+            171 => 3,
+            172 => 3,
+            173 => 1,
+            174 => 1,
+            175 => 1,
+            176 => 1,
+            177 => 1,
+            178 => 1,
+            179 => 1,
+            180 => 1,
         ];
     }
 

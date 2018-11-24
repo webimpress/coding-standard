@@ -165,4 +165,21 @@ class UnnecessaryParentheses
         $r = $a === $b + $c;
         $r = $a === ($b + $c);
     }
+
+    public function method11()
+    {
+        for ($i=0; $i<10; $i++) {
+            for ($j=0; $j<10; $j++) {
+                if ($j+3) {
+                    break 2;
+                } elseif ($j*4) {
+                    continue 2;
+                } elseif ($i-5) {
+                    break 1;
+                } elseif ($j%6) {
+                    continue 1;
+                }
+            }
+        }
+    }
 }

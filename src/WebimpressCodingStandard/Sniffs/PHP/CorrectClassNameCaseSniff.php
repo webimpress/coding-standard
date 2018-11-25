@@ -282,7 +282,7 @@ class CorrectClassNameCaseSniff implements Sniff
             if ($fix) {
                 $phpcsFile->fixer->replaceToken(
                     $stackPtr + 2,
-                    preg_replace('/^' . preg_quote($types) . '/', $newTypes, $string)
+                    preg_replace('/^' . preg_quote($types, '/') . '/', $newTypes, $string)
                 );
             }
         }

@@ -148,7 +148,7 @@ class CorrectClassNameCaseSniff implements Sniff
             true
         );
 
-        $this->checkClass($phpcsFile, $start + 1, $prevToken + 1);//$prevToken - $start);
+        $this->checkClass($phpcsFile, $start + 1, $prevToken + 1);
     }
 
     /**

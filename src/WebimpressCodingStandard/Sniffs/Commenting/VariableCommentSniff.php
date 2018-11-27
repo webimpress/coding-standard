@@ -142,8 +142,6 @@ class VariableCommentSniff extends AbstractVariableSniff
                         return;
                     }
 
-                    $nestedTags[] = $tags[$key + 1];
-
                     next($tags);
                     ++$key;
                 }

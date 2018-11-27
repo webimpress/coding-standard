@@ -30,7 +30,10 @@ class PlacementSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if ($tokens[$stackPtr - 1]['code'] !== T_WHITESPACE) {
+        if ($tokens[$stackPtr - 1]['code'] !== T_WHITESPACE
+            && ($tokens[$stackPtr - 1]['code'] !== T_COMMENT
+                || $tokens[$stackPtr - 1]['line'] === $tokens[$stackPtr]['line'])
+        ) {
             $error = 'Expected at least one space before comment';
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'MissingSpaceBefore');
 

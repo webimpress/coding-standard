@@ -6,3 +6,9 @@ echo 'world'; // hey
 echo     '!'   ; /* 1 */ /* 2 */ /* 3 */ /* 4 */
 
 /* one */ /* space */ /* between */ // comments
+
+/* hey */
+$foo = 'bar';
+
+// comment1
+// comment2

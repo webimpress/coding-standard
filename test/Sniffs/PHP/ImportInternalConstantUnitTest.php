@@ -8,7 +8,7 @@ use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
 class ImportInternalConstantUnitTest extends AbstractTestCase
 {
-    public function getErrorList(string $testFile = '') : array
+    protected function getErrorList(string $testFile = '') : array
     {
         switch ($testFile) {
             case 'ImportInternalConstantUnitTest.1.inc':
@@ -65,7 +65,7 @@ class ImportInternalConstantUnitTest extends AbstractTestCase
         ];
     }
 
-    public function getWarningList(string $testFile = '') : array
+    protected function getWarningList(string $testFile = '') : array
     {
         return [];
     }

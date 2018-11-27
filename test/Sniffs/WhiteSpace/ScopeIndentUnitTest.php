@@ -8,7 +8,7 @@ use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
 class ScopeIndentUnitTest extends AbstractTestCase
 {
-    public function getErrorList(string $testFile = '') : array
+    protected function getErrorList(string $testFile = '') : array
     {
         if ($testFile === 'ScopeIndentUnitTest.1.inc') {
             return [
@@ -256,7 +256,7 @@ class ScopeIndentUnitTest extends AbstractTestCase
         ];
     }
 
-    public function getWarningList(string $testFile = '') : array
+    protected function getWarningList(string $testFile = '') : array
     {
         return [];
     }

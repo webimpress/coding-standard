@@ -8,7 +8,7 @@ use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
 class VariableCommentUnitTest extends AbstractTestCase
 {
-    public function getErrorList(string $testFile = '') : array
+    protected function getErrorList(string $testFile = '') : array
     {
         return [
             4 => 1,
@@ -23,7 +23,7 @@ class VariableCommentUnitTest extends AbstractTestCase
         ];
     }
 
-    public function getWarningList(string $testFile = '') : array
+    protected function getWarningList(string $testFile = '') : array
     {
         return [];
     }

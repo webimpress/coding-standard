@@ -8,7 +8,7 @@ use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
 class AlphabeticallySortedUsesUnitTest extends AbstractTestCase
 {
-    public function getErrorList(string $testFile = '') : array
+    protected function getErrorList(string $testFile = '') : array
     {
         switch ($testFile) {
             case 'AlphabeticallySortedUsesUnitTest.1.inc':
@@ -28,7 +28,7 @@ class AlphabeticallySortedUsesUnitTest extends AbstractTestCase
         ];
     }
 
-    public function getWarningList(string $testFile = '') : array
+    protected function getWarningList(string $testFile = '') : array
     {
         return [];
     }

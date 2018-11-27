@@ -8,7 +8,7 @@ use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
 class LineAfterUnitTest extends AbstractTestCase
 {
-    public function getErrorList(string $testFile = '') : array
+    protected function getErrorList(string $testFile = '') : array
     {
         switch ($testFile) {
             case 'LineAfterUnitTest.1.inc':
@@ -51,7 +51,7 @@ class LineAfterUnitTest extends AbstractTestCase
         ];
     }
 
-    public function getWarningList(string $testFile = '') : array
+    protected function getWarningList(string $testFile = '') : array
     {
         return [];
     }

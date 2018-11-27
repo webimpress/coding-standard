@@ -32,6 +32,8 @@ class MethodAnnotationSniff extends AbstractScopeSniff
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param int $stackPtr
      */
     protected function processTokenOutsideScope(File $phpcsFile, $stackPtr) : void

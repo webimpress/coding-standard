@@ -19,7 +19,7 @@ class ConstVisibilitySniff extends AbstractScopeSniff
         $scopeTokens = Tokens::$ooScopeTokens;
         $listen = [T_CONST];
 
-        parent::__construct($scopeTokens, $listen, true);
+        parent::__construct($scopeTokens, $listen);
     }
 
     /**
@@ -38,6 +38,8 @@ class ConstVisibilitySniff extends AbstractScopeSniff
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param int $stackPtr
      */
     protected function processTokenOutsideScope(File $phpcsFile, $stackPtr) : void

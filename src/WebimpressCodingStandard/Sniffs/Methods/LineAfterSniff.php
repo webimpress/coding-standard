@@ -65,9 +65,12 @@ class LineAfterSniff extends AbstractScopeSniff
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param int $stackPtr
      */
     protected function processTokenOutsideScope(File $phpcsFile, $stackPtr) : void
     {
+        // we process only function inside class/interface/trait
     }
 }

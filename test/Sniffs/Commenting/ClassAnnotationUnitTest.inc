@@ -41,6 +41,7 @@
  *         @ORM\UniqueConstraint(name="unique_idx", columns={"unique"})
  *     }
  * )
+ * @ORM\Table(row=@Row(count=3))
  */
-class Entity {
+abstract class Entity {
 }

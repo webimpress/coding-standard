@@ -1,7 +1,7 @@
 <?php
-// @phpcs:set WebimpressCodingStandard.Commenting.VariableComment allowedAnnotations[] ORM
+// @phpcs:set WebimpressCodingStandard.Commenting.PropertyAnnotation allowedAnnotations[] ORM
 
-class VariableCommentWithSpecifiedAnnotations
+class PropertyCommentWithSpecifiedAnnotations
 {
     /**
      * @var string

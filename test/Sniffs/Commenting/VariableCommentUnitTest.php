@@ -10,16 +10,6 @@ class VariableCommentUnitTest extends AbstractTestCase
 {
     public function getErrorList(string $testFile = '') : array
     {
-        switch ($testFile) {
-            case 'VariableCommentUnitTest.1.inc':
-                return [];
-            case 'VariableCommentUnitTest.2.inc':
-                return [
-                    9 => 1,
-                    17 => 1,
-                ];
-        }
-
         return [
             4 => 1,
             9 => 1,

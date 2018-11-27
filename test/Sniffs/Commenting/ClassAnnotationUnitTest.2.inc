@@ -1,4 +1,4 @@
-<?php // @phpcs:set WebimpressCodingStandard.Commenting.ClassAnnotation allowedAnnotations[] ORM,Params
+<?php // @phpcs:set WebimpressCodingStandard.Commenting.ClassAnnotation allowedAnnotations[] ORM,Config
 
 /**
  * @ORM\Table(name="table")
@@ -41,6 +41,7 @@
  *         @ORM\UniqueConstraint(name="unique_idx", columns={"unique"})
  *     }
  * )
+ * @ORM\Table(row=@Row(count=3))
  */
-class Entity {
+trait Entity {
 }

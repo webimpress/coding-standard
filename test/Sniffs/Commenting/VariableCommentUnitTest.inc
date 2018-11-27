@@ -1,4 +1,4 @@
-<?php // @phpcs:set WebimpressCodingStandard.Commenting.VariableComment allowedAnnotations[]
+<?php // @phpcs:set WebimpressCodingStandard.Commenting.VariableComment allowedTags[] @link
 
 class Foo {
     // @var int
@@ -56,7 +56,14 @@ new class () {
 
     /**
      * @var null|string
-     * @ORM\NotAllowed
+     * @see Foo::$array
+     * @link https://www.google.com/
+     * @Skip This could be annotation, and it should be skipped here.
      */
     public $annotationsNotAllowed;
+
+    public function __construct(string $variable = '')
+    {
+        $localVariable = "Here is {$variable} in string.";
+    }
 };

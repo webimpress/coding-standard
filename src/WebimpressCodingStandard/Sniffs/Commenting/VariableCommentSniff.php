@@ -9,10 +9,8 @@ use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 
 use function array_filter;
 use function current;
-use function in_array;
 use function key;
 use function next;
-use function preg_match;
 use function strtolower;
 use function substr;
 
@@ -33,20 +31,14 @@ class VariableCommentSniff extends AbstractVariableSniff
     /**
      * @var string[]
      */
+    public $allowedTags = [];
+
+    /**
+     * @var string[]
+     */
     public $nestedTags = [
         '@var',
     ];
-
-    /**
-     * Allowed annotations in properties doc-block.
-     * When it is set to:
-     *     - `null` - any annotation is allowed,
-     *     - `[]` (empty array) - all annotations are not allowed,
-     *     - `['ORM']` (specified values) - only specified annotations are allowed.
-     *
-     * @var null|string[]
-     */
-    public $allowedAnnotations = [];
 
     /**
      * @param int $stackPtr
@@ -133,12 +125,10 @@ class VariableCommentSniff extends AbstractVariableSniff
 
                 while (isset($tags[$key + 1]) && $tags[$key + 1] < $i) {
                     $tagName = strtolower($tokens[$tags[$key + 1]]['content']);
-                    if (! $this->isAllowedAnnotation($tokens[$tags[$key + 1]]['content'])
-                        && ! array_filter($this->nestedTags, function ($v) use ($tagName) {
-                            return strtolower($v) === $tagName;
-                        })
-                    ) {
-                        $error = 'Tag %s cannot be nested.';
+                    if (! array_filter($this->nestedTags, function ($v) use ($tagName) {
+                        return strtolower($v) === $tagName;
+                    })) {
+                        $error = 'Tag %s cannot be nested';
                         $data = [
                             $tokens[$tags[$key + 1]]['content'],
                         ];
@@ -153,14 +143,19 @@ class VariableCommentSniff extends AbstractVariableSniff
                 }
             }
 
-            if (strtolower($tokens[$tag]['content']) === '@var') {
+            $tagName = strtolower($tokens[$tag]['content']);
+            if ($tagName === '@var') {
                 if ($foundVar !== null) {
                     $error = 'Only one @var tag is allowed in a member variable comment';
                     $phpcsFile->addError($error, $tag, 'DuplicateVar');
                 } else {
                     $foundVar = $tag;
                 }
-            } elseif (! $this->isAllowedAnnotation($tokens[$tag]['content'])) {
+            } elseif ($tagName[1] === $tokens[$tag]['content'][1]
+                && ! array_filter($this->allowedTags, function ($v) use ($tagName) {
+                    return strtolower($v) === $tagName;
+                })
+            ) {
                 $error = '%s tag is not allowed in member variable comment';
                 $data = [$tokens[$tag]['content']];
                 $phpcsFile->addError($error, $tag, 'TagNotAllowed', $data);
@@ -190,12 +185,5 @@ class VariableCommentSniff extends AbstractVariableSniff
     protected function processVariableInString(File $phpcsFile, $stackPtr) : void
     {
         // Sniff process only class member vars.
-    }
-
-    private function isAllowedAnnotation(string $tag) : bool
-    {
-        return preg_match('/@([A-Z][a-zA-Z0-9]*)\b/', $tag, $annotation)
-            && ($this->allowedAnnotations === null
-                || in_array($annotation[1], $this->allowedAnnotations, true));
     }
 }

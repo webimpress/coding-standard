@@ -59,6 +59,10 @@ new class () {
      * @see Foo::$array
      * @link https://www.google.com/
      * @Skip This could be annotation, and it should be skipped here.
+     *
+     * @ORM\Skip({
+     *     @ORM\Skip(name="skip", value="skip this nested annotation")
+     * })
      */
     public $annotationsNotAllowed;
 

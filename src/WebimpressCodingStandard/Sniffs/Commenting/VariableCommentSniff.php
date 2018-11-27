@@ -8,6 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 
 use function array_filter;
+use function array_merge;
 use function current;
 use function key;
 use function next;
@@ -97,6 +98,11 @@ class VariableCommentSniff extends AbstractVariableSniff
                 true
             );
 
+            $tagName = strtolower($tokens[$tag]['content']);
+            $isValidTag = array_filter(array_merge($this->allowedTags, ['@var']), function ($v) use ($tagName) {
+                return strtolower($v) === $tagName;
+            });
+
             if (substr($tokens[$last]['content'], -1) === '{') {
                 $dep = 1;
                 $i = $last;
@@ -125,7 +131,7 @@ class VariableCommentSniff extends AbstractVariableSniff
 
                 while (isset($tags[$key + 1]) && $tags[$key + 1] < $i) {
                     $tagName = strtolower($tokens[$tags[$key + 1]]['content']);
-                    if (! array_filter($this->nestedTags, function ($v) use ($tagName) {
+                    if ($isValidTag && ! array_filter($this->nestedTags, function ($v) use ($tagName) {
                         return strtolower($v) === $tagName;
                     })) {
                         $error = 'Tag %s cannot be nested';
@@ -151,11 +157,7 @@ class VariableCommentSniff extends AbstractVariableSniff
                 } else {
                     $foundVar = $tag;
                 }
-            } elseif ($tagName[1] === $tokens[$tag]['content'][1]
-                && ! array_filter($this->allowedTags, function ($v) use ($tagName) {
-                    return strtolower($v) === $tagName;
-                })
-            ) {
+            } elseif (! $isValidTag && $tagName[1] === $tokens[$tag]['content'][1]) {
                 $error = '%s tag is not allowed in member variable comment';
                 $data = [$tokens[$tag]['content']];
                 $phpcsFile->addError($error, $tag, 'TagNotAllowed', $data);

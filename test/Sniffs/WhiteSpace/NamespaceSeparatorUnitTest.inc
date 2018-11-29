@@ -1,0 +1,14 @@
+<?php
+
+namespace \ WhiteSpace \ Name  \  Space;
+
+function noSpaces(My \ Name $name) {}
+
+function inNamespace(
+    \  My\ Name $name,
+    \No\ Spaces $here,
+    \Multi
+    \Line\
+    Spaces $param
+) {
+}

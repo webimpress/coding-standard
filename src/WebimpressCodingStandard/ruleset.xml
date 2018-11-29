@@ -17,6 +17,7 @@
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
         <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
         <exclude name="PSR2.Methods.FunctionCallSignature.OpeningIndent"/>
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.Indent"/>
         <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.Indent"/>
     </rule>
 

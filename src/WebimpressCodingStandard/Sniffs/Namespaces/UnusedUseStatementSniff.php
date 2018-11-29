@@ -196,8 +196,6 @@ class UnusedUseStatementSniff implements Sniff
             }
 
             $phpcsFile->fixer->endChangeset();
-
-            $phpcsFile->recordMetric($stackPtr, __CLASS__, $stackPtr);
         }
     }
 

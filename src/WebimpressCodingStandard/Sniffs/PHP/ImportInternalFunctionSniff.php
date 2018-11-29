@@ -8,7 +8,6 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use WebimpressCodingStandard\CodingStandard;
-use WebimpressCodingStandard\Sniffs\Namespaces\UnusedUseStatementSniff;
 
 use function array_flip;
 use function get_defined_functions;
@@ -294,11 +293,6 @@ class ImportInternalFunctionSniff implements Sniff
         $use = $first;
         while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
             if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
-                continue;
-            }
-
-            // Check if the statement is not planned to be removed.
-            if (isset($phpcsFile->getMetrics()[UnusedUseStatementSniff::class]['values'][$use])) {
                 continue;
             }
 

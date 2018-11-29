@@ -6,7 +6,6 @@ namespace WebimpressCodingStandard\Helper;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Sniffs\Namespaces\UnusedUseStatementSniff;
 
 use function in_array;
 use function strrchr;
@@ -62,10 +61,6 @@ trait NamespacesTrait
         $use = $first;
         while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
             if (! empty($tokens[$use]['conditions'])) {
-                continue;
-            }
-
-            if (isset($phpcsFile->getMetrics()[UnusedUseStatementSniff::class]['values'][$use])) {
                 continue;
             }
 

@@ -8,7 +8,6 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use WebimpressCodingStandard\CodingStandard;
-use WebimpressCodingStandard\Sniffs\Namespaces\UnusedUseStatementSniff;
 
 use function array_walk_recursive;
 use function get_defined_constants;
@@ -306,10 +305,6 @@ class ImportInternalConstantSniff implements Sniff
         $use = $first;
         while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
             if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
-                continue;
-            }
-
-            if (isset($phpcsFile->getMetrics()[UnusedUseStatementSniff::class]['values'][$use])) {
                 continue;
             }
 

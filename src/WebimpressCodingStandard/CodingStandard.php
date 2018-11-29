@@ -8,9 +8,6 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Common;
 use PHP_CodeSniffer\Util\Tokens;
 
-use function preg_match;
-use function sprintf;
-use function strpos;
 use function strtolower;
 
 use const T_ANON_CLASS;
@@ -38,40 +35,6 @@ class CodingStandard
             case 'int':
             case 'integer':
                 return 'int';
-            case 'integer[]':
-                return 'int[]';
-            case 'boolean[]':
-                return 'bool[]';
-        }
-
-        if (strpos($lowerVarType, 'array(') !== false) {
-            // Valid array declaration:
-            // array, array(type), array(type1 => type2).
-            $matches = [];
-            $pattern = '/^array\(\s*([^\s^=^>]*)(\s*=>\s*(.*))?\s*\)/i';
-            if (preg_match($pattern, $varType, $matches) !== 0) {
-                $type1 = '';
-                if (isset($matches[1])) {
-                    $type1 = $matches[1];
-                }
-
-                $type2 = '';
-                if (isset($matches[3])) {
-                    $type2 = $matches[3];
-                }
-
-                $type1 = self::suggestType($type1);
-                $type2 = self::suggestType($type2);
-                if ($type2 !== '') {
-                    $type2 = ' => ' . $type2;
-                }
-
-                if ($type1 || $type2) {
-                    return sprintf('array(%s%s)', $type1, $type2);
-                }
-            }
-
-            return 'array';
         }
 
         return Common::suggestType($varType);

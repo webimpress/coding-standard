@@ -16,7 +16,11 @@ class ReferenceUnitTest extends AbstractTestCase
             6 => 2,
             7 => 1,
             8 => 1,
-            13 => 1,
+            13 => 3,
+            17 => 1,
+            18 => 1,
+            19 => 1,
+            20 => 1,
         ];
     }
 

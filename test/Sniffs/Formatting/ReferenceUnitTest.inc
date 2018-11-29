@@ -10,6 +10,11 @@ function (& $var) {
     return [&$j];
 }
 
-function ($x, & $y) {
-    $z = $x & $y;
+function ($x, & $y, string & $z, int&$v) {
+    return $z & $v === $x & $y;
 }
+
+$a = &new \DateTime();
+$b = & new \DateTime();
+$c =& new \DateTime();
+$d =&new \DateTime();

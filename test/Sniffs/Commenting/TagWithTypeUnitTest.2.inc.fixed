@@ -371,4 +371,14 @@ interface MyInterface extends MyOne, MyTwo
      * @return MyTwo
      */
     public function method3($myTwo);
+
+    /**
+     * @return null|true|DateTime
+     */
+    public function method4();
+
+    /**
+     * @return false|DateTime
+     */
+    public function method5();
 }

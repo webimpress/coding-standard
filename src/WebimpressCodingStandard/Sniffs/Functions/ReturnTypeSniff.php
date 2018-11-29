@@ -638,8 +638,7 @@ class ReturnTypeSniff implements Sniff
                         }
 
                         $after = $phpcsFile->findNext(
-                            Tokens::$emptyTokens
-                                + [T_NS_SEPARATOR => T_NS_SEPARATOR, T_STRING => T_STRING],
+                            Tokens::$emptyTokens + [T_NS_SEPARATOR => T_NS_SEPARATOR, T_STRING => T_STRING],
                             $next + 1,
                             null,
                             true

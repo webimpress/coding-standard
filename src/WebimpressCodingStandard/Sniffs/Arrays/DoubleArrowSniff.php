@@ -81,12 +81,10 @@ class DoubleArrowSniff extends AbstractArraySniff
                 if ($fix) {
                     $phpcsFile->fixer->beginChangeset();
                     $phpcsFile->fixer->replaceToken($data['arrow'], '');
-                    for ($i = $data['arrow'] - 1; $i > $data['index_end']; --$i) {
-                        if ($tokens[$i]['code'] !== T_WHITESPACE) {
-                            break;
-                        }
-
-                        $phpcsFile->fixer->replaceToken($i, '');
+                    $token = $data['arrow'] - 1;
+                    while ($tokens[$token]['code'] === T_WHITESPACE) {
+                        $phpcsFile->fixer->replaceToken($token, '');
+                        --$token;
                     }
                     $phpcsFile->fixer->addContentBefore($data['value_start'], '=> ');
                     $phpcsFile->fixer->endChangeset();

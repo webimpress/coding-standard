@@ -24,6 +24,9 @@ use const T_PUBLIC;
 use const T_STATIC;
 use const T_WHITESPACE;
 
+/**
+ * @internal
+ */
 trait AnnotationsTrait
 {
     /**

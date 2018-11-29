@@ -61,6 +61,8 @@ class TagWithTypeUnitTest extends AbstractTestCase
                     282 => 1,
                     301 => 1,
                     309 => 1,
+                    324 => 1,
+                    325 => 1,
                 ];
             case 'TagWithTypeUnitTest.2.inc':
                 return [

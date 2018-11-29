@@ -319,4 +319,10 @@ interface MyInterface extends MyOne, MyTwo
      * @param MyTwo $myTwo
      */
     public function method3($myTwo);
+
+    /**
+     * @param integer[] $imts
+     * @param boolean[] $bools
+     */
+    public function method4(array $imts, array $bools);
 }

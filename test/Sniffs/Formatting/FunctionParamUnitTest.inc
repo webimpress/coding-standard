@@ -12,6 +12,8 @@ $callback = function (
 
 function hello(string  $world, int  &$x = null) {}
 
-function test(int$var,$bar){}
+function test(int$var,$bar,bool...$bools){}
+
+function variableArgs(int   ...$ints) {}
 
 function broken;

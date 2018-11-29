@@ -10,6 +10,7 @@ use PHP_CodeSniffer\Util\Tokens;
 
 use const T_BITWISE_AND;
 use const T_CLOSURE;
+use const T_ELLIPSIS;
 use const T_FUNCTION;
 use const T_WHITESPACE;
 
@@ -43,7 +44,7 @@ class FunctionParamSniff implements Sniff
             }
 
             $last = $phpcsFile->findPrevious(
-                Tokens::$emptyTokens + [T_BITWISE_AND => T_BITWISE_AND],
+                Tokens::$emptyTokens + [T_BITWISE_AND => T_BITWISE_AND, T_ELLIPSIS => T_ELLIPSIS],
                 $param['token'] - 1,
                 null,
                 true

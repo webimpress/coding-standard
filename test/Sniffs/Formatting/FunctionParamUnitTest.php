@@ -17,7 +17,8 @@ class FunctionParamUnitTest extends AbstractTestCase
             7 => 1,
             8 => 1,
             13 => 2,
-            15 => 1,
+            15 => 2,
+            17 => 1,
         ];
     }
 

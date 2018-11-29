@@ -363,8 +363,6 @@ class DocCommentSniff implements Sniff
     /**
      * Checks if there is one space after star in multiline doc comment.
      * More than one space is allowed, unless the line contains tag.
-     *
-     * @todo: needs to check with doctrine annotations
      */
     private function checkSpacesAfterStar(File $phpcsFile, int $commentStart, int $commentEnd) : void
     {

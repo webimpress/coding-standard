@@ -7,6 +7,7 @@ namespace WebimpressCodingStandard\Helper;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
 
+use function array_pop;
 use function in_array;
 use function strrchr;
 use function strtolower;
@@ -60,7 +61,7 @@ trait NamespacesTrait
 
         $use = $first;
         while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
-            if (! empty($tokens[$use]['conditions'])) {
+            if (! $this->isInNamespace($tokens[$use])) {
                 continue;
             }
 
@@ -96,5 +97,20 @@ trait NamespacesTrait
         }
 
         return $imports;
+    }
+
+    private function isInNamespace(array $token) : bool
+    {
+        if (empty($token['conditions'])) {
+            return true;
+        }
+
+        if (array_pop($token['conditions']) === T_NAMESPACE
+            && ! $token['conditions']
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

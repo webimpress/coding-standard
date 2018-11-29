@@ -201,7 +201,7 @@ class CorrectClassNameCaseSniff implements Sniff
         );
 
         // Global use statements.
-        if (empty($tokens[$stackPtr]['conditions'])) {
+        if ($this->isInNamespace($tokens[$stackPtr])) {
             $this->checkClass($phpcsFile, $nextToken, $end, true);
             return;
         }
@@ -370,7 +370,7 @@ class CorrectClassNameCaseSniff implements Sniff
         }
 
         if (! $isGlobalUse) {
-            $imports = $this->getGlobalUses($phpcsFile);
+            $imports = $this->getGlobalUses($phpcsFile, $start);
 
             // Check if class is imported.
             if (isset($imports[strtolower($class)])) {

@@ -1,0 +1,30 @@
+<?php
+
+namespace A {
+    use ArrayObject as AO;
+
+    new \DateTime;
+
+    new AO;
+    new AO;
+    new \ArrayObject();
+
+    \DateTime::createFromFormat();
+}
+
+namespace B {
+    use ArrayObject;
+    use DateTime as DT;
+
+    use const T_NAMESPACE;
+    use function min;
+
+    new DT;
+    new DT;
+    new \DateTime();
+
+    DT::createFromFormat();
+
+    new ArrayObject();
+    min(T_NAMESPACE, 10);
+}

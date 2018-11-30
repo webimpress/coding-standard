@@ -253,6 +253,10 @@ class ScopeIndentUnitTest extends AbstractTestCase
             531 => 1,
             532 => 1,
             533 => 1,
+            561 => 1,
+            562 => 1,
+            563 => 1,
+            564 => 1,
         ];
     }
 

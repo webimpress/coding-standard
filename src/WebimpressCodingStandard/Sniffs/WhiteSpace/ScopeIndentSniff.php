@@ -638,7 +638,7 @@ class ScopeIndentSniff implements Sniff
                 } elseif ($tokens[$i]['code'] !== T_WHITESPACE
                     && $expectedIndent
                     && ($tokens[$i]['code'] !== T_COMMENT
-                        || preg_match('/^\s*(\/\/|#)/', $tokens[$i]['content']))
+                        || preg_match('/^\s*(\/\/|#|\/\*)/', $tokens[$i]['content']))
                 ) {
                     $error = 'Missing indent. Expected %d spaces';
                     $data = [$expectedIndent];

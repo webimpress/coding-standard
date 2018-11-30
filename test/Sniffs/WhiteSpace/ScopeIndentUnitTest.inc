@@ -556,3 +556,10 @@ $ghi = [
         ->c()
         ->d(),
 ];
+
+$x = function () {
+// comment
+# comment
+/* comment */
+return 1;
+};

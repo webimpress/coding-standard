@@ -163,12 +163,12 @@ class TagWithTypeSniff implements Sniff
         if (strtolower($this->type) === 'void') {
             if ($this->description) {
                 $error = 'Description for return "void" type is not allowed.'
-                    . ' Please move it to method description.';
+                    . ' Please move it to method description';
                 $phpcsFile->addError($error, $tagPtr, 'ReturnVoidDescription');
                 return false;
             }
 
-            $error = 'Return tag with "void" type is redundant.';
+            $error = 'Return tag with "void" type is redundant';
             $fix = $phpcsFile->addFixableError($error, $tagPtr, 'ReturnVoid');
 
             if ($fix) {
@@ -178,8 +178,8 @@ class TagWithTypeSniff implements Sniff
             return false;
         }
 
-        if (isset($this->description[0]) && $this->description[0] === '$') {
-            $error = 'Return tag description cannot start from variable name.';
+        if (isset($this->description[0]) && strpos($this->description, '$') === 0) {
+            $error = 'Return tag description cannot start from variable name';
             $phpcsFile->addError($error, $tagPtr + 2, 'ReturnVariable');
         }
 
@@ -325,14 +325,20 @@ class TagWithTypeSniff implements Sniff
             if ($count > 1
                 && ($lower === 'mixed' || strpos($lower, 'mixed[') === 0)
             ) {
-                $error = 'Type %s cannot be mixed with other types.';
-                $data = [
-                    $type,
-                ];
-                $phpcsFile->addError($error, $tagPtr + 2, 'TypeMixed', $data);
+                if ($count > 2
+                    || ! array_filter($this->types, function ($type) {
+                        return strtolower($type) === 'null';
+                    })
+                ) {
+                    $error = 'Type "%s" cannot be mixed with other types';
+                    $data = [
+                        $type,
+                    ];
+                    $phpcsFile->addError($error, $tagPtr + 2, 'TypeMixed', $data);
 
-                $hasInvalidType = true;
-                continue;
+                    $hasInvalidType = true;
+                    continue;
+                }
             }
 
             $clearType = strtr($lower, ['[' => '', ']' => '']);
@@ -350,11 +356,16 @@ class TagWithTypeSniff implements Sniff
                 }
             }
 
-            // todo: what with void[] ?
             if ($clearType === 'void') {
-                // If void is mixed up with other return types.
-                $error = 'Type "void" is mixed with other types.';
-                $phpcsFile->addError($error, $tagPtr + 2, 'VoidMixed');
+                if ($count > 1) {
+                    $error = 'Type "void" cannot be mixed with other types';
+                    $code = 'VoidMixed';
+                } else {
+                    $error = 'Type "void[]" is disallowed';
+                    $code = 'VoidArray';
+                }
+
+                $phpcsFile->addError($error, $tagPtr + 2, $code);
 
                 $hasInvalidType = true;
                 continue;
@@ -441,7 +452,7 @@ class TagWithTypeSniff implements Sniff
                 return;
             }
         } elseif ($hasTrue && $hasFalse) {
-            $error = 'Return tag contains "true" and "false". Please use "bool" instead.';
+            $error = 'Return tag contains "true" and "false". Please use "bool" instead';
             $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'TrueAndFalse');
 
             if ($fix) {
@@ -455,8 +466,6 @@ class TagWithTypeSniff implements Sniff
 
             return;
         }
-
-        // todo: here was previously uniqueness check
 
         // Check if order of types is as expected: first null, then simple types, and then complex.
         usort($this->types, function ($a, $b) {

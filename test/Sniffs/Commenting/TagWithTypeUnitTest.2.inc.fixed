@@ -381,4 +381,24 @@ interface MyInterface extends MyOne, MyTwo
      * @return false|DateTime
      */
     public function method5();
+
+    /**
+     * @return int[]
+     */
+    public function method6();
+
+    /**
+     * @return bool[]
+     */
+    public function method7();
+
+    /**
+     * @return null|mixed
+     */
+    public function method8();
+
+    /**
+     * @return null|mixed[]
+     */
+    public function method9();
 }

@@ -321,8 +321,14 @@ interface MyInterface extends MyOne, MyTwo
     public function method3($myTwo);
 
     /**
-     * @param int[] $imts
+     * @param int[] $ints
      * @param bool[] $bools
      */
-    public function method4(array $imts, array $bools);
+    public function method4(array $ints, array $bools);
+
+    /**
+     * @param null|mixed $mixed
+     * @param null|mixed[] $mixedArray
+     */
+    public function method5($mixed, array $mixedArray = null);
 }

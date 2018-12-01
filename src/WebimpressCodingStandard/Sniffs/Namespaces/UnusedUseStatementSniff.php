@@ -181,7 +181,7 @@ class UnusedUseStatementSniff implements Sniff
 
         $warning = 'Unused use statement "%s"';
         $data = [$className];
-        $fix = $phpcsFile->addFixableWarning($warning, $stackPtr, 'UnusedUse', $data);
+        $fix = $phpcsFile->addFixableError($warning, $stackPtr, 'UnusedUse', $data);
 
         if ($fix) {
             // Remove the whole use statement line.

@@ -10,11 +10,6 @@ class UnusedUseStatementUnitTest extends AbstractTestCase
 {
     protected function getErrorList(string $testFile = '') : array
     {
-        return [];
-    }
-
-    protected function getWarningList(string $testFile = '') : array
-    {
         switch ($testFile) {
             case 'UnusedUseStatementUnitTest.1.inc':
                 return [
@@ -49,5 +44,10 @@ class UnusedUseStatementUnitTest extends AbstractTestCase
             38 => 1,
             39 => 1,
         ];
+    }
+
+    protected function getWarningList(string $testFile = '') : array
+    {
+        return [];
     }
 }

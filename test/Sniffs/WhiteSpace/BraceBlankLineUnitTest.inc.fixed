@@ -1,13 +1,11 @@
 <?php
 
 function myFunction ($x, $y) {
-
     $noBlankLine = 1;
 }
 
 class MyClass
 {
-
     use \MyTrait;
 }
 
@@ -15,9 +13,7 @@ abstract class MyClassB {}
 
 abstract class MyClassC
 {
-
     public function noBlankLine() {
-
         $noBlankLine = 1;
     }
 
@@ -28,36 +24,64 @@ interface MyInterface;
 
 interface MyInterfaceB
 {
-
     public function method();
 }
 
 trait MyTrait
 {
-
     use AnotherTrait;
 }
 
 trait MyTraitB
 {
-
     private function noBlankLine($x)
     {
-
         $noBlankLine = function () use ($x) {
-
             $noBlankLine = 1;
         };
     }
 }
 
 $closure = function () {
-
     $noBlankLine = 1;
 };
 
 new class extends \Foo implements \Countable ()
 {
-
     public $property = null;
 }
+
+if ($x) {
+    while (true) {
+        foreach ($arr as $elem) {
+            do {
+                $stop = 1;
+            } while (true);
+        }
+    }
+}
+
+for (;true;) {
+    if (1) {
+        $a = 1;
+    } elseif (2) {
+        $y = 1;
+    } else {
+        $x = 1;
+    }
+}
+
+switch (true) {
+    case 1:
+        break;
+}
+
+try {
+    $x = 1;
+} catch (\Exception $e) {
+    $y = 1;
+} finally {
+    $z = 1;
+}
+
+$a{1};

@@ -19,6 +19,11 @@
         <exclude name="PSR2.Methods.FunctionCallSignature.OpeningIndent"/>
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.Indent"/>
         <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.Indent"/>
+        <!-- Replaced by WebimpressCodingStandard.Whitespace.BraceBlankLine -->
+        <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+        <exclude name="PSR2.Methods.FunctionClosingBrace.SpacingBeforeClose"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
     </rule>
 
     <!-- Generic Rules -->

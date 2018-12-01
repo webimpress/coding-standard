@@ -239,10 +239,10 @@ class ParamSniff implements Sniff
     private function checkParam(
         File $phpcsFile,
         array $param,
-        int $tagPtr = null,
-        string $name = null,
-        string $typeStr = null,
-        string $description = null
+        ?int $tagPtr = null,
+        ?string $name = null,
+        ?string $typeStr = null,
+        ?string $description = null
     ) : void {
         $typeHint = $param['type_hint'];
 

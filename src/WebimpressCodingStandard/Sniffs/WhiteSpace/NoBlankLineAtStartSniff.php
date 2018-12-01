@@ -7,6 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\WhiteSpace;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
+use const T_ANON_CLASS;
 use const T_CLASS;
 use const T_CLOSURE;
 use const T_FUNCTION;
@@ -22,6 +23,7 @@ class NoBlankLineAtStartSniff implements Sniff
     public function register() : array
     {
         return [
+            T_ANON_CLASS,
             T_CLASS,
             T_CLOSURE,
             T_FUNCTION,

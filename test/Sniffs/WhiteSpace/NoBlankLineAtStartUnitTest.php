@@ -21,6 +21,7 @@ class NoBlankLineAtStartUnitTest extends AbstractTestCase
             45 => 1,
             47 => 1,
             54 => 1,
+            60 => 1,
         ];
     }
 

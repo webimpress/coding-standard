@@ -55,3 +55,9 @@ $closure = function () {
 
     $noBlankLine = 1;
 };
+
+new class extends \Foo implements \Countable ()
+{
+
+    public $property = null;
+}

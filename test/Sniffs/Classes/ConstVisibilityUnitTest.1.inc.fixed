@@ -1,9 +1,9 @@
-<?php // @phpcs:set WebimpressCodingStandard.Classes.ConstVisibility fixable false
+<?php // @phpcs:set WebimpressCodingStandard.Classes.ConstVisibility fixable true
 namespace MyApp\MyNamespace;
 
 class MyClass
 {
-    const C0 = 0;
+    public const C0 = 0;
 
     public const C1 = 1;
     protected const C2 = 2;
@@ -12,7 +12,7 @@ class MyClass
 
 interface MyInterface
 {
-    const C0 = 0;
+    public const C0 = 0;
 
     public const C1 = 1;
     protected const C2 = 2;
@@ -20,7 +20,7 @@ interface MyInterface
 }
 
 new class () {
-    const C0 = 0;
+    public const C0 = 0;
 
     public const C1 = 1;
     protected const C2 = 2;

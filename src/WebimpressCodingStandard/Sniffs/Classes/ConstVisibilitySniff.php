@@ -14,12 +14,14 @@ use const T_CONST;
 
 class ConstVisibilitySniff extends AbstractScopeSniff
 {
+    /**
+     * @var bool
+     */
+    public $fixable = false;
+
     public function __construct()
     {
-        $scopeTokens = Tokens::$ooScopeTokens;
-        $listen = [T_CONST];
-
-        parent::__construct($scopeTokens, $listen);
+        parent::__construct(Tokens::$ooScopeTokens, [T_CONST]);
     }
 
     /**
@@ -33,7 +35,16 @@ class ConstVisibilitySniff extends AbstractScopeSniff
 
         if (! in_array($tokens[$prev]['code'], Tokens::$scopeModifiers, true)) {
             $error = 'Missing constant visibility';
-            $phpcsFile->addError($error, $stackPtr, 'MissingVisibility');
+
+            if ($this->fixable) {
+                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'MissingVisibility');
+
+                if ($fix) {
+                    $phpcsFile->fixer->addContentBefore($stackPtr, 'public ');
+                }
+            } else {
+                $phpcsFile->addError($error, $stackPtr, 'MissingVisibility');
+            }
         }
     }
 

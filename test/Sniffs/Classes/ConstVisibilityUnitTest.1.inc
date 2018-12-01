@@ -1,4 +1,4 @@
-<?php // @phpcs:set WebimpressCodingStandard.Classes.ConstVisibility fixable false
+<?php // @phpcs:set WebimpressCodingStandard.Classes.ConstVisibility fixable true
 namespace MyApp\MyNamespace;
 
 class MyClass

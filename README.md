@@ -28,11 +28,17 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="./vendor/squizlabs/php_codesniffer/phpcs.xsd">
        <rule ref="./vendor/webimpress/coding-standard/ruleset.xml"/>
+
+       <!-- Paths to check -->
+       <file>config</file>
+       <file>src</file>
+       <file>test</file>
    </ruleset>
    ```
 
-You can add or exclude some locations in that file.
-For a reference please see: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
+As shown above you must define locations or files you want to be
+checked and fixed by code sniffer. For a reference please see:
+https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset
 
 
 ## Usage

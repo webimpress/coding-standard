@@ -52,8 +52,10 @@ class BraceBlankLineSniff implements Sniff
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
                 $i = $prev + 1;
-                while ($tokens[$i]['line'] + 1 < $tokens[$closer]['line']) {
-                    $phpcsFile->fixer->replaceToken($i, '');
+                while ($tokens[$i]['line'] < $tokens[$closer]['line']) {
+                    if ($tokens[$i]['line'] > $tokens[$prev]['line']) {
+                        $phpcsFile->fixer->replaceToken($i, '');
+                    }
                     ++$i;
                 }
                 $phpcsFile->fixer->endChangeset();

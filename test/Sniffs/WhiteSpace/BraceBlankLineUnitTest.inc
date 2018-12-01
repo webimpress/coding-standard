@@ -127,3 +127,9 @@ try {
 }
 
 $a{1};
+
+if (true) {
+
+    // comment here
+
+}

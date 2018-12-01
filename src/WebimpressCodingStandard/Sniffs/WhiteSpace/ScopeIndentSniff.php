@@ -187,15 +187,6 @@ class ScopeIndentSniff implements Sniff
         $phpIndents = [];
         $previousIndent = null;
 
-        // calculate indent of php open tag
-        $html = $phpcsFile->findFirstOnLine(T_INLINE_HTML, $stackPtr);
-        $trimmed = ltrim($tokens[$html]['content']);
-        if ($html === false || $trimmed === '') {
-            $extraIndent = $tokens[$stackPtr]['column'] - 1;
-        } else {
-            $extraIndent = strlen($tokens[$html]['content']) - strlen($trimmed);
-        }
-
         for ($i = $stackPtr + 1; $i < $phpcsFile->numTokens; ++$i) {
             if (in_array($tokens[$i]['code'], Tokens::$booleanOperators, true)) {
                 $next = $phpcsFile->findNext(
@@ -206,7 +197,7 @@ class ScopeIndentSniff implements Sniff
                 );
 
                 if ($tokens[$next]['line'] > $tokens[$i]['line']) {
-                    $error = 'Boolean operator found at the end of the line.';
+                    $error = 'Boolean operator found at the end of the line';
                     $fix = $phpcsFile->addFixableError($error, $i, 'BooleanOperatorAtTheEnd');
 
                     if ($fix) {
@@ -337,7 +328,7 @@ class ScopeIndentSniff implements Sniff
                     true
                 );
                 if ($scopeCondition['line'] === $tokens[$prev]['line']) {
-                    $error = 'Closing parenthesis must be in the same line as control structure.';
+                    $error = 'Closing parenthesis must be in the same line as control structure';
                     $fix = $phpcsFile->addFixableError($error, $parenthesis, 'UnnecessaryLineBreak');
 
                     if ($fix) {
@@ -382,7 +373,7 @@ class ScopeIndentSniff implements Sniff
                         $tokens[$i]['parenthesis_closer']
                     )
                 ) {
-                    $error = 'Closing parenthesis must be in next line';
+                    $error = 'Closing parenthesis must be in the next line';
                     $fix = $phpcsFile->addFixableError($error, $i, 'ClosingParenthesis');
 
                     if ($fix) {
@@ -404,7 +395,7 @@ class ScopeIndentSniff implements Sniff
                         )
                     ) {
                         if ($tokens[$prev]['line'] <= $tokens[$i]['line'] - 1) {
-                            $error = 'Invalid closing parenthesis position.';
+                            $error = 'Invalid closing parenthesis position';
                             $fix = $phpcsFile->addFixableError($error, $prev, 'InvalidClosingParenthesisPosition');
 
                             if ($fix) {
@@ -417,7 +408,7 @@ class ScopeIndentSniff implements Sniff
                                 $phpcsFile->fixer->endChangeset();
                             }
                         } elseif ($tokens[$prev + 1]['code'] === T_WHITESPACE) {
-                            $error = 'Unexpected whitespace before closing parenthesis.';
+                            $error = 'Unexpected whitespace before closing parenthesis';
                             $fix = $phpcsFile->addFixableError(
                                 $error,
                                 $prev + 1,
@@ -532,7 +523,7 @@ class ScopeIndentSniff implements Sniff
                     // if it is not a function call
                     // and not a control structure
                     if (! in_array($tokens[$owner]['code'], $this->functionToken, true)) {
-                        $error = 'Closing parenthesis must be in previous line.';
+                        $error = 'Closing parenthesis must be in the previous line';
                         $fix = $phpcsFile->addFixableError($error, $next, 'ClosingParenthesis');
 
                         if ($fix) {

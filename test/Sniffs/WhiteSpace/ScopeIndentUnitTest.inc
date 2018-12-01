@@ -563,3 +563,8 @@ $x = function () {
 /* comment */
 return 1;
 };
+
+if ($a &&
+    $b
+) {
+}

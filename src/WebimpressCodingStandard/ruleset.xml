@@ -28,6 +28,7 @@
 
     <!-- Generic Rules -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Classes.DuplicateClassName"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <rule ref="Generic.CodeAnalysis.EmptyStatement"/>

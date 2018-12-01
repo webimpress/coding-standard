@@ -184,6 +184,7 @@ class ScopeIndentSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         $this->extras = [];
+        $extraIndent = 0;
         $phpIndents = [];
         $previousIndent = null;
 

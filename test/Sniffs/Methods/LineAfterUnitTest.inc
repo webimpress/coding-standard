@@ -23,4 +23,13 @@ abstract class LineAfter
 
     abstract public function method8();
     abstract public function method9();
+
+    public function implemented()
+    {
+    } // comment here
+    public function afterComment()
+    {
+    } /* another comment */public function inTheSameLine()
+    {
+    } # comment
 }

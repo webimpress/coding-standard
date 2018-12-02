@@ -6,7 +6,9 @@ namespace WebimpressCodingStandard\Sniffs\Methods;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractScopeSniff;
+use PHP_CodeSniffer\Util\Tokens;
 
+use function in_array;
 use function max;
 
 use const T_ANON_CLASS;
@@ -40,7 +42,17 @@ class LineAfterSniff extends AbstractScopeSniff
             $closer = $phpcsFile->findNext(T_SEMICOLON, $tokens[$stackPtr]['parenthesis_closer'] + 1);
         }
 
-        $contentAfter = $phpcsFile->findNext(T_WHITESPACE, $closer + 1, null, true);
+        $lastInLine = $closer;
+        while ($tokens[$lastInLine + 1]['line'] === $tokens[$closer]['line']
+            && in_array($tokens[$lastInLine + 1]['code'], Tokens::$emptyTokens, true)
+        ) {
+            ++$lastInLine;
+        }
+        while ($tokens[$lastInLine]['code'] === T_WHITESPACE) {
+            --$lastInLine;
+        }
+
+        $contentAfter = $phpcsFile->findNext(T_WHITESPACE, $lastInLine + 1, null, true);
         if ($contentAfter !== false
             && $tokens[$contentAfter]['line'] - $tokens[$closer]['line'] !== 2
             && $tokens[$contentAfter]['code'] !== T_CLOSE_CURLY_BRACKET
@@ -58,7 +70,7 @@ class LineAfterSniff extends AbstractScopeSniff
                     }
                     $phpcsFile->fixer->endChangeset();
                 } else {
-                    $phpcsFile->fixer->addNewline($closer);
+                    $phpcsFile->fixer->addNewline($lastInLine);
                 }
             }
         }

@@ -11,10 +11,14 @@ class RedundantSemicolonUnitTest extends AbstractTestCase
     protected function getErrorList(string $testFile = '') : array
     {
         return [
-            4 => 1,
-            7 => 1,
-            10 => 1,
-            13 => 1,
+            3 => 1,
+            6 => 1,
+            9 => 1,
+            12 => 1,
+            15 => 1,
+            21 => 1,
+            29 => 1,
+            31 => 3,
         ];
     }
 

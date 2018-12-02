@@ -1,5 +1,7 @@
 <?php
 
+
+
 if (1 > 0) {
 }
 
@@ -15,10 +17,15 @@ switch (true) {
 $closure = function() {
 };
 
-$class = new class {
+$class = new class { // comment
+
 };
 
 $class = new class() extends \DateTime implements \ArrayAccess {
 };
 
 $a = $b{0};
+
+$hello = 1;
+
+$world = $hello; /* comment */

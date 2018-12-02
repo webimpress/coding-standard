@@ -13,6 +13,7 @@ use function array_merge;
 use const T_ANON_CLASS;
 use const T_NEW;
 use const T_NS_SEPARATOR;
+use const T_OBJECT_OPERATOR;
 use const T_OPEN_PARENTHESIS;
 use const T_OPEN_SQUARE_BRACKET;
 use const T_SELF;
@@ -41,6 +42,7 @@ class InstantiatingParenthesisSniff implements Sniff
             array_merge(Tokens::$emptyTokens, [
                 T_ANON_CLASS,
                 T_NS_SEPARATOR,
+                T_OBJECT_OPERATOR,
                 T_SELF,
                 T_STATIC,
                 T_STRING,

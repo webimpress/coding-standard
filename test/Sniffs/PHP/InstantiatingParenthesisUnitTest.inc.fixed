@@ -39,3 +39,6 @@ new $arr['val']();
 
 new $arr['abc']['def']();
 new $arr['key']['inx']();
+
+$object = (object) ['c' => 'DateTime'];
+$dateTime = new $object->c();

@@ -97,7 +97,7 @@ class DeclareStrictTypesSniff implements Sniff
 
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
 
-        if ($tokens[$next]['code'] === T_DECLARE) {
+        if ($next && $tokens[$next]['code'] === T_DECLARE) {
             $string = $phpcsFile->findNext(
                 T_STRING,
                 $tokens[$next]['parenthesis_opener'] + 1,
@@ -313,7 +313,9 @@ class DeclareStrictTypesSniff implements Sniff
             }
         }
 
-        $this->checkOtherDeclarations($phpcsFile, $next);
+        if ($next) {
+            $this->checkOtherDeclarations($phpcsFile, $next);
+        }
 
         $error = 'Missing strict type declaration at the beginning of the file';
         $fix = $phpcsFile->addFixableError($error, $stackPtr, 'NotFound');

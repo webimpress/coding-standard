@@ -46,6 +46,8 @@ class DeclareStrictTypesUnitTest extends AbstractTestCase
                 return [3 => 2];
             case 'DeclareStrictTypesUnitTest.13.inc':
                 return [2 => 2];
+            case 'DeclareStrictTypesUnitTest.14.inc':
+                return [1 => 1];
         }
 
         return [

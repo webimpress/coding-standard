@@ -8,11 +8,13 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
-use function preg_replace;
-use function strtolower;
-
+use const T_ARRAY_CAST;
+use const T_BOOL_CAST;
 use const T_BOOLEAN_NOT;
-use const T_UNSET_CAST;
+use const T_DOUBLE_CAST;
+use const T_INT_CAST;
+use const T_OBJECT_CAST;
+use const T_STRING_CAST;
 use const T_WHITESPACE;
 
 class TypeCastingSniff implements Sniff
@@ -20,11 +22,13 @@ class TypeCastingSniff implements Sniff
     /**
      * @var array
      */
-    private $castMap = [
-        '(boolean)' => '(bool)',
-        '(integer)' => '(int)',
-        '(real)' => '(float)',
-        '(double)' => '(float)',
+    public $castMap = [
+        T_INT_CAST => '(int)',
+        T_STRING_CAST => '(string)',
+        T_DOUBLE_CAST => '(float)',
+        T_ARRAY_CAST => '(array)',
+        T_BOOL_CAST => '(bool)',
+        T_OBJECT_CAST => '(object)',
     ];
 
     /**
@@ -61,16 +65,19 @@ class TypeCastingSniff implements Sniff
             return;
         }
 
-        if ($tokens[$stackPtr]['code'] === T_UNSET_CAST) {
-            $phpcsFile->addError('(unset) casting is not allowed.', $stackPtr, 'UnsetCast');
+        $code = $tokens[$stackPtr]['code'];
+        if (! isset($this->castMap[$code])) {
+            $error = 'Type cast %s casting is disallowed';
+            $data = [$tokens[$stackPtr]['content']];
+
+            $phpcsFile->addError($error, $stackPtr, 'DisallowedCast', $data);
             return;
         }
 
         $content = $tokens[$stackPtr]['content'];
-        $expected = preg_replace('/\s/', '', strtolower($content));
-        if ($content !== $expected || isset($this->castMap[$expected])) {
+        $expected = $this->castMap[$code];
+        if ($content !== $expected) {
             $error = 'Invalid casting used. Expected %s, found %s';
-            $expected = $this->castMap[$expected] ?? $expected;
             $data = [
                 $expected,
                 $content,
@@ -80,8 +87,6 @@ class TypeCastingSniff implements Sniff
             if ($fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr, $expected);
             }
-
-            return;
         }
     }
 }

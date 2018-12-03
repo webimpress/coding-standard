@@ -59,14 +59,14 @@ class FunctionDataProviderTagSniff implements Sniff
             $functionName = $tokens[$namePtr]['content'];
 
             if (strpos($functionName, 'test') !== 0) {
-                $error = 'Tag @dataProvider is allowed only for test* methods.';
+                $error = 'Tag @dataProvider is allowed only for test* methods';
                 $phpcsFile->addError($error, $tag, 'NoTestMethod');
                 return;
             }
 
             $params = $phpcsFile->getMethodParameters($functionPtr);
             if (! $params) {
-                $error = 'Function "%s" does not accept any parameters.';
+                $error = 'Function "%s" does not accept any parameters';
                 $data = [$functionName];
                 $phpcsFile->addError($error, $namePtr, 'MissingParameters', $data);
             }
@@ -75,13 +75,13 @@ class FunctionDataProviderTagSniff implements Sniff
             if ($tokens[$tag + 1]['code'] !== T_DOC_COMMENT_WHITESPACE
                 || $tokens[$tag + 2]['code'] !== T_DOC_COMMENT_STRING
             ) {
-                $error = 'Missing data provider name.';
+                $error = 'Missing data provider name';
                 $phpcsFile->addError($error, $tag, 'MissingName');
             } else {
                 $providerName = $tokens[$tag + 2]['content'];
 
                 if (preg_match('/Provider$/', $providerName)) {
-                    $error = 'Data provider name should not have "Provider" suffix.';
+                    $error = 'Data provider name should not have "Provider" suffix';
                     $phpcsFile->addError($error, $tag, 'DataProviderInvalidName');
                 }
             }

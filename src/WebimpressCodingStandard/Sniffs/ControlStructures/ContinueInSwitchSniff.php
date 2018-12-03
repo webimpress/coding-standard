@@ -55,7 +55,7 @@ class ContinueInSwitchSniff implements Sniff
             }
 
             if ($token === T_SWITCH) {
-                $error = 'Continue instruction is disallowed in switch, use break instead.';
+                $error = 'Continue instruction is disallowed in switch, use break instead';
                 $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Disallow');
 
                 if ($fix) {

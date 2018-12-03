@@ -52,7 +52,7 @@ class TypeCastingSniff implements Sniff
             if (! $nextToken || $tokens[$nextToken]['code'] !== T_BOOLEAN_NOT) {
                 return;
             }
-            $error = 'Double negation casting is not allowed. Please use (bool) instead.';
+            $error = 'Double negation casting is not allowed. Please use (bool) instead';
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'DoubleNot');
 
             if ($fix) {

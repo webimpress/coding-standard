@@ -34,7 +34,7 @@ class BlankLineSniff implements Sniff
 
         $next = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
         if ($next && $tokens[$stackPtr]['line'] < $tokens[$next]['line'] - 2) {
-            $error = 'Unexpected blank line found.';
+            $error = 'Unexpected blank line found';
             $fix = $phpcsFile->addFixableError($error, $stackPtr + 1, 'BlankLine');
 
             if ($fix) {

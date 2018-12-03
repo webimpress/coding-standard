@@ -43,7 +43,7 @@ class BooleanOperatorSniff implements Sniff
         if ($tokens[$prev]['line'] === $tokens[$stackPtr]['line']
             && $tokens[$next]['line'] !== $tokens[$stackPtr]['line']
         ) {
-            $error = 'Logical operator cannot be at the end of the line.';
+            $error = 'Logical operator cannot be at the end of the line';
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'OperatorAtTheEnd');
 
             if ($fix) {

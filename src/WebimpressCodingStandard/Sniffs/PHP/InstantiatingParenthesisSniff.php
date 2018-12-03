@@ -65,7 +65,7 @@ class InstantiatingParenthesisSniff implements Sniff
                 true
             );
 
-            $error = 'Missing parenthesis on instantiating a new class.';
+            $error = 'Missing parenthesis on instantiating a new class';
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'MissingParenthesis');
 
             if ($fix) {

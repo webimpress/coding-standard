@@ -283,7 +283,7 @@ class ReturnTypeSniff implements Sniff
 
         if (! $hasNullInDoc && strpos($this->returnTypeValue, '?') === 0) {
             $error = 'Missing "null" as possible return type in PHPDocs.'
-                . ' Nullable type has been found in return type declaration.';
+                . ' Nullable type has been found in return type declaration';
             $fix = $phpcsFile->addFixableError($error, $this->returnDoc + 2, 'MissingNull');
 
             if ($fix) {
@@ -296,7 +296,7 @@ class ReturnTypeSniff implements Sniff
 
         if ($hasNullInDoc && strpos($this->returnTypeValue, '?') !== 0) {
             $error = 'Null type has been found in PHPDocs for return type.'
-                . ' It is not declared with function return type.';
+                . ' It is not declared with function return type';
             $fix = $phpcsFile->addFixableError($error, $this->returnDoc + 2, 'AdditionalNull');
 
             if ($fix) {
@@ -863,7 +863,7 @@ class ReturnTypeSniff implements Sniff
                 || $this->returnDocValue === 'void')
         ) {
             $error = 'Function "%s" returns value but it is not specified.'
-                . ' Please add return tag or declare return type.';
+                . ' Please add return tag or declare return type';
             $data = [
                 $this->methodName,
             ];

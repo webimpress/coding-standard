@@ -41,7 +41,7 @@ class NoInlineCommentAfterCurlyCloseSniff implements Sniff
             return;
         }
 
-        $error = 'Inline comment is not allowed after closing curly bracket.';
+        $error = 'Inline comment is not allowed after closing curly bracket';
         $phpcsFile->addError($error, $next, 'NotAllowed');
     }
 }

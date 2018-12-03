@@ -273,7 +273,7 @@ class UnnecessaryParenthesesSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $error = 'Parentheses around expression "%s" are redundant.';
+        $error = 'Parentheses around expression "%s" are redundant';
         $data = [$phpcsFile->getTokensAsString($openPtr + 1, $closePtr - $openPtr - 1)];
         $fix = $phpcsFile->addFixableError($error, $openPtr, $errorCode, $data);
 

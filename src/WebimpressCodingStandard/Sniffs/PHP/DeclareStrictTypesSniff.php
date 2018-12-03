@@ -116,7 +116,7 @@ class DeclareStrictTypesSniff implements Sniff
                     && $tokens[$after]['code'] === T_CLOSE_TAG
                 ) {
                     if ($tokens[$prev]['line'] !== $tokens[$next]['line']) {
-                        $error = 'PHP open tag must be on the same line as strict type declaration.';
+                        $error = 'PHP open tag must be on the same line as strict type declaration';
                         $fix = $phpcsFile->addFixableError($error, $prev, 'OpenTag');
 
                         if ($fix) {
@@ -133,7 +133,7 @@ class DeclareStrictTypesSniff implements Sniff
                     }
 
                     if ($prev !== false && ($prev < ($next - 1) || $tokens[$prev]['content'] !== '<?php ')) {
-                        $error = 'Expected single space after PHP open tag and before strict type declaration.';
+                        $error = 'Expected single space after PHP open tag and before strict type declaration';
                         $fix = $phpcsFile->addFixableError($error, $prev, 'OpenTagSpace');
 
                         if ($fix) {
@@ -148,7 +148,7 @@ class DeclareStrictTypesSniff implements Sniff
                     }
 
                     if ($tokens[$after]['line'] !== $tokens[$eos]['line']) {
-                        $error = 'PHP close tag must be on the same line as strict type declaration.';
+                        $error = 'PHP close tag must be on the same line as strict type declaration';
                         $fix = $phpcsFile->addFixableError($error, $after, 'CloseTag');
 
                         if ($fix) {
@@ -165,7 +165,7 @@ class DeclareStrictTypesSniff implements Sniff
                     }
 
                     if ($after !== false && ($after > $eos + 2 || $tokens[$eos + 1]['content'] !== ' ')) {
-                        $error = 'Expected single space before PHP close tag and after declaration.';
+                        $error = 'Expected single space before PHP close tag and after declaration';
                         $fix = $phpcsFile->addFixableError($error, $after, 'CloseTagSpace');
 
                         if ($fix) {

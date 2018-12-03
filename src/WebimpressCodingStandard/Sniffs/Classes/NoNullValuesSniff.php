@@ -30,7 +30,7 @@ class NoNullValuesSniff extends AbstractVariableSniff
 
         $value = $phpcsFile->findNext(Tokens::$emptyTokens, $next + 1, null, true);
         if ($tokens[$value]['code'] === T_NULL) {
-            $error = 'Default null value for the property is redundant.';
+            $error = 'Default null value for the property is redundant';
             $fix = $phpcsFile->addFixableError($error, $value, 'NullValue');
 
             if ($fix) {

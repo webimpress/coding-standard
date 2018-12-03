@@ -411,7 +411,7 @@ class DocCommentSniff implements Sniff
                         $phpcsFile->fixer->addContent($next, $expected);
                     }
                 } elseif ($tokens[$next + 1]['content'] !== $expected
-                    && ($tokens[$next + 2]['content'][0] === '@'
+                    && (strpos($tokens[$next + 2]['content'], '@') === 0
                         || $tokens[$next + 1]['line'] === $tokens[$commentStart]['line'] + 1)
                 ) {
                     $error = 'There must be exactly %d space(s) between star and comment';

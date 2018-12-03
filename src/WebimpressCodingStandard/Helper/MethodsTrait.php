@@ -214,7 +214,7 @@ trait MethodsTrait
 
     private function getSuggestedType(string $class) : string
     {
-        $prefix = $class[0] === '?' ? '?' : '';
+        $prefix = strpos($class, '?') === 0 ? '?' : '';
         $suffix = strstr($class, '[');
         $clear = strtolower(strtr($class, ['?' => '', '[' => '', ']' => '']));
 
@@ -242,7 +242,7 @@ trait MethodsTrait
             return $prefix . $this->importedClasses[$clear]['alias'] . $suffix;
         }
 
-        if ($clear[0] === '\\') {
+        if (strpos($clear, '\\') === 0) {
             $ltrim = ltrim($clear, '\\');
             foreach ($this->importedClasses as $use) {
                 if (strtolower($use['class']) === $ltrim) {
@@ -263,7 +263,7 @@ trait MethodsTrait
 
     private function typesMatch(string $typeHint, string $typeStr) : bool
     {
-        $isNullable = $typeHint[0] === '?';
+        $isNullable = strpos($typeHint, '?') === 0;
         $lowerTypeHint = strtolower($isNullable ? substr($typeHint, 1) : $typeHint);
         $lowerTypeStr = strtolower($typeStr);
 
@@ -304,7 +304,7 @@ trait MethodsTrait
         }
 
         // It is already FQCN
-        if ($class[0] === '\\') {
+        if (strpos($class, '\\') === 0) {
             return $class;
         }
 

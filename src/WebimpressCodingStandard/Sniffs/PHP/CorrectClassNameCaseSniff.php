@@ -22,6 +22,7 @@ use function ltrim;
 use function preg_quote;
 use function preg_replace;
 use function strlen;
+use function strpos;
 use function strstr;
 use function strtolower;
 use function strtr;
@@ -296,7 +297,7 @@ class CorrectClassNameCaseSniff implements Sniff
         $suffix = strstr($class, '[');
         $class = strtr($class, ['[' => '', ']' => '']);
 
-        if ($class[0] === '\\') {
+        if (strpos($class, '\\') === 0) {
             $result = $this->hasDifferentCase(ltrim($class, '\\'));
             if ($result) {
                 return '\\' . $result . $suffix;
@@ -360,7 +361,7 @@ class CorrectClassNameCaseSniff implements Sniff
     private function checkClass(File $phpcsFile, int $start, int $end, bool $isGlobalUse = false) : void
     {
         $class = trim($phpcsFile->getTokensAsString($start, $end - $start));
-        if ($class[0] === '\\') {
+        if (strpos($class, '\\') === 0) {
             $result = $this->hasDifferentCase(ltrim($class, '\\'));
             if ($result) {
                 $this->error($phpcsFile, $start, $end, '\\' . $result, $class);

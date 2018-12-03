@@ -137,7 +137,7 @@ class FunctionCommentSniff implements Sniff
                         break;
                     }
 
-                    if ($tokens[$i]['content'][0] === '}') {
+                    if (strpos($tokens[$i]['content'], '}') === 0) {
                         --$dep;
                     }
 

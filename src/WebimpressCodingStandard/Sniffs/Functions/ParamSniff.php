@@ -468,7 +468,7 @@ class ParamSniff implements Sniff
             $tmpTypeHint = $typeHint;
             if (isset($param['default'])
                 && strtolower($param['default']) === 'null'
-                && $tmpTypeHint[0] !== '?'
+                && strpos($tmpTypeHint, '?') !== 0
             ) {
                 $tmpTypeHint = '?' . $tmpTypeHint;
             }

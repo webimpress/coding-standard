@@ -281,7 +281,7 @@ class ReturnTypeSniff implements Sniff
 
         $hasNullInDoc = preg_grep('/^null$/i', $this->returnDocTypes);
 
-        if (! $hasNullInDoc && $this->returnTypeValue[0] === '?') {
+        if (! $hasNullInDoc && strpos($this->returnTypeValue, '?') === 0) {
             $error = 'Missing "null" as possible return type in PHPDocs.'
                 . ' Nullable type has been found in return type declaration.';
             $fix = $phpcsFile->addFixableError($error, $this->returnDoc + 2, 'MissingNull');
@@ -294,7 +294,7 @@ class ReturnTypeSniff implements Sniff
             return;
         }
 
-        if ($hasNullInDoc && $this->returnTypeValue[0] !== '?') {
+        if ($hasNullInDoc && strpos($this->returnTypeValue, '?') !== 0) {
             $error = 'Null type has been found in PHPDocs for return type.'
                 . ' It is not declared with function return type.';
             $fix = $phpcsFile->addFixableError($error, $this->returnDoc + 2, 'AdditionalNull');

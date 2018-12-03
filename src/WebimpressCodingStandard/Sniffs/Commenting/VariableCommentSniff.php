@@ -12,6 +12,7 @@ use function array_merge;
 use function current;
 use function key;
 use function next;
+use function strpos;
 use function strtolower;
 use function substr;
 
@@ -114,7 +115,7 @@ class VariableCommentSniff extends AbstractVariableSniff
                         break;
                     }
 
-                    if ($tokens[$i]['content'][0] === '}') {
+                    if (strpos($tokens[$i]['content'], '}') === 0) {
                         --$dep;
                     }
 

@@ -224,7 +224,7 @@ class TagWithTypeSniff implements Sniff
         $commentStart = $phpcsFile->findPrevious(T_DOC_COMMENT_OPEN_TAG, $tagPtr - 1);
         $i = $tagPtr;
         while ($i = $phpcsFile->findPrevious(T_DOC_COMMENT_STRING, $i - 1, $commentStart)) {
-            if ($tokens[$i]['content'][0] === '}') {
+            if (strpos($tokens[$i]['content'], '}') === 0) {
                 --$nested;
             }
 

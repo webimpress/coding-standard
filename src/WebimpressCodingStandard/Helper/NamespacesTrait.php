@@ -6,20 +6,20 @@ namespace WebimpressCodingStandard\Helper;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
+use WebimpressCodingStandard\CodingStandard;
 
-use function array_pop;
 use function in_array;
+use function ltrim;
 use function strrchr;
 use function strtolower;
+use function strtoupper;
 use function substr;
-use function trim;
 
 use const T_AS;
 use const T_NAMESPACE;
 use const T_NS_SEPARATOR;
 use const T_STRING;
 use const T_USE;
-use const T_WHITESPACE;
 
 /**
  * @internal
@@ -29,8 +29,7 @@ trait NamespacesTrait
     private function getNamespace(File $phpcsFile, int $stackPtr) : string
     {
         if ($nsStart = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr - 1)) {
-            $nsEnd = $phpcsFile->findNext([T_NS_SEPARATOR, T_STRING, T_WHITESPACE], $nsStart + 1, null, true);
-            return trim($phpcsFile->getTokensAsString($nsStart + 1, $nsEnd - $nsStart - 1));
+            return $this->getName($phpcsFile, $nsStart + 1);
         }
 
         return '';
@@ -38,13 +37,14 @@ trait NamespacesTrait
 
     /**
      * @return array Array of imported classes {
-     *     @var array $_ Key is lowercase class alias name {
-     *         @var string $alias Original class alias name
-     *         @var string $class FQCN
+     *     @var array $_ Key is lowercase alias name for classes and function and upercase for constants {
+     *         @var string $name Original alias name
+     *         @var string $fqn Fully-Qualified Name
+     *         @var int $ptr Pointer position of use statement
      *     }
      * }
      */
-    private function getGlobalUses(File $phpcsFile, int $stackPtr = 0) : array
+    private function getGlobalUses(File $phpcsFile, int $stackPtr = 0, string $type = 'class') : array
     {
         $first = 0;
         $last = $phpcsFile->numTokens;
@@ -61,56 +61,78 @@ trait NamespacesTrait
 
         $use = $first;
         while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
-            if (! $this->isInNamespace($tokens[$use])) {
+            if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
                 continue;
             }
 
             $nextToken = $phpcsFile->findNext(Tokens::$emptyTokens, $use + 1, null, true);
 
+            $useType = 'class';
             if ($tokens[$nextToken]['code'] === T_STRING
                 && in_array(strtolower($tokens[$nextToken]['content']), ['const', 'function'], true)
             ) {
+                $useType = strtolower($tokens[$nextToken]['content']);
+
+                // increase token
+                ++$nextToken;
+            }
+
+            if ($type !== 'all' && $type !== $useType) {
                 continue;
             }
 
-            $end = $phpcsFile->findNext(
-                [T_NS_SEPARATOR, T_STRING],
+            $name = $this->getName($phpcsFile, $nextToken);
+
+            $endOfStatement = $phpcsFile->findEndOfStatement($use);
+            $endOfName = $phpcsFile->findNext(
+                Tokens::$emptyTokens + [T_NS_SEPARATOR => T_NS_SEPARATOR, T_STRING => T_STRING],
                 $nextToken + 1,
                 null,
                 true
             );
 
-            $class = trim($phpcsFile->getTokensAsString($nextToken, $end - $nextToken));
+            $aliasStart = $phpcsFile->findNext(
+                Tokens::$emptyTokens + [T_AS => T_AS],
+                $endOfName + 1,
+                $endOfStatement,
+                true
+            );
 
-            $endOfStatement = $phpcsFile->findEndOfStatement($use);
-            if ($aliasStart = $phpcsFile->findNext([T_WHITESPACE, T_AS], $end + 1, $endOfStatement, true)) {
-                $alias = trim($phpcsFile->getTokensAsString($aliasStart, $endOfStatement - $aliasStart));
+            if ($aliasStart) {
+                $alias = $tokens[$aliasStart]['content'];
+            } elseif (strrchr($name, '\\') !== false) {
+                $alias = substr(strrchr($name, '\\'), 1);
             } else {
-                if (strrchr($class, '\\') !== false) {
-                    $alias = substr(strrchr($class, '\\'), 1);
-                } else {
-                    $alias = $class;
-                }
+                $alias = $name;
             }
 
-            $imports[strtolower($alias)] = ['alias' => $alias, 'class' => $class];
+            $imports[$useType][$useType === 'const' ? strtoupper($alias) : strtolower($alias)] = [
+                'name' => $alias,
+                'fqn' => $name,
+                'ptr' => $use,
+            ];
         }
 
-        return $imports;
+        return $type === 'all' ? $imports : ($imports[$type] ?? []);
     }
 
-    private function isInNamespace(array $token) : bool
+    private function getName(File $phpcsFile, int $stackPtr) : string
     {
-        if (empty($token['conditions'])) {
-            return true;
-        }
+        $tokens = $phpcsFile->getTokens();
 
-        if (array_pop($token['conditions']) === T_NAMESPACE
-            && ! $token['conditions']
-        ) {
-            return true;
-        }
+        $class = '';
+        do {
+            if (in_array($tokens[$stackPtr]['code'], Tokens::$emptyTokens, true)) {
+                continue;
+            }
 
-        return false;
+            if (! in_array($tokens[$stackPtr]['code'], [T_NS_SEPARATOR, T_STRING], true)) {
+                break;
+            }
+
+            $class .= $tokens[$stackPtr]['content'];
+        } while (isset($tokens[++$stackPtr]));
+
+        return ltrim($class, '\\');
     }
 }

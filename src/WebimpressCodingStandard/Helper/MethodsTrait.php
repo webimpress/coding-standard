@@ -239,21 +239,21 @@ trait MethodsTrait
 
         // Is the class imported?
         if (isset($this->importedClasses[$clear])) {
-            return $prefix . $this->importedClasses[$clear]['alias'] . $suffix;
+            return $prefix . $this->importedClasses[$clear]['name'] . $suffix;
         }
 
         if (strpos($clear, '\\') === 0) {
             $ltrim = ltrim($clear, '\\');
             foreach ($this->importedClasses as $use) {
-                if (strtolower($use['class']) === $ltrim) {
-                    return $prefix . $use['alias'] . $suffix;
+                if (strtolower($use['fqn']) === $ltrim) {
+                    return $prefix . $use['name'] . $suffix;
                 }
 
-                if (stripos($ltrim, $use['class'] . '\\') === 0) {
+                if (stripos($ltrim, $use['fqn'] . '\\') === 0) {
                     $clear = ltrim(strtr($class, ['?' => '', '[' => '', ']' => '']), '\\');
-                    $name = substr($clear, strlen($use['class']));
+                    $name = substr($clear, strlen($use['fqn']));
 
-                    return $prefix . $use['alias'] . $name . $suffix;
+                    return $prefix . $use['name'] . $name . $suffix;
                 }
             }
         }
@@ -275,7 +275,7 @@ trait MethodsTrait
             return false;
         }
 
-        // If type is not nullable PHPDocs should just containt type name
+        // If type is not nullable PHPDocs should just contain type name
         if (! $isNullable && $count !== 1) {
             return false;
         }
@@ -310,7 +310,7 @@ trait MethodsTrait
 
         // It is an imported class
         if (isset($this->importedClasses[$class])) {
-            return '\\' . $this->importedClasses[$class]['class'];
+            return '\\' . $this->importedClasses[$class]['fqn'];
         }
 
         // It is a class from the current namespace

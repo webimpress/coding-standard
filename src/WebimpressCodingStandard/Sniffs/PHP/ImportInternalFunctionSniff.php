@@ -7,17 +7,15 @@ namespace WebimpressCodingStandard\Sniffs\PHP;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\CodingStandard;
+use WebimpressCodingStandard\Helper\NamespacesTrait;
 
 use function array_flip;
 use function get_defined_functions;
 use function in_array;
-use function ltrim;
 use function sort;
 use function sprintf;
 use function strtolower;
 
-use const T_AS;
 use const T_DOUBLE_COLON;
 use const T_FUNCTION;
 use const T_NAMESPACE;
@@ -25,13 +23,13 @@ use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_OBJECT_OPERATOR;
 use const T_OPEN_PARENTHESIS;
-use const T_SEMICOLON;
 use const T_STRING;
-use const T_USE;
 use const T_WHITESPACE;
 
 class ImportInternalFunctionSniff implements Sniff
 {
+    use NamespacesTrait;
+
     /**
      * @var string[] Array of functions to exclude from importing.
      */
@@ -71,20 +69,19 @@ class ImportInternalFunctionSniff implements Sniff
 
         $currentNamespacePtr = null;
         $functionsToImport = [];
-        $lastUse = null;
 
         do {
             $namespacePtr = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr - 1) ?: null;
 
             if ($namespacePtr !== $currentNamespacePtr) {
                 if ($currentNamespacePtr) {
-                    $this->importFunctions($phpcsFile, $currentNamespacePtr, $lastUse, $functionsToImport);
+                    $this->importFunctions($phpcsFile, $currentNamespacePtr, $functionsToImport);
                 }
 
                 $currentNamespacePtr = $namespacePtr;
                 $functionsToImport = [];
-                $lastUse = null;
-                $this->importedFunctions = $this->getImportedFunctions($phpcsFile, $namespacePtr, $lastUse);
+
+                $this->importedFunctions = $this->getGlobalUses($phpcsFile, $namespacePtr ?: 0, 'function');
 
                 foreach ($this->importedFunctions as $func) {
                     $fqn = strtolower($func['fqn']);
@@ -95,8 +92,10 @@ class ImportInternalFunctionSniff implements Sniff
                         $fix = $phpcsFile->addFixableError($error, $func['ptr'], 'ExcludeImported', $data);
 
                         if ($fix) {
+                            $eos = $phpcsFile->findEndOfStatement($func['ptr']);
+
                             $phpcsFile->fixer->beginChangeset();
-                            for ($i = $func['ptr']; $i <= $func['eos']; ++$i) {
+                            for ($i = $func['ptr']; $i <= $eos; ++$i) {
                                 $phpcsFile->fixer->replaceToken($i, '');
                             }
                             if ($tokens[$i + 1]['code'] === T_WHITESPACE) {
@@ -114,7 +113,7 @@ class ImportInternalFunctionSniff implements Sniff
         } while ($stackPtr = $phpcsFile->findNext($this->register(), $stackPtr + 1));
 
         if ($currentNamespacePtr) {
-            $this->importFunctions($phpcsFile, $currentNamespacePtr, $lastUse, $functionsToImport);
+            $this->importFunctions($phpcsFile, $currentNamespacePtr, $functionsToImport);
         }
 
         return $phpcsFile->numTokens + 1;
@@ -231,7 +230,7 @@ class ImportInternalFunctionSniff implements Sniff
     /**
      * @param string[] $functionNames
      */
-    private function importFunctions(File $phpcsFile, int $namespacePtr, ?int $lastUse, array $functionNames) : void
+    private function importFunctions(File $phpcsFile, int $namespacePtr, array $functionNames) : void
     {
         if (! $functionNames) {
             return;
@@ -241,16 +240,12 @@ class ImportInternalFunctionSniff implements Sniff
 
         $phpcsFile->fixer->beginChangeset();
 
-        if ($lastUse) {
-            $ptr = $phpcsFile->findEndOfStatement($lastUse);
+        $tokens = $phpcsFile->getTokens();
+        if (isset($tokens[$namespacePtr]['scope_opener'])) {
+            $ptr = $tokens[$namespacePtr]['scope_opener'];
         } else {
-            $tokens = $phpcsFile->getTokens();
-            if (isset($tokens[$namespacePtr]['scope_opener'])) {
-                $ptr = $tokens[$namespacePtr]['scope_opener'];
-            } else {
-                $ptr = $phpcsFile->findEndOfStatement($namespacePtr);
-                $phpcsFile->fixer->addNewline($ptr);
-            }
+            $ptr = $phpcsFile->findEndOfStatement($namespacePtr);
+            $phpcsFile->fixer->addNewline($ptr);
         }
 
         $content = '';
@@ -259,81 +254,7 @@ class ImportInternalFunctionSniff implements Sniff
         }
 
         $phpcsFile->fixer->addContent($ptr, $content);
-        if (! $lastUse && isset($tokens[$namespacePtr]['scope_opener'])) {
-            $phpcsFile->fixer->addNewline($ptr);
-        }
 
         $phpcsFile->fixer->endChangeset();
-    }
-
-    /**
-     * @return array Array of imported functions {
-     *     @var array $_ Key is lowercase function name {
-     *         @var string $name Original function name
-     *         @var string $fqn Fully qualified function name without leading slashes
-     *         @var int $ptr The position of use declaration
-     *         @var int $eos The position of the end of the use statement
-     *     }
-     * }
-     */
-    private function getImportedFunctions(File $phpcsFile, ?int $namespacePtr, ?int &$lastUse) : array
-    {
-        $first = 0;
-        $last = $phpcsFile->numTokens;
-
-        $tokens = $phpcsFile->getTokens();
-
-        if ($namespacePtr && isset($tokens[$namespacePtr]['scope_opener'])) {
-            $first = $tokens[$namespacePtr]['scope_opener'];
-            $last = $tokens[$namespacePtr]['scope_closer'];
-        }
-
-        $functions = [];
-
-        $use = $first;
-        while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
-            if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
-                continue;
-            }
-
-            if ($next = $this->isFunctionUse($phpcsFile, $use)) {
-                $start = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $next + 1);
-                $end = $phpcsFile->findPrevious(
-                    T_STRING,
-                    $phpcsFile->findNext([T_AS, T_SEMICOLON], $start + 1) - 1
-                );
-                $endOfStatement = $phpcsFile->findEndOfStatement($next);
-                $name = $phpcsFile->findPrevious(T_STRING, $endOfStatement - 1);
-                $fullName = $phpcsFile->getTokensAsString($start, $end - $start + 1);
-
-                $functions[strtolower($tokens[$name]['content'])] = [
-                    'name' => $tokens[$name]['content'],
-                    'fqn' => ltrim($fullName, '\\'),
-                    'ptr' => $use,
-                    'eos' => $endOfStatement,
-                ];
-            }
-
-            $lastUse = $use;
-        }
-
-        return $functions;
-    }
-
-    /**
-     * @return false|int
-     */
-    private function isFunctionUse(File $phpcsFile, int $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-        $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
-
-        if ($tokens[$next]['code'] === T_STRING
-            && strtolower($tokens[$next]['content']) === 'function'
-        ) {
-            return $next;
-        }
-
-        return false;
     }
 }

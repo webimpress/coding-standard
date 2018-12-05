@@ -64,12 +64,12 @@ class UnusedUseStatementSniff implements Sniff
      */
     public function process(File $phpcsFile, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
-
         // Only check use statements in the global scope.
         if (! CodingStandard::isGlobalUse($phpcsFile, $stackPtr)) {
             return;
         }
+
+        $tokens = $phpcsFile->getTokens();
 
         // Seek to the end of the statement and get the string before the semi colon.
         // It works only with one USE keyword per declaration.

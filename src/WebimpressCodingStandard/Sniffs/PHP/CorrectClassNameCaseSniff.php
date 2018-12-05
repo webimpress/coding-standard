@@ -7,6 +7,7 @@ namespace WebimpressCodingStandard\Sniffs\PHP;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
+use WebimpressCodingStandard\CodingStandard;
 use WebimpressCodingStandard\Helper\NamespacesTrait;
 
 use function array_map;
@@ -202,7 +203,7 @@ class CorrectClassNameCaseSniff implements Sniff
         );
 
         // Global use statements.
-        if ($this->isInNamespace($tokens[$stackPtr])) {
+        if (CodingStandard::isGlobalUse($phpcsFile, $stackPtr)) {
             $this->checkClass($phpcsFile, $nextToken, $end, true);
             return;
         }
@@ -310,8 +311,8 @@ class CorrectClassNameCaseSniff implements Sniff
 
         // Check if class is imported.
         if (isset($imports[strtolower($class)])) {
-            if ($imports[strtolower($class)]['alias'] !== $class) {
-                return $imports[strtolower($class)]['alias'] . $suffix;
+            if ($imports[strtolower($class)]['name'] !== $class) {
+                return $imports[strtolower($class)]['name'] . $suffix;
             }
         } else {
             // Class from the same namespace.
@@ -375,8 +376,8 @@ class CorrectClassNameCaseSniff implements Sniff
 
             // Check if class is imported.
             if (isset($imports[strtolower($class)])) {
-                if ($imports[strtolower($class)]['alias'] !== $class) {
-                    $this->error($phpcsFile, $start, $end, $imports[strtolower($class)]['alias'], $class);
+                if ($imports[strtolower($class)]['name'] !== $class) {
+                    $this->error($phpcsFile, $start, $end, $imports[strtolower($class)]['name'], $class);
                 }
             } else {
                 // Class from the same namespace.

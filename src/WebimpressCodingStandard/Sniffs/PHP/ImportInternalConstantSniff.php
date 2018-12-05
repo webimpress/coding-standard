@@ -7,18 +7,16 @@ namespace WebimpressCodingStandard\Sniffs\PHP;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\CodingStandard;
+use WebimpressCodingStandard\Helper\NamespacesTrait;
 
 use function array_walk_recursive;
 use function get_defined_constants;
 use function in_array;
-use function ltrim;
 use function sort;
 use function sprintf;
 use function strtolower;
 use function strtoupper;
 
-use const T_AS;
 use const T_DOUBLE_COLON;
 use const T_FUNCTION;
 use const T_NAMESPACE;
@@ -26,13 +24,13 @@ use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_OBJECT_OPERATOR;
 use const T_OPEN_PARENTHESIS;
-use const T_SEMICOLON;
 use const T_STRING;
-use const T_USE;
 use const T_WHITESPACE;
 
 class ImportInternalConstantSniff implements Sniff
 {
+    use NamespacesTrait;
+
     /**
      * @var string[] Array of constants to exclude from importing.
      */
@@ -80,20 +78,19 @@ class ImportInternalConstantSniff implements Sniff
 
         $currentNamespacePtr = null;
         $constantsToImport = [];
-        $lastUse = null;
 
         do {
             $namespacePtr = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr - 1) ?: null;
 
             if ($namespacePtr !== $currentNamespacePtr) {
                 if ($currentNamespacePtr) {
-                    $this->importConstants($phpcsFile, $currentNamespacePtr, $lastUse, $constantsToImport);
+                    $this->importConstants($phpcsFile, $currentNamespacePtr, $constantsToImport);
                 }
 
                 $currentNamespacePtr = $namespacePtr;
                 $constantsToImport = [];
-                $lastUse = null;
-                $this->importedConstants = $this->getImportedConstants($phpcsFile, $namespacePtr, $lastUse);
+
+                $this->importedConstants = $this->getGlobalUses($phpcsFile, $namespacePtr ?: 0, 'const');
 
                 foreach ($this->importedConstants as $const) {
                     $fqn = strtoupper($const['fqn']);
@@ -104,8 +101,10 @@ class ImportInternalConstantSniff implements Sniff
                         $fix = $phpcsFile->addFixableError($error, $const['ptr'], 'ExcludeImported', $data);
 
                         if ($fix) {
+                            $eos = $phpcsFile->findEndOfStatement($const['ptr']);
+
                             $phpcsFile->fixer->beginChangeset();
-                            for ($i = $const['ptr']; $i <= $const['eos']; ++$i) {
+                            for ($i = $const['ptr']; $i <= $eos; ++$i) {
                                 $phpcsFile->fixer->replaceToken($i, '');
                             }
                             if ($tokens[$i + 1]['code'] === T_WHITESPACE) {
@@ -123,7 +122,7 @@ class ImportInternalConstantSniff implements Sniff
         } while ($stackPtr = $phpcsFile->findNext($this->register(), $stackPtr + 1));
 
         if ($currentNamespacePtr) {
-            $this->importConstants($phpcsFile, $currentNamespacePtr, $lastUse, $constantsToImport);
+            $this->importConstants($phpcsFile, $currentNamespacePtr, $constantsToImport);
         }
 
         return $phpcsFile->numTokens + 1;
@@ -243,7 +242,7 @@ class ImportInternalConstantSniff implements Sniff
     /**
      * @param string[] $constantNames
      */
-    private function importConstants(File $phpcsFile, int $namespacePtr, ?int $lastUse, array $constantNames) : void
+    private function importConstants(File $phpcsFile, int $namespacePtr, array $constantNames) : void
     {
         if (! $constantNames) {
             return;
@@ -253,16 +252,12 @@ class ImportInternalConstantSniff implements Sniff
 
         $phpcsFile->fixer->beginChangeset();
 
-        if ($lastUse) {
-            $ptr = $phpcsFile->findEndOfStatement($lastUse);
+        $tokens = $phpcsFile->getTokens();
+        if (isset($tokens[$namespacePtr]['scope_opener'])) {
+            $ptr = $tokens[$namespacePtr]['scope_opener'];
         } else {
-            $tokens = $phpcsFile->getTokens();
-            if (isset($tokens[$namespacePtr]['scope_opener'])) {
-                $ptr = $tokens[$namespacePtr]['scope_opener'];
-            } else {
-                $ptr = $phpcsFile->findEndOfStatement($namespacePtr);
-                $phpcsFile->fixer->addNewline($ptr);
-            }
+            $ptr = $phpcsFile->findEndOfStatement($namespacePtr);
+            $phpcsFile->fixer->addNewline($ptr);
         }
 
         $content = '';
@@ -271,81 +266,7 @@ class ImportInternalConstantSniff implements Sniff
         }
 
         $phpcsFile->fixer->addContent($ptr, $content);
-        if (! $lastUse && isset($tokens[$namespacePtr]['scope_opener'])) {
-            $phpcsFile->fixer->addNewline($ptr);
-        }
 
         $phpcsFile->fixer->endChangeset();
-    }
-
-    /**
-     * @return array Array of imported constants {
-     *     @var array $_ Key is lowercase constant name {
-     *         @var string $name Original constant name
-     *         @var string $fqn Fully qualified constant name without leading slashes
-     *         @var int $ptr The position of use declaration
-     *         @var int $eos The position of the end of the use statement
-     *     }
-     * }
-     */
-    private function getImportedConstants(File $phpcsFile, ?int $namespacePtr, ?int &$lastUse) : array
-    {
-        $first = 0;
-        $last = $phpcsFile->numTokens;
-
-        $tokens = $phpcsFile->getTokens();
-
-        if ($namespacePtr && isset($tokens[$namespacePtr]['scope_opener'])) {
-            $first = $tokens[$namespacePtr]['scope_opener'];
-            $last = $tokens[$namespacePtr]['scope_closer'];
-        }
-
-        $constants = [];
-
-        $use = $first;
-        while ($use = $phpcsFile->findNext(T_USE, $use + 1, $last)) {
-            if (! CodingStandard::isGlobalUse($phpcsFile, $use)) {
-                continue;
-            }
-
-            if ($next = $this->isConstUse($phpcsFile, $use)) {
-                $start = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $next + 1);
-                $end = $phpcsFile->findPrevious(
-                    T_STRING,
-                    $phpcsFile->findNext([T_AS, T_SEMICOLON], $start + 1) - 1
-                );
-                $endOfStatement = $phpcsFile->findEndOfStatement($next);
-                $name = $phpcsFile->findPrevious(T_STRING, $endOfStatement - 1);
-                $fullName = $phpcsFile->getTokensAsString($start, $end - $start + 1);
-
-                $constants[strtoupper($tokens[$name]['content'])] = [
-                    'name' => $tokens[$name]['content'],
-                    'fqn' => ltrim($fullName, '\\'),
-                    'ptr' => $use,
-                    'eos' => $endOfStatement,
-                ];
-            }
-
-            $lastUse = $use;
-        }
-
-        return $constants;
-    }
-
-    /**
-     * @return false|int
-     */
-    private function isConstUse(File $phpcsFile, int $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-        $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
-
-        if ($tokens[$next]['code'] === T_STRING
-            && strtolower($tokens[$next]['content']) === 'const'
-        ) {
-            return $next;
-        }
-
-        return false;
     }
 }

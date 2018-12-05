@@ -15,6 +15,9 @@ use const T_CLASS;
 use const T_OPEN_PARENTHESIS;
 use const T_TRAIT;
 
+/**
+ * @internal
+ */
 class CodingStandard
 {
     /**

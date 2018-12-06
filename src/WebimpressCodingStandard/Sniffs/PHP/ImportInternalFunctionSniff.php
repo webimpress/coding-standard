@@ -9,8 +9,6 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use WebimpressCodingStandard\Helper\NamespacesTrait;
 
-use function array_flip;
-use function get_defined_functions;
 use function in_array;
 use function sort;
 use function sprintf;
@@ -41,14 +39,13 @@ class ImportInternalFunctionSniff implements Sniff
     private $builtInFunctions;
 
     /**
-     * @var array Array of imported function in current namespace.
+     * @var array Array of imported functions in current namespace.
      */
     private $importedFunctions;
 
     public function __construct()
     {
-        $allFunctions = get_defined_functions();
-        $this->builtInFunctions = array_flip($allFunctions['internal']);
+        $this->builtInFunctions = $this->getBuiltInFunctions();
     }
 
     /**

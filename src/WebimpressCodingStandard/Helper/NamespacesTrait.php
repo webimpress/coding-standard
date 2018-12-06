@@ -8,6 +8,10 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
 use WebimpressCodingStandard\CodingStandard;
 
+use function array_flip;
+use function array_walk_recursive;
+use function get_defined_constants;
+use function get_defined_functions;
 use function in_array;
 use function ltrim;
 use function strrchr;
@@ -134,5 +138,26 @@ trait NamespacesTrait
         } while (isset($tokens[++$stackPtr]));
 
         return ltrim($class, '\\');
+    }
+
+    private function getBuiltInFunctions() : array
+    {
+        $allFunctions = get_defined_functions();
+
+        return array_flip($allFunctions['internal']);
+    }
+
+    private function getBuiltInConstants() : array
+    {
+        $allConstants = get_defined_constants(true);
+
+        $arr = [];
+        array_walk_recursive($allConstants, function ($v, $k) use (&$arr) {
+            if (strtolower($k) !== 'user') {
+                $arr[$k] = $v;
+            }
+        });
+
+        return $arr;
     }
 }

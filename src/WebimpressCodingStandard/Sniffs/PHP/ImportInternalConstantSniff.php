@@ -9,12 +9,9 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use WebimpressCodingStandard\Helper\NamespacesTrait;
 
-use function array_walk_recursive;
-use function get_defined_constants;
 use function in_array;
 use function sort;
 use function sprintf;
-use function strtolower;
 use function strtoupper;
 
 use const T_DOUBLE_COLON;
@@ -42,22 +39,13 @@ class ImportInternalConstantSniff implements Sniff
     private $builtInConstants;
 
     /**
-     * @var array Array of imported constant in current namespace.
+     * @var array Array of imported constants in current namespace.
      */
     private $importedConstants;
 
     public function __construct()
     {
-        $allConstants = get_defined_constants(true);
-
-        $arr = [];
-        array_walk_recursive($allConstants, function ($v, $k) use (&$arr) {
-            if (strtolower($k) !== 'user') {
-                $arr[$k] = $v;
-            }
-        });
-
-        $this->builtInConstants = $arr;
+        $this->builtInConstants = $this->getBuiltInConstants();
     }
 
     /**

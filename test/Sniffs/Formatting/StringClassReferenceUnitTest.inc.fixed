@@ -1,0 +1,13 @@
+<?php
+
+$class = \DateTime::class;
+
+$myClass = \WebimpressCodingStandardTest\Ruleset::class;
+
+$interface = \Traversable::class;
+$lowercase = \traversable::class;
+
+$trait = \WebimpressCodingStandard\Helper\NamespacesTrait::class;
+
+$nonExistingClass = 'MyNamespace\ClassDoesNotExist';
+$nonSlash = 'DateTime';

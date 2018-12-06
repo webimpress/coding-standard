@@ -314,6 +314,7 @@ class ReturnTypeSniff implements Sniff
             return;
         }
 
+        // @phpcs:disable WebimpressCodingStandard.Formatting.StringClassReference
         $needSpecificationTypes = [
             'array',
             '?array',
@@ -491,6 +492,7 @@ class ReturnTypeSniff implements Sniff
                 }
                 break;
         }
+        // @phpcs:enable
     }
 
     private function processReturnStatements(File $phpcsFile, int $stackPtr) : void

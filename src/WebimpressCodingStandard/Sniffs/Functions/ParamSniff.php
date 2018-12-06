@@ -380,6 +380,7 @@ class ParamSniff implements Sniff
                     continue;
                 }
 
+                // @phpcs:disable WebimpressCodingStandard.Formatting.StringClassReference
                 // traversable
                 if (in_array($lowerTypeHint, [
                         'traversable',
@@ -434,6 +435,7 @@ class ParamSniff implements Sniff
                     '\generator',
                     '?\generator',
                 ];
+                // @phpcs:enable
 
                 if (! in_array($lowerTypeHint, $needSpecificationTypes, true)
                     && ((in_array($lowerTypeHint, $simpleTypes, true)

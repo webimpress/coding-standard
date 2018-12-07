@@ -1,0 +1,30 @@
+<?php
+
+namespace MyApp\MyNamespace;
+
+use MyApp\MyClass as Alias;
+use MyApp\Other;
+use MyName;
+use MyImportedClass;
+
+use function hello/* comment */;
+use function world as helloWorld;
+
+use const PHP_EOL as EOL;
+use const DIRECTORY_SEPARATOR;
+
+class NewClass
+{
+    use ATrait, BTrait {/* c */
+        sayHello as protected myProtectedHello;
+    }
+    use CTrait {
+    }
+
+    public function __construct(array $arr)
+    {
+        foreach ($arr as $k => $v) {
+            echo $k . '=>' . $v;
+        }
+    }
+}

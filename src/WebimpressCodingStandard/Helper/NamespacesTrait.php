@@ -104,10 +104,8 @@ trait NamespacesTrait
 
             if ($aliasStart) {
                 $alias = $tokens[$aliasStart]['content'];
-            } elseif (strrchr($name, '\\') !== false) {
-                $alias = substr(strrchr($name, '\\'), 1);
             } else {
-                $alias = $name;
+                $alias = $this->getAliasFromName($name);
             }
 
             $imports[$useType][$useType === 'const' ? strtoupper($alias) : strtolower($alias)] = [
@@ -118,6 +116,13 @@ trait NamespacesTrait
         }
 
         return $type === 'all' ? $imports : ($imports[$type] ?? []);
+    }
+
+    private function getAliasFromName(string $name) : string
+    {
+        return strrchr($name, '\\') === false
+            ? $name
+            : substr(strrchr($name, '\\'), 1);
     }
 
     private function getName(File $phpcsFile, int $stackPtr) : string

@@ -163,11 +163,7 @@ class UnusedUseStatementSniff implements Sniff
                     }
                 } elseif ($tokens[$classUsed]['code'] === T_DOC_COMMENT_STRING) {
                     if ($tokens[$beforeUsage]['code'] === T_DOC_COMMENT_TAG
-                        && in_array(
-                            $tokens[$beforeUsage]['content'],
-                            ['@var', '@param', '@return', '@throws', '@method'],
-                            true
-                        )
+                        && in_array($tokens[$beforeUsage]['content'], CodingStandard::TAG_WITH_TYPE, true)
                     ) {
                         return;
                     }

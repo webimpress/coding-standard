@@ -6,6 +6,7 @@ namespace WebimpressCodingStandard\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use WebimpressCodingStandard\CodingStandard;
 
 use function array_filter;
 use function implode;
@@ -44,12 +45,7 @@ class DocCommentSniff implements Sniff
     /**
      * @var string[]
      */
-    public $tagWithType = [
-        '@var',
-        '@param',
-        '@return',
-        '@throws',
-    ];
+    public $tagWithType = CodingStandard::TAG_WITH_TYPE;
 
     /**
      * @var string[]

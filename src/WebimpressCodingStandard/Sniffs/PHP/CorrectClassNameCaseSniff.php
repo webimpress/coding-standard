@@ -253,7 +253,7 @@ class CorrectClassNameCaseSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (! in_array($tokens[$stackPtr]['content'], ['@var', '@param', '@return', '@throws'], true)
+        if (! in_array($tokens[$stackPtr]['content'], CodingStandard::TAG_WITH_TYPE, true)
             || $tokens[$stackPtr + 1]['code'] !== T_DOC_COMMENT_WHITESPACE
             || $tokens[$stackPtr + 2]['code'] !== T_DOC_COMMENT_STRING
         ) {

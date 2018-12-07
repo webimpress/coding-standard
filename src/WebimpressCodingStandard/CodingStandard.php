@@ -20,6 +20,16 @@ use const T_TRAIT;
  */
 class CodingStandard
 {
+    public const TAG_WITH_TYPE = [
+        '@var',
+        '@param',
+        '@return',
+        '@throws',
+        '@property',
+        '@property-read',
+        '@property-write',
+    ];
+
     /**
      * Returns a valid variable type for param/var tag.
      *

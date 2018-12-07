@@ -1,0 +1,31 @@
+<?php
+
+// multiple namespaces
+
+namespace A {
+    use DateTime as DT;
+
+    const CONST_A = 'a';
+
+    function myAFunction(string $a) {
+        $dt = new DT();
+
+        return $dt->diff(new DT());
+    }
+}
+
+namespace B {
+use DateTime;
+use function A\myAFunction;
+use const A\CONST_A;
+    new DateTime();
+
+    function myBFunction () {
+        return myAFunction(CONST_A);
+    }
+}
+
+namespace C {
+use DT;
+    echo DT::class;
+}

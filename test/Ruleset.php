@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandardTest;
 
+use PHP_CodeSniffer\Ruleset as PhpcsRuleset;
+
 use function str_replace;
 
-class Ruleset extends \PHP_CodeSniffer\Ruleset
+class Ruleset extends PhpcsRuleset
 {
     /**
      * @param string[] $files

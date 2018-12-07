@@ -1,0 +1,129 @@
+<?php
+
+namespace MyNamespace \ Hello;
+
+use ArrayAccess;
+use DateTime;
+use InClosure\Param;
+use const InClosure\ReturnType;
+use const InClosure\CONST_IN_CLOSURE;
+use function InClosure\functionInClosure;
+use RuntimeException;
+use Throwable;
+use Name\Space;
+use Exception;
+use Error;
+use MyNamespace\Other\OtherClass;
+use function MyNamespace\Other\otherFunction;
+use function Bar\Baz\barBaz;
+use function Name\functionInSwitch;
+use function Name\otherFunctionInSwitch;
+use const MyNamespace\Other\OTHER_CONST;
+use const Bar\Baz\BAR_BAZ;
+use const Name\NAME_CONST;
+use const Name\CONST_IN_SWITCH;
+use const Name\OTHER_CONST_IN_SWITCH;
+
+use \ArrayObject as AO;
+
+use function Foo\Bar\fooBar;
+
+use const Foo\Bar\FOO_BAR;
+
+class TheClass extends ParentClass      implements ArrayAccess
+{
+    use MyTrait;
+
+    private $a;
+
+    public function __construct(DateTime $dateTime)
+    {
+        $this->a = new A\ClassA  ();
+
+        // class with the same name exists in the same directory (assumed: namespace)
+        new \SomeNamespace\DisallowFqnUnitTest();
+
+        // directory with the same name exists here so it assumes it has the namespace
+        new \SomeNamespace\BarBaz\TestAsset();
+
+        (function (Param &$inClosure) use ($dateTime) : ReturnType {
+            // the alias is used, so it can't be imported
+            new \AO();
+        })(CONST_IN_CLOSURE, functionInClosure());
+    }
+
+    public function test(AO ...$ao) : ArrayAccess
+    {
+        throw new RuntimeException();
+    }
+
+    public function catchException(Throwable $throwable = null, Space &$space = null)
+    {
+        try {
+            $this->test(new AO());
+        } catch (Exception | Error $ex) {
+            throw $ex;
+        }
+    }
+
+    public function doubleColon()
+    {
+        MyClass::class;
+        OtherClass::CLASS_CONST;
+    }
+
+    public function functionFromNamespace()
+    {
+        myFunction    ();
+
+        otherFunction();
+
+        fooBar();
+        \AnotherNamespace\fooBar();
+
+        barBaz();
+
+        switch (true) {
+            case 1:
+                functionInSwitch();
+                break;
+
+            case 2 * (3 + 2):
+                otherFunctionInSwitch();
+                break;
+        }
+    }
+
+    public function constantFromNamespace(int $var)
+    {
+        MY_CONST  ;
+
+        OTHER_CONST;
+
+        FOO_BAR;
+        \AnotherNamespace\FOO_BAR;
+
+        BAR_BAZ;
+
+        NAME_CONST | NAME_CONST & $var;
+
+        switch (true) {
+            case 1:
+                CONST_IN_SWITCH;
+                break;
+
+            case 2 * (3 + 2):
+                OTHER_CONST_IN_SWITCH;
+                break;
+        }
+    }
+
+    public function internalFunctionAndConstant()
+    {
+        $arr = array_merge([], []);
+
+        \sort($arr);
+
+        return \T_WHITESPACE + T_ELLIPSIS;
+    }
+}

@@ -1,0 +1,47 @@
+<?php
+
+namespace MyNamespace;
+
+use DateTime;
+use ArrayObject;
+use ArrayAccess;
+use FooBar\Baz;
+use Exception;
+use Error;
+use OtherName\ReturnType;
+
+use ImportedClass;
+
+/**
+ * Class MyClass
+ *
+ * @package MyNamespace
+ * @property Date $date
+ * @property Service\DateService $dateService
+ * @property-read DateTime $dateTime
+ * @property-write ArrayObject
+ */
+class MyClass
+{
+    /**
+     * @var null|Something|ArrayAccess
+     */
+    public $property;
+
+    /**
+     * @param self|Baz $param
+     * @throws Exception|Error
+     */
+    public function __construct(self $param)
+    {
+    }
+
+    /**
+     * @param \OtherNamespace\ImportedClass $param
+     * @return object|ReturnType
+     */
+    public function withReturn(\OtherNamespace\ImportedClass $param)
+    {
+        return $x;
+    }
+}

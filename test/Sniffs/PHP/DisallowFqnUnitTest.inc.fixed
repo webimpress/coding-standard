@@ -3,6 +3,7 @@
 namespace MyNamespace \ Hello;
 
 use ArrayAccess;
+use Countable;
 use DateTime;
 use InClosure\Param;
 use const InClosure\ReturnType;
@@ -30,7 +31,7 @@ use function Foo\Bar\fooBar;
 
 use const Foo\Bar\FOO_BAR;
 
-class TheClass extends ParentClass      implements ArrayAccess
+class TheClass extends ParentClass      implements ArrayAccess, Countable
 {
     use MyTrait;
 

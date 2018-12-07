@@ -38,6 +38,7 @@ use const T_CATCH;
 use const T_CLOSE_PARENTHESIS;
 use const T_CLOSURE;
 use const T_COLON;
+use const T_COMMA;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
@@ -282,6 +283,17 @@ class DisallowFqnSniff implements Sniff
                     && ($owner = $tokens[end($tokens[$stackPtr]['nested_parenthesis'])]['parenthesis_owner'] ?? 0)
                     && $tokens[$owner]['code'] === T_CATCH
                 ) {
+                    $type = 'class';
+                }
+            } elseif ($tokens[$prev]['code'] === T_COMMA) {
+                $before = $phpcsFile->findPrevious(
+                    Tokens::$emptyTokens + [T_STRING => T_STRING, T_NS_SEPARATOR => T_NS_SEPARATOR],
+                    $prev - 1,
+                    null,
+                    true
+                );
+
+                if ($tokens[$before]['code'] === T_IMPLEMENTS) {
                     $type = 'class';
                 }
             }

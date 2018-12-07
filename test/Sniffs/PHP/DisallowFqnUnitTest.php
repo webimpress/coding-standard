@@ -45,7 +45,7 @@ class DisallowFqnUnitTest extends AbstractTestCase
         }
 
         return [
-            11 => 2,
+            11 => 3,
             17 => 1,
             19 => 1,
             22 => 1,

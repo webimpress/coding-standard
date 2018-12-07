@@ -8,7 +8,7 @@ use function Foo\Bar\fooBar;
 
 use const Foo\Bar\FOO_BAR;
 
-class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAccess
+class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAccess, \Countable
 {
     use MyTrait;
 

@@ -28,6 +28,7 @@ sayHello as protected;
     use Hello {
 sayHello as private myPrivateHello;
 }
+    use EmptyBrackets ;
 
     /**
      * @param mixed $x

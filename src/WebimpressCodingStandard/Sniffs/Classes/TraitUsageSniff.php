@@ -124,13 +124,24 @@ class TraitUsageSniff implements Sniff
         }
 
         if ($tokens[$scopeOpener]['code'] === T_OPEN_CURLY_BRACKET) {
-            $prevNonEmpty = $phpcsFile->findPrevious(
-                Tokens::$emptyTokens,
-                $scopeOpener - 1,
-                null,
-                true
-            );
-            if ($tokens[$prevNonEmpty]['line'] !== $tokens[$scopeOpener]['line']) {
+            $scopeCloser = $tokens[$scopeOpener]['scope_closer'];
+
+            $prevNonEmpty = $phpcsFile->findPrevious(Tokens::$emptyTokens, $scopeOpener - 1, null, true);
+            $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, $scopeOpener + 1, null, true);
+
+            if ($scopeCloser === $nextNonEmpty) {
+                $error = 'Empty brackets with trait are redundant';
+                $fix = $phpcsFile->addFixableError($error, $scopeOpener, 'EmptyBrackets');
+
+                if ($fix) {
+                    $phpcsFile->fixer->beginChangeset();
+                    for ($i = $prev + 1; $i < $nextNonEmpty; ++$i) {
+                        $phpcsFile->fixer->replaceToken($scopeOpener, '');
+                        $phpcsFile->fixer->replaceToken($scopeCloser, ';');
+                    }
+                    $phpcsFile->fixer->endChangeset();
+                }
+            } elseif ($tokens[$prevNonEmpty]['line'] !== $tokens[$scopeOpener]['line']) {
                 $error = 'There must be a single space before curly bracket';
                 $fix = $phpcsFile->addFixableError($error, $scopeOpener, 'SpaceBeforeCurly');
 
@@ -155,39 +166,39 @@ class TraitUsageSniff implements Sniff
                 }
             }
 
-            $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, $scopeOpener + 1, null, true);
-            if ($tokens[$nextNonEmpty]['line'] !== $tokens[$scopeOpener]['line'] + 1) {
-                $error = 'Content must be in next line after opening curly bracket';
-                $fix = $phpcsFile->addFixableError($error, $scopeOpener, 'OpeningCurlyBracket');
+            if ($nextNonEmpty < $scopeCloser) {
+                if ($tokens[$nextNonEmpty]['line'] !== $tokens[$scopeOpener]['line'] + 1) {
+                    $error = 'Content must be in next line after opening curly bracket';
+                    $fix = $phpcsFile->addFixableError($error, $scopeOpener, 'OpeningCurlyBracket');
 
-                if ($fix) {
-                    $phpcsFile->fixer->beginChangeset();
-                    for ($i = $scopeOpener + 1; $i < $nextNonEmpty; ++$i) {
-                        $phpcsFile->fixer->replaceToken($i, '');
+                    if ($fix) {
+                        $phpcsFile->fixer->beginChangeset();
+                        for ($i = $scopeOpener + 1; $i < $nextNonEmpty; ++$i) {
+                            $phpcsFile->fixer->replaceToken($i, '');
+                        }
+                        $phpcsFile->fixer->addContentBefore($nextNonEmpty, $phpcsFile->eolChar);
+                        $phpcsFile->fixer->endChangeset();
                     }
-                    $phpcsFile->fixer->addContentBefore($nextNonEmpty, $phpcsFile->eolChar);
-                    $phpcsFile->fixer->endChangeset();
                 }
-            }
 
-            $scopeCloser = $tokens[$scopeOpener]['scope_closer'];
-            $prevNonEmpty = $phpcsFile->findPrevious(
-                Tokens::$emptyTokens,
-                $scopeCloser - 1,
-                null,
-                true
-            );
-            if ($tokens[$prevNonEmpty]['line'] + 1 !== $tokens[$scopeCloser]['line']) {
-                $error = 'Close curly bracket must be in next line after content';
-                $fix = $phpcsFile->addFixableError($error, $scopeCloser, 'ClosingCurlyBracket');
+                $prevNonEmpty = $phpcsFile->findPrevious(
+                    Tokens::$emptyTokens,
+                    $scopeCloser - 1,
+                    null,
+                    true
+                );
+                if ($tokens[$prevNonEmpty]['line'] + 1 !== $tokens[$scopeCloser]['line']) {
+                    $error = 'Close curly bracket must be in next line after content';
+                    $fix = $phpcsFile->addFixableError($error, $scopeCloser, 'ClosingCurlyBracket');
 
-                if ($fix) {
-                    $phpcsFile->fixer->beginChangeset();
-                    for ($i = $prevNonEmpty + 1; $i < $scopeCloser; ++$i) {
-                        $phpcsFile->fixer->replaceToken($i, '');
+                    if ($fix) {
+                        $phpcsFile->fixer->beginChangeset();
+                        for ($i = $prevNonEmpty + 1; $i < $scopeCloser; ++$i) {
+                            $phpcsFile->fixer->replaceToken($i, '');
+                        }
+                        $phpcsFile->fixer->addContentBefore($scopeCloser, $phpcsFile->eolChar);
+                        $phpcsFile->fixer->endChangeset();
                     }
-                    $phpcsFile->fixer->addContentBefore($scopeCloser, $phpcsFile->eolChar);
-                    $phpcsFile->fixer->endChangeset();
                 }
             }
 

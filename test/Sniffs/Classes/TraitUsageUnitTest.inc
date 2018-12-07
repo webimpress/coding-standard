@@ -24,6 +24,7 @@ class Foo
     use HelloWorld
     { sayHello as protected;}
     use Hello{ sayHello as private myPrivateHello; }
+    use EmptyBrackets {}
 
 
     /**

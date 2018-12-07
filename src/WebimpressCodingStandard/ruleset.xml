@@ -82,6 +82,9 @@
     <!-- PEAR Rules -->
     <rule ref="PEAR.Commenting.InlineComment"/>
 
+    <!-- PSR-12 Rules -->
+    <rule ref="PSR12.Classes.ClassInstantiation"/>
+
     <!-- Squiz Rules -->
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>

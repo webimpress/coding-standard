@@ -9,6 +9,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 
 use function class_exists;
 use function interface_exists;
+use function ltrim;
 use function str_replace;
 use function strpos;
 use function trait_exists;

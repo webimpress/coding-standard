@@ -20,6 +20,7 @@ use function strlen;
 use function strpos;
 use function substr;
 
+use const T_ANON_CLASS;
 use const T_ARRAY;
 use const T_BREAK;
 use const T_CATCH;
@@ -48,6 +49,7 @@ use const T_IF;
 use const T_INLINE_ELSE;
 use const T_INLINE_HTML;
 use const T_INLINE_THEN;
+use const T_INTERFACE;
 use const T_OBJECT_OPERATOR;
 use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_PARENTHESIS;
@@ -64,6 +66,7 @@ use const T_STRING;
 use const T_STRING_CONCAT;
 use const T_SWITCH;
 use const T_THROW;
+use const T_TRAIT;
 use const T_USE;
 use const T_VARIABLE;
 use const T_WHILE;
@@ -164,6 +167,7 @@ class ScopeIndentSniff implements Sniff
                 T_USE => T_USE,
                 T_CLOSURE => T_CLOSURE,
                 T_ARRAY => T_ARRAY,
+                T_ANON_CLASS => T_ANON_CLASS,
             ];
     }
 
@@ -253,7 +257,8 @@ class ScopeIndentSniff implements Sniff
                 continue;
             }
 
-            if ($tokens[$i]['code'] === T_CLASS) {
+            // Skip class/interface/trait declarations, handled by ClassDeclarationSniff
+            if (in_array($tokens[$i]['code'], [T_CLASS, T_INTERFACE, T_TRAIT], true)) {
                 $i = $tokens[$i]['scope_opener'];
                 continue;
             }
@@ -311,6 +316,31 @@ class ScopeIndentSniff implements Sniff
             if (isset($this->extras[$i])) {
                 $extraIndent -= $this->extras[$i];
                 unset($this->extras[$i]);
+            }
+
+            // Skip anonymous class declaration, handled by AnonymousClassDeclarationSniff
+            // Anonymous class without parenthesis
+            if ($tokens[$i]['code'] === T_ANON_CLASS) {
+                $next = $phpcsFile->findNext(Tokens::$emptyTokens, $i + 1, null, true);
+                if ($tokens[$next]['code'] !== T_OPEN_PARENTHESIS) {
+                    $i = $tokens[$i]['scope_opener'];
+                    continue;
+                }
+            }
+
+            // Closing parenthesis belongs to anonymous class, skip to scope opener
+            if ($tokens[$i]['code'] === T_CLOSE_PARENTHESIS) {
+                $before = $phpcsFile->findPrevious(
+                    Tokens::$emptyTokens,
+                    $tokens[$i]['parenthesis_opener'] - 1,
+                    null,
+                    true
+                );
+
+                if ($tokens[$before]['code'] === T_ANON_CLASS) {
+                    $i = $tokens[$before]['scope_opener'];
+                    continue;
+                }
             }
 
             // check if closing parenthesis is in the same line as control structure

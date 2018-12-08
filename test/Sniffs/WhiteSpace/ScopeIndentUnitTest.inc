@@ -568,3 +568,18 @@ if ($a &&
     $b
 ) {
 }
+
+$instance = new class(
+$param1,
+$param2
+) extends Foo implements
+  \ArrayAccess,
+   \Countable,
+ \Traversable
+{
+     }
+
+interface MyInterface extends
+ OtherInterface,
+   \Traversable {
+}

@@ -53,7 +53,7 @@ use const T_UNSET;
 use const T_USE;
 use const T_VARIABLE;
 
-class UnnecessaryParenthesesSniff implements Sniff
+class RedundantParenthesesSniff implements Sniff
 {
     /**
      * @var int[]

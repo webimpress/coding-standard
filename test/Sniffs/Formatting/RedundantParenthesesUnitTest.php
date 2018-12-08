@@ -6,7 +6,7 @@ namespace WebimpressCodingStandardTest\Sniffs\Formatting;
 
 use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class UnnecessaryParenthesesUnitTest extends AbstractTestCase
+class RedundantParenthesesUnitTest extends AbstractTestCase
 {
     protected function getErrorList(string $testFile = '') : array
     {

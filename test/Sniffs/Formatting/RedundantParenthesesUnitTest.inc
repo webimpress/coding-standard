@@ -1,6 +1,6 @@
 <?php
 
-class UnnecessaryParentheses
+class RedundantParentheses
 {
     public function method1()
     {
@@ -19,7 +19,7 @@ class UnnecessaryParentheses
         $i2 = new static();
         $i3 = new DateTime();
 
-        $anonym = new class() extends UnnecessaryParentheses {
+        $anonym = new class() extends RedundantParentheses {
         };
 
         $v1 = new $anonym();

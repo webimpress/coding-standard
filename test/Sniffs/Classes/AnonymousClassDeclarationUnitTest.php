@@ -92,6 +92,7 @@ class AnonymousClassDeclarationUnitTest extends AbstractTestCase
             96 => 2,
             99 => 2,
             100 => 1,
+            104 => 1,
         ];
     }
 

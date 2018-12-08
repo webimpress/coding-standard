@@ -100,3 +100,12 @@ $instance = new class extends \Foo implements
 
 $instance = new class extends Foo {
 };
+
+$instance = new class (
+    (function () {
+    })(),
+    array(),
+    [],
+    $a ? ($b + 1) * $c : $y
+) extends DateTime {
+};

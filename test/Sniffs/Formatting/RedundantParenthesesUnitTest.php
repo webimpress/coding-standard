@@ -52,6 +52,7 @@ class RedundantParenthesesUnitTest extends AbstractTestCase
             150 => 1,
             151 => 1,
             152 => 1,
+            166 => 1,
             171 => 3,
             172 => 3,
             173 => 1,
@@ -62,6 +63,7 @@ class RedundantParenthesesUnitTest extends AbstractTestCase
             178 => 1,
             179 => 1,
             180 => 1,
+            185 => 1,
         ];
     }
 

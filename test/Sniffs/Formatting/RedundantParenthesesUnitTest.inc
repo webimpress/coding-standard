@@ -181,5 +181,9 @@ class RedundantParentheses
                 }
             }
         }
+
+        if ($a === ($b + 1)) {
+            echo 1;
+        }
     }
 }

@@ -219,9 +219,27 @@ class RedundantParenthesesSniff implements Sniff
 
         // Check single expression comparision
         if (in_array($tokens[$prev]['code'], Tokens::$equalityTokens, true)) {
+            if ($op = $phpcsFile->findNext(
+                Tokens::$assignmentTokens + [
+                    T_INLINE_ELSE => T_INLINE_ELSE,
+                    T_INLINE_THEN => T_INLINE_THEN,
+                ],
+                $stackPtr + 1,
+                $closePtr
+            )) {
+                return;
+            }
+
             $op = $phpcsFile->findNext(
+                Tokens::$emptyTokens,
+                $closePtr + 1,
+                null,
+                true
+            );
+
+            if (! in_array(
+                $tokens[$op]['code'],
                 Tokens::$arithmeticTokens
-                    + Tokens::$assignmentTokens
                     + Tokens::$booleanOperators
                     + [
                         T_BITWISE_AND => T_BITWISE_AND,
@@ -231,11 +249,8 @@ class RedundantParenthesesSniff implements Sniff
                         T_INLINE_ELSE => T_INLINE_ELSE,
                         T_INLINE_THEN => T_INLINE_THEN,
                     ],
-                $stackPtr + 1,
-                $closePtr
-            );
-
-            if ($op === false) {
+                true
+            )) {
                 $this->error($phpcsFile, $stackPtr, $closePtr, 'SingleEquality');
             }
             return;

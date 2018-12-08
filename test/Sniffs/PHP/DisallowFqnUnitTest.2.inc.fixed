@@ -29,3 +29,8 @@ namespace C {
 use DT;
     echo DT::class;
 }
+
+namespace D {
+use DateTime;
+    new DateTime();
+}

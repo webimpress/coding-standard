@@ -9,6 +9,7 @@ use FooBar\Baz;
 use Exception;
 use Error;
 use OtherName\ReturnType;
+use Traversable;
 
 use ImportedClass;
 
@@ -43,5 +44,14 @@ class MyClass
     public function withReturn(\OtherNamespace\ImportedClass $param)
     {
         return $x;
+    }
+
+    /**
+     * @param DateTime[]|ArrayObject[]
+     * @return object[]|Traversable
+     */
+    public function arrayTypes(array $arr) : array
+    {
+        return $arr;
     }
 }

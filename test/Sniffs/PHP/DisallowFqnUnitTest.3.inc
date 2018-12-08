@@ -36,4 +36,13 @@ class MyClass
     {
         return $x;
     }
+
+    /**
+     * @param \DateTime[]|\ArrayObject[]
+     * @return object[]|\Traversable
+     */
+    public function arrayTypes(array $arr) : array
+    {
+        return $arr;
+    }
 }

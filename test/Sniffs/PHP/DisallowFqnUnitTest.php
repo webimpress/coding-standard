@@ -28,6 +28,7 @@ class DisallowFqnUnitTest extends AbstractTestCase
                     18 => 1,
                     21 => 2,
                     26 => 1,
+                    30 => 1,
                 ];
             case 'DisallowFqnUnitTest.3.inc':
                 return [
@@ -41,6 +42,8 @@ class DisallowFqnUnitTest extends AbstractTestCase
                     32 => 1,
                     33 => 1,
                     35 => 1,
+                    41 => 1,
+                    42 => 1,
                 ];
         }
 

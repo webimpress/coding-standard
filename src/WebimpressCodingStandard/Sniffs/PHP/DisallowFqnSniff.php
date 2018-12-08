@@ -23,9 +23,11 @@ use function ltrim;
 use function preg_quote;
 use function preg_replace;
 use function sprintf;
+use function str_replace;
 use function stripos;
 use function strlen;
 use function strpos;
+use function strstr;
 use function strtolower;
 use function strtoupper;
 use function substr;
@@ -153,7 +155,11 @@ class DisallowFqnSniff implements Sniff
         $localToImport = [];
         $newTypesArr = [];
         foreach ($typesArr as $name) {
-            $newTypesArr[] = $this->getExpectedName($phpcsFile, $stackPtr + 2, $namespace, $name, $localToImport);
+            $suffix = strstr($name, '[');
+            $name = str_replace(['[', ']'], '', $name);
+
+            $newTypesArr[] = $this->getExpectedName($phpcsFile, $stackPtr + 2, $namespace, $name, $localToImport)
+                . $suffix;
         }
 
         $newTypes = implode('|', $newTypesArr);
@@ -198,14 +204,14 @@ class DisallowFqnSniff implements Sniff
         // Remove leading slash from the class name
         $name = ltrim($name, '\\');
 
-        if (stripos($name, $namespace) === 0) {
+        if (stripos($name . '\\', $namespace . '\\') === 0) {
             return substr($name, strlen($namespace) + 1);
         }
 
         $alias = $this->getAliasFromName($name);
         foreach ($this->imported['class'] ?? [] as $class) {
             // If namespace or part of it is already imported
-            if (stripos($name, $class['fqn']) === 0) {
+            if (stripos($name . '\\', $class['fqn'] . '\\') === 0) {
                 return $class['name'];
             }
         }
@@ -302,7 +308,7 @@ class DisallowFqnSniff implements Sniff
         $name = $this->getName($phpcsFile, $stackPtr);
 
         // If the found name is in the same namespace
-        if (stripos($name, $namespace) === 0) {
+        if (stripos($name . '\\', $namespace . '\\') === 0) {
             $error = 'FQN is disallowed for %s in namespace %s';
             $data = [
                 $name,
@@ -343,7 +349,7 @@ class DisallowFqnSniff implements Sniff
 
         foreach ($this->imported['class'] ?? [] as $class) {
             // If namespace or part of it is already imported
-            if (stripos($name, $class['fqn']) === 0) {
+            if (stripos($name . '\\', $class['fqn'] . '\\') === 0) {
                 $error = 'Namespace %s is already imported';
                 $data = [$class['fqn']];
                 $this->error($phpcsFile, $error, $stackPtr, 'NamespaceImported', $data, $class['name']);

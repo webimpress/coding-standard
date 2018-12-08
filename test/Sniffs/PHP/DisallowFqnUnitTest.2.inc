@@ -25,3 +25,7 @@ namespace B {
 namespace C {
     echo \DT::class;
 }
+
+namespace D {
+    new \DateTime();
+}

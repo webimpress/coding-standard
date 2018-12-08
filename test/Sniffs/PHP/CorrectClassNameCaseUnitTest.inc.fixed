@@ -25,10 +25,10 @@ class MyClass
         $dt = new DateTime();
         $ao = new ArrayObject();
         $ai = new \ArrayIterator();
-        $dr = \DateTime
+        $dr = DateTime
             ::
             createFromFormat('Y-m-d', '2015-12-16');
-        $dx = \DateTime::createFromFormat('Y', '2016');
+        $dx = DateTime::createFromFormat('Y', '2016');
 
         $class = Foo::class;
 
@@ -40,7 +40,7 @@ class MyClass
         new BarClass();
 
         $dt = new
-        \DateTime;
+        DateTime;
     }
 
     public function throwEx()
@@ -70,10 +70,10 @@ class MyClass
     /**
      * @see https://webimpress.com/
      * @param int $a
-     * @param array|\Traversable|\ArrayObject $b
+     * @param array|\Traversable|ArrayObject $b
      * @param callable $c
      * @param AbstractTestCase|CorrectClassNameCaseUnitTest|null $testCase
-     * @return \WebimpressCodingStandardTest\Sniffs\AbstractTestCase
+     * @return AbstractTestCase
      * @throws \RangeException
      */
     public function method3(
@@ -81,12 +81,12 @@ class MyClass
         $b,
         callable $c,
         AbstractTestCase $testCase = null
-    ) : \WebimpressCodingStandardTest\Sniffs\AbstractTestCase {
+    ) : AbstractTestCase {
         throw new \RangeException;
     }
 
     /**
-     * @param iterable|\Traversable[]|\ArrayObject[]|Foo[] $a
+     * @param iterable|\Traversable[]|ArrayObject[]|Foo[] $a
      */
     public function trav(iterable $a)
     {

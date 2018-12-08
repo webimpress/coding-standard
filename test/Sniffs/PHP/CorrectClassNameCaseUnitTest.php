@@ -17,7 +17,9 @@ class CorrectClassNameCaseUnitTest extends AbstractTestCase
                     5 => 1,
                     8 => 1,
                     9 => 1,
-                    11 => 1,
+                    10 => 1,
+                    12 => 1,
+                    15 => 1,
                 ];
             case 'CorrectClassNameCaseUnitTest.2.inc':
                 return [

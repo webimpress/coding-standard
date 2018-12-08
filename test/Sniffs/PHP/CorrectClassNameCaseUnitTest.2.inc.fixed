@@ -7,7 +7,7 @@ namespace A {
 
     new AO;
     new AO;
-    new \ArrayObject();
+    new AO();
 
     \DateTime::createFromFormat();
 }
@@ -21,7 +21,7 @@ namespace B {
 
     new DT;
     new DT;
-    new \DateTime();
+    new DT();
 
     DT::createFromFormat();
 

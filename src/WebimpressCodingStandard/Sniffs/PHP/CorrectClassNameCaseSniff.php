@@ -22,11 +22,11 @@ use function in_array;
 use function ltrim;
 use function preg_quote;
 use function preg_replace;
+use function str_replace;
 use function strlen;
 use function strpos;
 use function strstr;
 use function strtolower;
-use function strtr;
 use function substr;
 use function trim;
 
@@ -274,7 +274,7 @@ class CorrectClassNameCaseSniff implements Sniff
         $newTypes = implode('|', $newTypesArr);
 
         if ($newTypes !== $types) {
-            $error = 'Invalid class name case: expected %s; found %s';
+            $error = 'Expected class name %s; found %s';
             $data = [
                 $newTypes,
                 $types,
@@ -296,9 +296,18 @@ class CorrectClassNameCaseSniff implements Sniff
     private function getExpectedName(File $phpcsFile, string $class, int $stackPtr) : string
     {
         $suffix = strstr($class, '[');
-        $class = strtr($class, ['[' => '', ']' => '']);
+        $class = str_replace(['[', ']'], '', $class);
+
+        $imports = $this->getGlobalUses($phpcsFile);
 
         if (strpos($class, '\\') === 0) {
+            $fqn = strtolower(ltrim($class, '\\'));
+            foreach ($imports as $alias => $import) {
+                if (strtolower($import['fqn']) === $fqn) {
+                    return $import['name'] . $suffix;
+                }
+            }
+
             $result = $this->hasDifferentCase(ltrim($class, '\\'));
             if ($result) {
                 return '\\' . $result . $suffix;
@@ -306,8 +315,6 @@ class CorrectClassNameCaseSniff implements Sniff
 
             return $class . $suffix;
         }
-
-        $imports = $this->getGlobalUses($phpcsFile);
 
         // Check if class is imported.
         if (isset($imports[strtolower($class)])) {
@@ -318,6 +325,12 @@ class CorrectClassNameCaseSniff implements Sniff
             // Class from the same namespace.
             $namespace = $this->getNamespace($phpcsFile, $stackPtr);
             $fullClassName = ltrim($namespace . '\\' . $class, '\\');
+
+            foreach ($imports as $alias => $import) {
+                if (strtolower($import['fqn']) === strtolower($fullClassName)) {
+                    return $import['name'] . $suffix;
+                }
+            }
 
             $result = $this->hasDifferentCase(ltrim($fullClassName, '\\'));
             if ($result) {
@@ -363,6 +376,18 @@ class CorrectClassNameCaseSniff implements Sniff
     {
         $class = trim($phpcsFile->getTokensAsString($start, $end - $start));
         if (strpos($class, '\\') === 0) {
+            if (! $isGlobalUse) {
+                $imports = $this->getGlobalUses($phpcsFile, $start);
+
+                $fqn = strtolower(ltrim($class, '\\'));
+                foreach ($imports as $alias => $import) {
+                    if (strtolower($import['fqn']) === $fqn) {
+                        $this->error($phpcsFile, $start, $end, $import['name'], $class);
+                        return;
+                    }
+                }
+            }
+
             $result = $this->hasDifferentCase(ltrim($class, '\\'));
             if ($result) {
                 $this->error($phpcsFile, $start, $end, '\\' . $result, $class);
@@ -384,6 +409,13 @@ class CorrectClassNameCaseSniff implements Sniff
                 $namespace = $this->getNamespace($phpcsFile, $start);
                 $fullClassName = ltrim($namespace . '\\' . $class, '\\');
 
+                foreach ($imports as $alias => $import) {
+                    if (strtolower($import['fqn']) === strtolower($fullClassName)) {
+                        $this->error($phpcsFile, $start, $end, $import['name'], $class);
+                        return;
+                    }
+                }
+
                 $result = $this->hasDifferentCase(ltrim($fullClassName, '\\'));
                 if ($result) {
                     $this->error($phpcsFile, $start, $end, ltrim(substr($result, strlen($namespace)), '\\'), $class);
@@ -403,7 +435,7 @@ class CorrectClassNameCaseSniff implements Sniff
      */
     private function error(File $phpcsFile, int $start, int $end, string $expected, string $actual) : void
     {
-        $error = 'Invalid class name case: expected %s; found %s';
+        $error = 'Expected class name %s; found %s';
         $data = [
             $expected,
             $actual,

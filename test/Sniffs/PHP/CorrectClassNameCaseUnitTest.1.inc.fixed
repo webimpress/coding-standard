@@ -6,6 +6,14 @@ new DateTime;
 
 new AO;
 new AO;
-new \ArrayObject();
+new AO();
+new AO();
 
 DateTime::createFromFormat();
+
+/**
+ * @property AO $ao
+ */
+class CorrectClassNameCase
+{
+}

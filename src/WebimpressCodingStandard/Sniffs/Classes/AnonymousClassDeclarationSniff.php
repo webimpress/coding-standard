@@ -368,10 +368,10 @@ class AnonymousClassDeclarationSniff implements Sniff
                     if ($fix) {
                         if ($tokens[$prev]['code'] === T_WHITESPACE) {
                             $phpcsFile->fixer->beginChangeset();
-                            if ($tokens[$prev - 1]['code'] === T_WHITESPACE) {
-                                $phpcsFile->fixer->replaceToken($prev - 1, ' ');
-                            }
                             $phpcsFile->fixer->replaceToken($prev, ' ');
+                            while ($tokens[--$prev]['code'] === T_WHITESPACE) {
+                                $phpcsFile->fixer->replaceToken($prev, '');
+                            }
                             $phpcsFile->fixer->endChangeset();
                         } else {
                             $phpcsFile->fixer->addContent($prev, ' ');

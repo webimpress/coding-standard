@@ -583,3 +583,10 @@ interface MyInterface extends
  OtherInterface,
    \Traversable {
 }
+
+new class extends \DateTime {
+public function reset()
+{
+    echo 1;
+}
+};

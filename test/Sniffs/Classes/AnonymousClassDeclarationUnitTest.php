@@ -69,6 +69,7 @@ class AnonymousClassDeclarationUnitTest extends AbstractTestCase
             31 => 1,
             32 => 1,
             34 => 1,
+            39 => 1,
             40 => 3,
             51 => 1,
             52 => 1,

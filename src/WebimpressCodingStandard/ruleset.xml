@@ -32,8 +32,6 @@
     <!-- Generic Rules -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.Classes.DuplicateClassName"/>
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
-    <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
     <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
     <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
@@ -44,6 +42,8 @@
             <property name="error" value="true"/>
         </properties>
     </rule>
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <rule ref="Generic.NamingConventions.ConstructorName"/>
     <rule ref="Generic.PHP.DiscourageGoto"/>
     <rule ref="Generic.PHP.ForbiddenFunctions">

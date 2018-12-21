@@ -67,7 +67,7 @@ class TypeCastingSniff implements Sniff
 
         $code = $tokens[$stackPtr]['code'];
         if (! isset($this->castMap[$code])) {
-            $error = 'Type cast %s casting is disallowed';
+            $error = 'Type cast %s is disallowed';
             $data = [$tokens[$stackPtr]['content']];
 
             $phpcsFile->addError($error, $stackPtr, 'DisallowedCast', $data);

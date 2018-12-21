@@ -4,6 +4,7 @@
 
 ! ! $var;
 
+(binary)$var;
 (boolean)$var;
 (integer)$var;
 (object)$var;
@@ -16,6 +17,7 @@
 (real)$var;
 (unset)$var;
 
+(binary)   $var;
 (boolean)  $var;
 (integer)  $var;
 (object)   $var;
@@ -36,6 +38,7 @@
 (integer )$var;
 (  integer)$var;
 
+(BINARY)   $var;
 (BOOLEAN)  $var;
 (INTEGER)  $var;
 (OBJECT)   $var;
@@ -47,3 +50,5 @@
 (FLOAT)    $var;
 (REAL)     $var;
 (UNSET)    $var;
+
+$binary = b'0x123';

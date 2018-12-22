@@ -88,6 +88,7 @@
     <rule ref="PSR12.Functions.NullableTypeDeclaration"/>
 
     <!-- Squiz Rules -->
+    <rule ref="Squiz.Classes.ClassFileName"/>
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
     <rule ref="Squiz.PHP.NonExecutableCode"/>

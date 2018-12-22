@@ -41,11 +41,6 @@ class ReturnTypeSniff implements Sniff
     public $spacesAfterColon = 1;
 
     /**
-     * @var int
-     */
-    public $spacesAfterNullable = 0;
-
-    /**
      * @var string[]
      */
     private $simpleReturnTypes = [
@@ -77,7 +72,6 @@ class ReturnTypeSniff implements Sniff
     {
         $this->spacesBeforeColon = (int) $this->spacesBeforeColon;
         $this->spacesAfterColon = (int) $this->spacesAfterColon;
-        $this->spacesAfterNullable = (int) $this->spacesAfterNullable;
 
         $tokens = $phpcsFile->getTokens();
 
@@ -119,9 +113,6 @@ class ReturnTypeSniff implements Sniff
 
         $this->checkSpacesBeforeColon($phpcsFile, $colon);
         $this->checkSpacesAfterColon($phpcsFile, $colon);
-        if ($nullable) {
-            $this->checkSpacesAfterNullable($phpcsFile, $nullable);
-        }
 
         $first = $phpcsFile->findNext(Tokens::$emptyTokens, ($nullable ?: $colon) + 1, null, true);
         $last = $phpcsFile->findPrevious(Tokens::$emptyTokens, $eol - 1, null, true);
@@ -232,43 +223,6 @@ class ReturnTypeSniff implements Sniff
                 $phpcsFile->fixer->replaceToken($colon + 1, $expected);
             } else {
                 $phpcsFile->fixer->addContent($colon, $expected);
-            }
-        }
-    }
-
-    /**
-     * Checks if token after nullable operator match configured number of spaces.
-     */
-    private function checkSpacesAfterNullable(File $phpcsFile, int $nullable) : void
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        // The whitespace after nullable operator is not expected and it is not present.
-        if ($this->spacesAfterNullable === 0
-            && $tokens[$nullable + 1]['code'] !== T_WHITESPACE
-        ) {
-            return;
-        }
-
-        $expected = str_repeat(' ', $this->spacesAfterNullable);
-
-        // Next token contains expected number of spaces.
-        if ($this->spacesAfterNullable > 0
-            && $tokens[$nullable + 1]['content'] === $expected
-        ) {
-            return;
-        }
-
-        $error = 'There must be exactly %d space(s) between the nullable operator and return type'
-            . ' when declaring a return type for a function';
-        $data = [$this->spacesAfterNullable];
-        $fix = $phpcsFile->addFixableError($error, $nullable + 1, 'SpacesAfterNullable', $data);
-
-        if ($fix) {
-            if ($tokens[$nullable + 1]['code'] === T_WHITESPACE) {
-                $phpcsFile->fixer->replaceToken($nullable + 1, $expected);
-            } else {
-                $phpcsFile->fixer->addContent($nullable, $expected);
             }
         }
     }

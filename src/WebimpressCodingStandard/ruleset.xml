@@ -85,6 +85,7 @@
 
     <!-- PSR-12 Rules -->
     <rule ref="PSR12.Classes.ClassInstantiation"/>
+    <rule ref="PSR12.Functions.NullableTypeDeclaration"/>
 
     <!-- Squiz Rules -->
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>

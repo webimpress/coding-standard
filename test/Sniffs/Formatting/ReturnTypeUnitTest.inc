@@ -1,7 +1,6 @@
 <?php
 // @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesBeforeColon 0
 // @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterColon 1
-// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterNullable 0
 
 $v = 1;
 

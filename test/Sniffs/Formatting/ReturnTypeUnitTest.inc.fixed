@@ -1,7 +1,6 @@
 <?php
 // @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesBeforeColon 0
 // @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterColon 1
-// @phpcs:set WebimpressCodingStandard.Formatting.ReturnType spacesAfterNullable 0
 
 $v = 1;
 
@@ -57,7 +56,7 @@ interface MyInterface
     public function b(): int;
     public function c(): ?int;
     public function d(): float;
-    public function e(): ?float;
+    public function e(): ? float;
     public function f(): object;
     public function g(): ?object;
     public function h(): array;
@@ -79,7 +78,7 @@ interface MyInterface
     public function w(): ?\DateTime;
 
     public function y($a, $b, $c): \My\TestClass;
-    public function z(): ?\ReturnType\MyType;
+    public function z(): ? \ReturnType\MyType;
 }
 
 class NonFixable

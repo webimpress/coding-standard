@@ -89,6 +89,7 @@
 
     <!-- Squiz Rules -->
     <rule ref="Squiz.Classes.ClassFileName"/>
+    <rule ref="Squiz.Classes.SelfMemberReference"/>
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
     <rule ref="Squiz.PHP.NonExecutableCode"/>

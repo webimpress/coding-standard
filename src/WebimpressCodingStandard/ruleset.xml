@@ -78,6 +78,7 @@
             <property name="allowMultiline" value="true"/>
         </properties>
     </rule>
+    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
 
     <!-- PEAR Rules -->
     <rule ref="PEAR.Commenting.InlineComment"/>

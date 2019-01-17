@@ -832,7 +832,7 @@ class ScopeIndentSniff implements Sniff
                 $ptr = $tokens[$ptr]['bracket_closer'];
             } elseif (in_array(
                 $tokens[$ptr]['code'],
-                [T_OBJECT_OPERATOR, T_SEMICOLON, T_CLOSE_PARENTHESIS, T_CLOSE_SHORT_ARRAY],
+                [T_OBJECT_OPERATOR, T_SEMICOLON, T_CLOSE_PARENTHESIS, T_CLOSE_SHORT_ARRAY, T_COMMA],
                 true
             )) {
                 return $ptr;

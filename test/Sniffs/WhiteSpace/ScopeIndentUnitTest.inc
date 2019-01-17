@@ -590,3 +590,10 @@ public function reset()
     echo 1;
 }
 };
+
+$array = [
+    (new \DateTime())
+        ->modify('+1 day')
+        ->format('Y-m-d'),
+    'string',
+];

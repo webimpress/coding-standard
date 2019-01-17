@@ -8,6 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
+use function array_diff;
 use function array_pop;
 use function ceil;
 use function end;
@@ -374,6 +375,59 @@ class ScopeIndentSniff implements Sniff
                 }
             }
 
+            if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS
+                && $tokens[$i]['line'] < $tokens[$tokens[$i]['parenthesis_closer']]['line']
+            ) {
+                $next = $phpcsFile->findNext(
+                    Tokens::$emptyTokens
+                        + [
+                            T_OPEN_SHORT_ARRAY => T_OPEN_SHORT_ARRAY,
+                            T_OPEN_CURLY_BRACKET => T_OPEN_CURLY_BRACKET,
+                            T_OPEN_PARENTHESIS => T_OPEN_PARENTHESIS,
+                        ],
+                    $i + 1,
+                    null,
+                    true
+                );
+
+                $prev = $phpcsFile->findPrevious(
+                    Tokens::$emptyTokens
+                        + [
+                            T_CLOSE_SHORT_ARRAY => T_CLOSE_SHORT_ARRAY,
+                            T_CLOSE_CURLY_BRACKET => T_CLOSE_CURLY_BRACKET,
+                            T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
+                        ],
+                    $tokens[$i]['parenthesis_closer'] - 1,
+                    null,
+                    true
+                );
+
+                $owner = $phpcsFile->findPrevious(
+                    Tokens::$emptyTokens,
+                    $tokens[$i]['parenthesis_opener'] - 1,
+                    null,
+                    true
+                );
+
+                $ownerTokens = array_diff($this->functionToken, $this->controlStructures);
+
+                if ($tokens[$next]['line'] === $tokens[$i]['line']
+                    && in_array($tokens[$owner]['code'], $ownerTokens, true)
+                    && $this->hasContainNewLine(
+                        $phpcsFile,
+                        $tokens[$i]['parenthesis_opener'],
+                        $prev
+                    )
+                ) {
+                    $error = 'Content must be in new line after opening parenthesis';
+                    $fix = $phpcsFile->addFixableError($error, $i, 'OpeningParenthesis');
+
+                    if ($fix) {
+                        $phpcsFile->fixer->addNewline($i);
+                    }
+                }
+            }
+
             // closing parenthesis in next line when multi-line control structure
             if ($tokens[$i]['code'] === T_CLOSE_PARENTHESIS
                 && $tokens[$i]['line'] > $tokens[$tokens[$i]['parenthesis_opener']]['line']
@@ -396,6 +450,7 @@ class ScopeIndentSniff implements Sniff
                     null,
                     true
                 );
+
                 if ($tokens[$prev]['line'] === $tokens[$i]['line']
                     && in_array($tokens[$owner]['code'], $this->functionToken, true)
                     && $this->hasContainNewLine(

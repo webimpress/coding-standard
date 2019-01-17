@@ -597,3 +597,7 @@ $array = [
         ->format('Y-m-d'),
     'string',
 ];
+
+$object
+    ->method((new MyClass())
+    ->inner((string) $value))->outer();

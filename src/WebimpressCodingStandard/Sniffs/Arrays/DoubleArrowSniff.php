@@ -14,6 +14,14 @@ use function str_repeat;
 
 use const T_WHITESPACE;
 
+/**
+ * - check if `=>` in array is at the end of the line (code: `AtTheEnd`)
+ * - check spaces before `=>` - by default expected only one space, but can
+ *   be configured by setting `maxPadding` to align array arrows `=>` in
+ *   multi-line arrays. New group of alignment starts when there is an empty line, line with comment or arrow
+ *   is in new line.
+ *   (code: `SpacesBefore`)
+ */
 class DoubleArrowSniff extends AbstractArraySniff
 {
     /**

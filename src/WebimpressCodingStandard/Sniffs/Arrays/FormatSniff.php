@@ -17,6 +17,28 @@ use const T_COMMENT;
 use const T_DOUBLE_ARROW;
 use const T_WHITESPACE;
 
+/**
+ * Single Line Arrays:
+ *   - no spaces after opening bracket (code: `SingleLineSpaceBefore`),
+ *   - no spaces before closing bracket (code: `SingleLineSpaceAfter`).
+ *
+ * Multiline Arrays:
+ *   - empty array in one line: `[]` (code: `EmptyArrayInOneLine`),
+ *   - no blank line before closing bracket (code: `BlankLineAtTheEnd`),
+ *   - one element per line (code: `OneElementPerLine`),
+ *   - no blank lines between elements; only allowed before comment (code: `BlankLine`):
+ *     ```php
+ *     $array = [
+ *         'elem1',
+ *         'elem2',
+ *
+ *         // some comment
+ *         'key' => 'value',
+ *         'foo' => 'baz',
+ *     ];
+ *     ```
+ *   - array closing bracket in new line (code: `ClosingBracketInNewLine`).
+ */
 class FormatSniff extends AbstractArraySniff
 {
     /**

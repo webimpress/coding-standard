@@ -32,4 +32,23 @@ abstract class LineAfter
     } /* another comment */public function inTheSameLine()
     {
     } # comment
+
+    public function nextWithDocBlock()
+    {
+    }
+
+
+    /**
+     * @return int
+     */
+    public function returnInt()
+    {
+        return 0;
+    }/**
+     * @return string
+     */
+    public function returnString()
+    {
+        return '';
+    }
 }

@@ -10,10 +10,10 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use function class_exists;
 use function interface_exists;
 use function ltrim;
-use function str_replace;
+use function preg_match;
 use function strpos;
+use function strtr;
 use function trait_exists;
-use function trim;
 
 use const T_CONSTANT_ENCAPSED_STRING;
 
@@ -37,7 +37,18 @@ class StringClassReferenceSniff implements Sniff
             return;
         }
 
-        $name = trim(str_replace(['"', "'"], '', $tokens[$stackPtr]['content']));
+        $name = strtr($tokens[$stackPtr]['content'], [
+            '"' => '',
+            "'" => '',
+            '\\\\' => '\\',
+        ]);
+
+        if (strpos($name, '\\\\') !== false
+            || preg_match('/\s/', $name)
+        ) {
+            return;
+        }
+
         if (class_exists($name) || interface_exists($name) || trait_exists($name)) {
             $error = 'String "%s" contains class reference, use ::class instead';
             $data = [$name];

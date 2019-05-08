@@ -11,3 +11,12 @@ $trait = \WebimpressCodingStandard\Helper\NamespacesTrait::class;
 
 $nonExistingClass = 'MyNamespace\ClassDoesNotExist';
 $nonSlash = 'DateTime';
+
+$doubleNamespaceSeparator = \WebimpressCodingStandardTest\Ruleset::class;
+$fourBackslashes = 'WebimpressCodingStandardTest\\\\Ruleset';
+$spaceInTheName = 'WebimpressCodingStandardTest Ruleset';
+$newLineInTheName = 'WebimpressCodingStandardTest
+    Ruleset';
+
+$spaceAtTheBeginning = ' WebimpressCodingStandardTest\\Ruleset';
+$spaceAtTheEnd = ' WebimpressCodingStandardTest\\Ruleset ';

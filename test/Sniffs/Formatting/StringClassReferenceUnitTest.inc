@@ -20,3 +20,6 @@ $newLineInTheName = 'WebimpressCodingStandardTest
 
 $spaceAtTheBeginning = ' WebimpressCodingStandardTest\\Ruleset';
 $spaceAtTheEnd = ' WebimpressCodingStandardTest\\Ruleset ';
+
+$namespaceSeparatorAtTheEnd = 'WebimpressCodingStandardTest\\Ruleset\\';
+$justNamespaceSeparator = '\\';

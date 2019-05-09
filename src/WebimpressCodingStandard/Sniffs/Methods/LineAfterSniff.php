@@ -71,12 +71,7 @@ class LineAfterSniff extends AbstractScopeSniff
             --$lastInLine;
         }
 
-        if ($tokens[$lastInLine]['code'] === T_DOC_COMMENT_OPEN_TAG) {
-            $contentAfter = $lastInLine;
-        } else {
-            $contentAfter = $phpcsFile->findNext(T_WHITESPACE, $lastInLine + 1, null, true);
-        }
-
+        $contentAfter = $phpcsFile->findNext(T_WHITESPACE, $lastInLine + 1, null, true);
         if ($contentAfter !== false
             && $tokens[$contentAfter]['line'] - $tokens[$closer]['line'] !== 2
             && $tokens[$contentAfter]['code'] !== T_CLOSE_CURLY_BRACKET

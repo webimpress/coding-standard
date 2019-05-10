@@ -410,7 +410,7 @@ class DisallowFqnSniff implements Sniff
 
         $error = '%s must be imported as %s';
         $data = [$name, $alias];
-        $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Import', $data);
+        $fix = $this->error($phpcsFile, $error, $stackPtr, 'Import', $data, $alias);
 
         if ($fix) {
             return $this->import($type, $name, $alias);
@@ -460,7 +460,7 @@ class DisallowFqnSniff implements Sniff
         string $code,
         array $data,
         string $expected
-    ) : void {
+    ) : bool {
         $fix = $phpcsFile->addFixableError($error, $stackPtr, $code, $data);
         if ($fix) {
             $tokens = $phpcsFile->getTokens();
@@ -481,6 +481,8 @@ class DisallowFqnSniff implements Sniff
             }
             $phpcsFile->fixer->endChangeset();
         }
+
+        return $fix;
     }
 
     private function import(string $type, string $fqn, string $alias) : array

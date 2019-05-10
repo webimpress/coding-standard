@@ -50,6 +50,8 @@ class LineAfterUnitTest extends AbstractTestCase
             24 => 1,
             29 => 1,
             32 => 1,
+            38 => 1,
+            47 => 1,
         ];
     }
 

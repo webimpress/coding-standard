@@ -31,6 +31,8 @@ use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
 use const T_NAMESPACE;
 use const T_OPEN_CURLY_BRACKET;
+use const T_OPEN_PARENTHESIS;
+use const T_OPEN_SHORT_ARRAY;
 use const T_OPEN_TAG;
 use const T_USE;
 use const T_WHITESPACE;
@@ -182,8 +184,12 @@ class DocCommentSniff implements Sniff
                 $phpcsFile->fixer->endChangeset();
             }
         } elseif ($tokens[$previous]['line'] === $tokens[$commentStart]['line'] - 1
-            && $tokens[$previous]['code'] !== T_OPEN_TAG
-            && $tokens[$previous]['code'] !== T_OPEN_CURLY_BRACKET
+            && ! in_array($tokens[$previous]['code'], [
+                T_OPEN_CURLY_BRACKET,
+                T_OPEN_PARENTHESIS,
+                T_OPEN_SHORT_ARRAY,
+                T_OPEN_TAG,
+            ], true)
         ) {
             $error = 'Missing blank line before doc comment';
             $fix = $phpcsFile->addFixableError($error, $commentStart, 'MissingBlankLine');

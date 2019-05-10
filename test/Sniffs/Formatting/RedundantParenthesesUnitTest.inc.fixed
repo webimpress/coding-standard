@@ -186,4 +186,10 @@ class RedundantParentheses
             echo 1;
         }
     }
+
+    public function method12()
+    {
+        if (! (new Invoke())()) {}
+        if (! (new Invoke())->method()) {}
+    }
 }

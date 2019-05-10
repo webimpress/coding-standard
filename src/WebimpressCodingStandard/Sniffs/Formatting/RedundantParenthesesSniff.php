@@ -170,6 +170,11 @@ class RedundantParenthesesSniff implements Sniff
             return;
         }
 
+        // Skip when open parenthesis after closing parenthesis
+        if ($tokens[$next]['code'] === T_OPEN_PARENTHESIS) {
+            return;
+        }
+
         // Check single expression casting
         if (in_array($tokens[$prev]['code'], Tokens::$castTokens, true)) {
             $op = $phpcsFile->findNext(

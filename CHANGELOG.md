@@ -28,6 +28,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#7](https://github.com/webimpress/coding-standard/pull/7) `Commenting\DocComment` - fixes false-positive when new line was required before doc-block
 
+- [#8](https://github.com/webimpress/coding-standard/pull/8) `Formatting\StringClassReference` - fixes checking if string is a valid class name before check if class/interface/trait exists
+
 ## 1.0.0 - 2019-03-07
 
 Initial release.

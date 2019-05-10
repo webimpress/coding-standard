@@ -14,6 +14,7 @@ use function strpos;
 use const T_CLOSE_CURLY_BRACKET;
 use const T_CLOSE_SHORT_ARRAY;
 use const T_COMMENT;
+use const T_DOC_COMMENT_OPEN_TAG;
 use const T_DOUBLE_ARROW;
 use const T_WHITESPACE;
 
@@ -161,6 +162,8 @@ class FormatSniff extends AbstractArraySniff
                     || strpos($tokens[$next]['content'], '#') === 0)
             ) {
                 $end = $next;
+            } elseif ($tokens[$next]['code'] === T_DOC_COMMENT_OPEN_TAG) {
+                $end = $tokens[$next]['comment_closer'];
             } else {
                 $end = $phpcsFile->findEndOfStatement($next);
                 if ($tokens[$end]['code'] === T_DOUBLE_ARROW

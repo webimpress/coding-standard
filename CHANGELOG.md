@@ -34,6 +34,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#10](https://github.com/webimpress/coding-standard/pull/10) `PHP\DisallowFqn` - fixes issue when backslash was removed from the beginning of the class name but there was no space before
 
+- [#11](https://github.com/webimpress/coding-standard/pull/11) `Arrays\Format` - fixes issue with doc-block in arrays
+
 ## 1.0.0 - 2019-03-07
 
 Initial release.

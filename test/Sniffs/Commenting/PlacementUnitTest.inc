@@ -1,4 +1,5 @@
 <?php
+/* comment */
 
 echo /* 1 */ 'hey';
 echo 'world';// hey

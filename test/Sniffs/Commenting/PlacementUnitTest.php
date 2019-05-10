@@ -11,10 +11,10 @@ class PlacementUnitTest extends AbstractTestCase
     protected function getErrorList(string $testFile = '') : array
     {
         return [
-            3 => 1,
             4 => 1,
-            6 => 3,
-            8 => 3,
+            5 => 1,
+            7 => 3,
+            9 => 3,
         ];
     }
 

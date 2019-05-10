@@ -58,6 +58,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#11](https://github.com/webimpress/coding-standard/pull/11) `Arrays\Format` - fixes issue with doc-block in arrays
 
+- [#12](https://github.com/webimpress/coding-standard/pull/12) `Formatting\RedundantParentheses` - fixes false-positive for invokable classes treated as single expression
+
 ## 1.0.0 - 2019-03-07
 
 Initial release.

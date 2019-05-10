@@ -32,6 +32,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#9](https://github.com/webimpress/coding-standard/pull/9) `PHP\DisallowFqn` - fixes conflict with `Namespaces\UnusedUseStatement` when newly added import was deleted straight away
 
+- [#10](https://github.com/webimpress/coding-standard/pull/10) `PHP\DisallowFqn` - fixes issue when backslash was removed from the beginning of the class name but there was no space before
+
 ## 1.0.0 - 2019-03-07
 
 Initial release.

@@ -10,10 +10,18 @@ use PHP_CodeSniffer\Util\Tokens;
 
 use function in_array;
 use function max;
+use function strpos;
 
 use const T_ANON_CLASS;
 use const T_CLASS;
 use const T_CLOSE_CURLY_BRACKET;
+use const T_DOC_COMMENT;
+use const T_DOC_COMMENT_CLOSE_TAG;
+use const T_DOC_COMMENT_OPEN_TAG;
+use const T_DOC_COMMENT_STAR;
+use const T_DOC_COMMENT_STRING;
+use const T_DOC_COMMENT_TAG;
+use const T_DOC_COMMENT_WHITESPACE;
 use const T_FUNCTION;
 use const T_INTERFACE;
 use const T_SEMICOLON;
@@ -42,9 +50,20 @@ class LineAfterSniff extends AbstractScopeSniff
             $closer = $phpcsFile->findNext(T_SEMICOLON, $tokens[$stackPtr]['parenthesis_closer'] + 1);
         }
 
+        $emptyTokens = Tokens::$emptyTokens;
+        unset(
+            $emptyTokens[T_DOC_COMMENT],
+            $emptyTokens[T_DOC_COMMENT_STAR],
+            $emptyTokens[T_DOC_COMMENT_WHITESPACE],
+            $emptyTokens[T_DOC_COMMENT_TAG],
+            $emptyTokens[T_DOC_COMMENT_OPEN_TAG],
+            $emptyTokens[T_DOC_COMMENT_CLOSE_TAG],
+            $emptyTokens[T_DOC_COMMENT_STRING]
+        );
+
         $lastInLine = $closer;
         while ($tokens[$lastInLine + 1]['line'] === $tokens[$closer]['line']
-            && in_array($tokens[$lastInLine + 1]['code'], Tokens::$emptyTokens, true)
+            && in_array($tokens[$lastInLine + 1]['code'], $emptyTokens, true)
         ) {
             ++$lastInLine;
         }
@@ -64,8 +83,18 @@ class LineAfterSniff extends AbstractScopeSniff
 
             if ($fix) {
                 if ($found) {
+                    $skip = 2;
+
                     $phpcsFile->fixer->beginChangeset();
-                    for ($i = $closer + 1; $i < $contentAfter - 1; $i++) {
+                    for ($i = $contentAfter - 1; $i > $closer; --$i) {
+                        if ($skip) {
+                            if (strpos($tokens[$i]['content'], $phpcsFile->eolChar) !== false) {
+                                --$skip;
+                            }
+
+                            continue;
+                        }
+
                         $phpcsFile->fixer->replaceToken($i, '');
                     }
                     $phpcsFile->fixer->endChangeset();

@@ -260,4 +260,30 @@ class Foo
      *           bar baz
      */
     public function descriptionIndentWithTags() {}
+
+    public function docCommentInArray() : array
+    {
+        return [
+            /**
+             * @param mixed $a
+             * @return mixed
+             */
+            static function ($a) {
+                return $a;
+            },
+        ];
+    }
+
+    public function docCommentInFunctionCall() : callable
+    {
+        $this->getName(
+            /**
+             * @param mixed $a
+             * @return mixed
+             */
+            static function ($a) {
+                return $a;
+            }
+        );
+    }
 }

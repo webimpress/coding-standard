@@ -24,6 +24,8 @@ use const Bar\Baz\BAR_BAZ;
 use const Name\NAME_CONST;
 use const Name\CONST_IN_SWITCH;
 use const Name\OTHER_CONST_IN_SWITCH;
+use MyTrait;
+use B;
 
 use \ArrayObject as AO;
 
@@ -126,5 +128,45 @@ class TheClass extends ParentClass      implements ArrayAccess, Countable
         \sort($arr);
 
         return \T_WHITESPACE + T_ELLIPSIS;
+    }
+
+    public function missingSpace()
+    {
+        return new class () extends DateTime implements Countable
+        {
+            use MyTrait {
+                A::big insteadof B;
+            }
+
+            public function checkInstance($a) : bool
+            {
+                return $a instanceof Exception;
+            }
+
+            public function conditions(string $a) : ?string
+            {
+                switch ($a) {
+                    case DateTime::class:
+                        return DateTime::class;
+                    case Countable::class:
+                        print Countable::class;
+                        echo Countable::class;
+                        return null;
+                    case 'require':
+                        require DateTime::class.'.php';
+                        require_once DateTime::class.'.php';
+                        include DateTime::class.'.php';
+                        include_once DateTime::class.'.php';
+                    case 'new':
+                        new DateTime();
+                }
+
+                if ($a and DateTime::class) {
+                } elseif ($a or DateTime::class) {
+                } elseif ($a xor DateTime::class) {}
+
+                throw RuntimeException::something();
+            }
+        };
     }
 }

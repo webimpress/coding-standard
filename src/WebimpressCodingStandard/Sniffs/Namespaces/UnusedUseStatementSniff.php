@@ -125,6 +125,8 @@ class UnusedUseStatementSniff implements Sniff
         while ($classUsed !== false) {
             $isStringToken = $tokens[$classUsed]['code'] === T_STRING;
 
+            $match = null;
+
             if (($isStringToken && strtolower($tokens[$classUsed]['content']) === $lowerClassName)
                 || ($tokens[$classUsed]['code'] === T_DOC_COMMENT_STRING
                     && preg_match(
@@ -135,6 +137,16 @@ class UnusedUseStatementSniff implements Sniff
                     && preg_match(
                         '/@' . preg_quote($lowerClassName, '/') . '(\(|\\\\|$)/i',
                         $tokens[$classUsed]['content']
+                    ))
+                || (! $isStringToken
+                    && ! preg_match(
+                        '/"[^"]*' . preg_quote($lowerClassName, '/') . '\b[^"]*"/i',
+                        $tokens[$classUsed]['content']
+                    )
+                    && preg_match(
+                        '/(?<!")@' . preg_quote($lowerClassName, '/') . '\b/i',
+                        $tokens[$classUsed]['content'],
+                        $match
                     ))
             ) {
                 $beforeUsage = $phpcsFile->findPrevious(
@@ -165,6 +177,10 @@ class UnusedUseStatementSniff implements Sniff
                     if ($tokens[$beforeUsage]['code'] === T_DOC_COMMENT_TAG
                         && in_array($tokens[$beforeUsage]['content'], CodingStandard::TAG_WITH_TYPE, true)
                     ) {
+                        return;
+                    }
+
+                    if ($match) {
                         return;
                     }
                 } else {

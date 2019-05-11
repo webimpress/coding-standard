@@ -39,6 +39,12 @@ use BarBaz\Unused14;
 use Unused15;
 use Used19;
 use Used20;
+use Used21;
+use Used22;
+use FooBar;
+use FooB;
+use Unused16;
+use Unused17;
 
 /**
  * @Used10
@@ -122,5 +128,12 @@ class Foo
         new Hey \ /** @todo */ Unused13();
         new /** hey */ Used18 \ World();
         MyClass::Unused14;
+    }
+
+    /**
+     * @Used21(param=@Used22, value=@Used23, key=@FooBar, foo="@Unused16", bar="something @Unused17 bar")
+     */
+    protected function testAnnotations()
+    {
     }
 }

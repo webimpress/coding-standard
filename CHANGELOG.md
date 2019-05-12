@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#14](https://github.com/webimpress/coding-standard/pull/14) `Formatting\StringClassReference` - fixes regular expression to check if string is valid FQCN
 
 ## 1.0.1 - 2019-05-11
 

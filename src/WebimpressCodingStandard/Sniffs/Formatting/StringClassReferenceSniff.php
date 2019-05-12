@@ -11,8 +11,8 @@ use function class_exists;
 use function interface_exists;
 use function ltrim;
 use function preg_match;
+use function str_replace;
 use function strpos;
-use function strtr;
 use function substr;
 use function trait_exists;
 
@@ -38,17 +38,8 @@ class StringClassReferenceSniff implements Sniff
             return;
         }
 
-        $name = strtr($tokens[$stackPtr]['content'], [
-            '"' => '',
-            "'" => '',
-            '\\\\' => '\\',
-        ]);
-
-        if (strpos($name, '\\\\') !== false
-            || preg_match('/[^\\a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]/', $name)
-            || substr($name, -1) === '\\'
-            || ltrim($name, '\\') === ''
-        ) {
+        $name = substr(str_replace('\\\\', '\\', $tokens[$stackPtr]['content']), 1, -1);
+        if (! preg_match('/^(\\\\?[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)+$/', $name)) {
             return;
         }
 

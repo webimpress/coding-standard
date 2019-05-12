@@ -23,3 +23,5 @@ $spaceAtTheEnd = ' WebimpressCodingStandardTest\\Ruleset ';
 
 $namespaceSeparatorAtTheEnd = 'WebimpressCodingStandardTest\\Ruleset\\';
 $justNamespaceSeparator = '\\';
+
+$quotes = '"\DateTime"';

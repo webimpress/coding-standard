@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#14](https://github.com/webimpress/coding-standard/pull/14) `PHP\DisallowFqn` - fixes importing FQN
 
 ## 1.0.2 - 2019-05-12
 

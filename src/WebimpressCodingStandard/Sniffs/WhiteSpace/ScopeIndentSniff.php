@@ -207,11 +207,21 @@ class ScopeIndentSniff implements Sniff
                     $fix = $phpcsFile->addFixableError($error, $i, 'BooleanOperatorAtTheEnd');
 
                     if ($fix) {
-                        $lastNonEmpty = $phpcsFile->findPrevious(Tokens::$emptyTokens, $next - 1, null, true);
-                        $string = $phpcsFile->getTokensAsString($i, $lastNonEmpty - $i + 1);
+                        $lastNonEmpty = $i;
+                        while ($tokens[$lastNonEmpty + 1]['line'] === $tokens[$i]['line']) {
+                            ++$lastNonEmpty;
+                        }
+                        while (in_array($tokens[$lastNonEmpty]['code'], Tokens::$emptyTokens, true)) {
+                            --$lastNonEmpty;
+                        }
 
+                        $string = $phpcsFile->getTokensAsString($i, $lastNonEmpty - $i + 1);
                         if (substr($string, -1) !== '(') {
                             $string .= ' ';
+                        }
+
+                        while ($bracket = $phpcsFile->findPrevious(T_OPEN_PARENTHESIS, $next - 1, $lastNonEmpty + 1)) {
+                            $next = $bracket;
                         }
 
                         $phpcsFile->fixer->beginChangeset();

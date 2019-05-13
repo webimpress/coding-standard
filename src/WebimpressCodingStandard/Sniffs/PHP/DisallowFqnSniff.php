@@ -119,38 +119,55 @@ class DisallowFqnSniff implements Sniff
         $namespace = '';
         $currentNamespacePtr = null;
         $toImport = [];
+        $toFix = [];
 
         do {
             $namespacePtr = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr - 1) ?: null;
 
             if ($namespacePtr !== $currentNamespacePtr) {
                 $namespace = $namespacePtr ? $this->getName($phpcsFile, $namespacePtr + 1) : '';
-                if ($currentNamespacePtr) {
-                    $this->importReferences($phpcsFile, $currentNamespacePtr, $toImport);
+                if ($toImport || $toFix) {
+                    $phpcsFile->fixer->beginChangeset();
+                    if ($currentNamespacePtr) {
+                        $this->importReferences($phpcsFile, $currentNamespacePtr, $toImport);
+                    }
+                    $this->fixErrors($phpcsFile, $toFix);
+                    $phpcsFile->fixer->endChangeset();
                 }
 
                 $currentNamespacePtr = $namespacePtr;
                 $toImport = [];
+                $toFix = [];
 
                 $this->imported = $this->getGlobalUses($phpcsFile, $stackPtr, 'all');
             }
 
             if ($tokens[$stackPtr]['code'] === T_DOC_COMMENT_TAG) {
-                $this->processTag($phpcsFile, $stackPtr, $namespace, $toImport);
-            } elseif ($reference = $this->processString($phpcsFile, $stackPtr, $namespace)) {
-                $toImport[] = $reference;
+                $this->processTag($phpcsFile, $stackPtr, $namespace, $toImport, $toFix);
+            } else {
+                $this->processString($phpcsFile, $stackPtr, $namespace, $toImport, $toFix);
             }
         } while ($stackPtr = $phpcsFile->findNext($this->register(), $stackPtr + 1));
 
-        if ($currentNamespacePtr) {
-            $this->importReferences($phpcsFile, $currentNamespacePtr, $toImport);
+        if ($toImport || $toFix) {
+            $phpcsFile->fixer->beginChangeset();
+            if ($currentNamespacePtr) {
+                $this->importReferences($phpcsFile, $currentNamespacePtr, $toImport);
+            }
+            $this->fixErrors($phpcsFile, $toFix);
+            $phpcsFile->fixer->endChangeset();
         }
 
         return $phpcsFile->numTokens + 1;
     }
 
-    private function processTag(File $phpcsFile, int $stackPtr, string $namespace, array &$toImport) : void
-    {
+    private function processTag(
+        File $phpcsFile,
+        int $stackPtr,
+        string $namespace,
+        array &$toImport,
+        array &$toFix
+    ) : void {
         $tokens = $phpcsFile->getTokens();
 
         if (! in_array($tokens[$stackPtr]['content'], CodingStandard::TAG_WITH_TYPE, true)
@@ -191,10 +208,7 @@ class DisallowFqnSniff implements Sniff
                     $toImport = array_merge($toImport, $localToImport);
                 }
 
-                $phpcsFile->fixer->replaceToken(
-                    $stackPtr + 2,
-                    preg_replace('/^' . preg_quote($types, '/') . '/', $newTypes, $string)
-                );
+                $toFix[$stackPtr + 2] = preg_replace('/^' . preg_quote($types, '/') . '/', $newTypes, $string);
             }
         }
     }
@@ -235,25 +249,30 @@ class DisallowFqnSniff implements Sniff
         }
 
         // We need to import it
-        $toImport[] = $this->import('class', $name, $alias);
+        $toImport += $this->import('class', $name, $alias);
 
         return $alias;
     }
 
-    private function processString(File $phpcsFile, int $stackPtr, string $namespace) : ?array
-    {
+    private function processString(
+        File $phpcsFile,
+        int $stackPtr,
+        string $namespace,
+        array &$toImport,
+        array &$toFix
+    ) : void {
         $tokens = $phpcsFile->getTokens();
 
         $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $stackPtr - 1, null, true);
 
         // Part of the name
         if ($tokens[$prev]['code'] === T_STRING || $tokens[$prev]['code'] === T_NAMESPACE) {
-            return null;
+            return;
         }
 
         // In the global use statement
         if ($tokens[$prev]['code'] === T_USE && CodingStandard::isGlobalUse($phpcsFile, $prev)) {
-            return null;
+            return;
         }
 
         if (! $namespace) {
@@ -263,7 +282,7 @@ class DisallowFqnSniff implements Sniff
                 $phpcsFile->fixer->replaceToken($stackPtr, '');
             }
 
-            return null;
+            return;
         }
 
         $next = $phpcsFile->findNext(
@@ -357,17 +376,17 @@ class DisallowFqnSniff implements Sniff
                 $phpcsFile->fixer->endChangeset();
             }
 
-            return null;
+            return;
         }
 
         // If function is built-in function; skip
         if ($type === 'function' && isset($this->builtInFunctions[strtolower($name)])) {
-            return null;
+            return;
         }
 
         // If constant is built-in constant; skip
         if ($type === 'const' && isset($this->builtInConstants[strtoupper($name)])) {
-            return null;
+            return;
         }
 
         foreach ($this->imported['class'] ?? [] as $class) {
@@ -375,9 +394,15 @@ class DisallowFqnSniff implements Sniff
             if (stripos($name . '\\', $class['fqn'] . '\\') === 0) {
                 $error = 'Namespace %s is already imported';
                 $data = [$class['fqn']];
-                $this->error($phpcsFile, $error, $stackPtr, 'NamespaceImported', $data, $class['name']);
 
-                return null;
+                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'NamespaceImported', $data);
+                if ($fix) {
+                    $phpcsFile->fixer->beginChangeset();
+                    $this->fixError($phpcsFile, $stackPtr, $class['name']);
+                    $phpcsFile->fixer->endChangeset();
+                }
+
+                return;
             }
         }
 
@@ -389,9 +414,15 @@ class DisallowFqnSniff implements Sniff
                 if (strtolower($function['fqn']) === strtolower($name)) {
                     $error = 'Function %s is already imported';
                     $data = [$function['fqn']];
-                    $this->error($phpcsFile, $error, $stackPtr, 'FunctionImported', $data, $function['name']);
 
-                    return null;
+                    $fix = $phpcsFile->addFixableError($error, $stackPtr, 'FunctionImported', $data);
+                    if ($fix) {
+                        $phpcsFile->fixer->beginChangeset();
+                        $this->fixError($phpcsFile, $stackPtr, $function['name']);
+                        $phpcsFile->fixer->endChangeset();
+                    }
+
+                    return;
                 }
             }
 
@@ -401,7 +432,7 @@ class DisallowFqnSniff implements Sniff
                 $data = [$name, $alias];
                 $phpcsFile->addError($error, $stackPtr, 'FunctionAliasUsed', $data);
 
-                return null;
+                return;
             }
         }
 
@@ -411,9 +442,15 @@ class DisallowFqnSniff implements Sniff
                 if (strtolower($const['fqn']) === strtolower($name)) {
                     $error = 'Constant %s is already imported';
                     $data = [$const['fqn']];
-                    $this->error($phpcsFile, $error, $stackPtr, 'ConstantImported', $data, $const['name']);
 
-                    return null;
+                    $fix = $phpcsFile->addFixableError($error, $stackPtr, 'ConstantImported', $data);
+                    if ($fix) {
+                        $phpcsFile->fixer->beginChangeset();
+                        $this->fixError($phpcsFile, $stackPtr, $const['name']);
+                        $phpcsFile->fixer->endChangeset();
+                    }
+
+                    return;
                 }
             }
 
@@ -423,23 +460,22 @@ class DisallowFqnSniff implements Sniff
                 $data = [$name, $alias];
                 $phpcsFile->addError($error, $stackPtr, 'ConstantAliasUsed', $data);
 
-                return null;
+                return;
             }
         }
 
         if ($type === 'class' && ! $this->isValidClassName($phpcsFile, $stackPtr, $alias, $name)) {
-            return null;
+            return;
         }
 
         $error = '%s must be imported as %s';
         $data = [$name, $alias];
-        $fix = $this->error($phpcsFile, $error, $stackPtr, 'Import', $data, $alias);
 
+        $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Import', $data);
         if ($fix) {
-            return $this->import($type, $name, $alias);
+            $toFix[$stackPtr] = $alias;
+            $toImport += $this->import($type, $name, $alias);
         }
-
-        return null;
     }
 
     private function isValidClassName(File $phpcsFile, int $stackPtr, string $alias, string $name) : bool
@@ -476,60 +512,51 @@ class DisallowFqnSniff implements Sniff
         return true;
     }
 
-    private function error(
-        File $phpcsFile,
-        string $error,
-        int $stackPtr,
-        string $code,
-        array $data,
-        string $expected
-    ) : bool {
-        $fix = $phpcsFile->addFixableError($error, $stackPtr, $code, $data);
-        if ($fix) {
-            $tokens = $phpcsFile->getTokens();
+    private function fixError(File $phpcsFile, int $stackPtr, string $expected) : void
+    {
+        $tokens = $phpcsFile->getTokens();
 
-            if (in_array($tokens[$stackPtr - 1]['code'], [
-                T_NEW,
-                T_USE,
-                T_EXTENDS,
-                T_IMPLEMENTS,
-                T_INSTANCEOF,
-                T_INSTEADOF,
-                T_CASE,
-                T_PRINT,
-                T_ECHO,
-                T_REQUIRE,
-                T_REQUIRE_ONCE,
-                T_INCLUDE,
-                T_INCLUDE_ONCE,
-                T_RETURN,
-                T_LOGICAL_AND,
-                T_LOGICAL_OR,
-                T_LOGICAL_XOR,
-                T_THROW,
-            ], true)) {
-                $expected = ' ' . $expected;
-            }
-
-            $phpcsFile->fixer->beginChangeset();
-
+        if ($tokens[$stackPtr]['code'] === T_DOC_COMMENT_STRING) {
             $phpcsFile->fixer->replaceToken($stackPtr, $expected);
-            $i = $stackPtr;
-            while (isset($tokens[++$i])) {
-                if (in_array($tokens[$i]['code'], Tokens::$emptyTokens, true)) {
-                    continue;
-                }
-
-                if (! in_array($tokens[$i]['code'], [T_NS_SEPARATOR, T_STRING], true)) {
-                    break;
-                }
-
-                $phpcsFile->fixer->replaceToken($i, '');
-            }
-            $phpcsFile->fixer->endChangeset();
+            return;
         }
 
-        return $fix;
+        if (in_array($tokens[$stackPtr - 1]['code'], [
+            T_NEW,
+            T_USE,
+            T_EXTENDS,
+            T_IMPLEMENTS,
+            T_INSTANCEOF,
+            T_INSTEADOF,
+            T_CASE,
+            T_PRINT,
+            T_ECHO,
+            T_REQUIRE,
+            T_REQUIRE_ONCE,
+            T_INCLUDE,
+            T_INCLUDE_ONCE,
+            T_RETURN,
+            T_LOGICAL_AND,
+            T_LOGICAL_OR,
+            T_LOGICAL_XOR,
+            T_THROW,
+        ], true)) {
+            $expected = ' ' . $expected;
+        }
+
+        $phpcsFile->fixer->replaceToken($stackPtr, $expected);
+        $i = $stackPtr;
+        while (isset($tokens[++$i])) {
+            if (in_array($tokens[$i]['code'], Tokens::$emptyTokens, true)) {
+                continue;
+            }
+
+            if (! in_array($tokens[$i]['code'], [T_NS_SEPARATOR, T_STRING], true)) {
+                break;
+            }
+
+            $phpcsFile->fixer->replaceToken($i, '');
+        }
     }
 
     private function import(string $type, string $fqn, string $alias) : array
@@ -539,7 +566,7 @@ class DisallowFqnSniff implements Sniff
             'fqn' => $fqn,
         ];
 
-        return [$type, $fqn];
+        return [$fqn => $type];
     }
 
     /**
@@ -551,8 +578,6 @@ class DisallowFqnSniff implements Sniff
             return;
         }
 
-        $phpcsFile->fixer->beginChangeset();
-
         $tokens = $phpcsFile->getTokens();
         if (isset($tokens[$namespacePtr]['scope_opener'])) {
             $ptr = $tokens[$namespacePtr]['scope_opener'];
@@ -562,17 +587,22 @@ class DisallowFqnSniff implements Sniff
         }
 
         $content = '';
-        foreach ($references as $data) {
+        foreach ($references as $fqn => $type) {
             $content .= sprintf(
                 '%suse %s%s;',
                 $phpcsFile->eolChar,
-                $data[0] === 'class' ? '' : $data[0] . ' ',
-                $data[1]
+                $type === 'class' ? '' : $type . ' ',
+                $fqn
             );
         }
 
         $phpcsFile->fixer->addContent($ptr, $content);
+    }
 
-        $phpcsFile->fixer->endChangeset();
+    private function fixErrors(File $phpcsFile, array $replacements)
+    {
+        foreach ($replacements as $ptr => $alias) {
+            $this->fixError($phpcsFile, $ptr, $alias);
+        }
     }
 }

@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#15](https://github.com/webimpress/coding-standard/pull/15) `PHP\DisallowFqn` - fixes importing FQN
 
+- [#16](https://github.com/webimpress/coding-standard/pull/16) `WhiteSpace\ScopeIndent` - fixes code fixer for the case when boolean operator is at the end of the line
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

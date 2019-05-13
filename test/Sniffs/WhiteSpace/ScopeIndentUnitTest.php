@@ -52,6 +52,12 @@ class ScopeIndentUnitTest extends AbstractTestCase
                     138 => 1,
                     146 => 1,
                     149 => 1,
+                    230 => 1,
+                    231 => 1,
+                    235 => 1,
+                    236 => 1,
+                    240 => 1,
+                    241 => 1,
                 ];
             case 'ScopeIndentUnitTest.2.inc':
                 return [

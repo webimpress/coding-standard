@@ -286,4 +286,15 @@ class Foo
             }
         );
     }
+
+    /**
+     * FIRST DOC-BLOCK COMMENT
+     */
+
+    /**
+     * Method doc-block
+     */
+    public function allowSpaceBetweenTwoPhpDocBlock()
+    {
+    }
 }

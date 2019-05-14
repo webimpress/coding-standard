@@ -23,6 +23,7 @@ use function strtolower;
 use function substr;
 use function trim;
 
+use const T_COLON;
 use const T_DOC_COMMENT_CLOSE_TAG;
 use const T_DOC_COMMENT_OPEN_TAG;
 use const T_DOC_COMMENT_STAR;
@@ -189,6 +190,7 @@ class DocCommentSniff implements Sniff
                 T_OPEN_PARENTHESIS,
                 T_OPEN_SHORT_ARRAY,
                 T_OPEN_TAG,
+                T_COLON,
             ], true)
         ) {
             $error = 'Missing blank line before doc comment';

@@ -33,6 +33,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#18](https://github.com/webimpress/coding-standard/pull/18) `Commenting\DocComment` - fixes requiring content straight after doc-block - allows empty line when next content is another doc-block
 
+- [#19](https://github.com/webimpress/coding-standard/pull/19) `Commenting\DocComment` - fixes issue with doc-block after colon (for example in switch statement) - empty line is no longer required before doc-block in that case
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

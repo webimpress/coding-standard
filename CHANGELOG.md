@@ -48,6 +48,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#16](https://github.com/webimpress/coding-standard/pull/16) `WhiteSpace\ScopeIndent` - fixes code fixer for the case when boolean operator is at the end of the line
 
+- [#17](https://github.com/webimpress/coding-standard/pull/17) fixes recognising types in `@method` PHPDoc tag. Fixes the following sniffs:
+    - `Namespaces\UnusedUseStatement` - imported classes/interfaces are not removed when used within the tag,
+    - `PHP\CorrectClassNameCase` - fixes caps in class/interface names used within the tag,
+    - `PHP\DisallowFqn` - imports FQN used within the tag.
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

@@ -13,6 +13,9 @@ DateTime::createFromFormat();
 
 /**
  * @property AO $ao
+ * @property-read AO $aor
+ * @property-write AO $aow
+ * @method AO method(AO|DateTime $p1, null|ArrayAccess $p2)
  */
 class CorrectClassNameCase
 {

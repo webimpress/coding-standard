@@ -130,7 +130,7 @@ class UnusedUseStatementSniff implements Sniff
             if (($isStringToken && strtolower($tokens[$classUsed]['content']) === $lowerClassName)
                 || ($tokens[$classUsed]['code'] === T_DOC_COMMENT_STRING
                     && preg_match(
-                        '/(\s|\||^)' . preg_quote($lowerClassName, '/') . '(\s|\||\\\\|$|\[\])/i',
+                        '/(\s|\||\(|^)' . preg_quote($lowerClassName, '/') . '(\s|\||\\\\|$|\[\])/i',
                         $tokens[$classUsed]['content']
                     ))
                 || ($tokens[$classUsed]['code'] === T_DOC_COMMENT_TAG

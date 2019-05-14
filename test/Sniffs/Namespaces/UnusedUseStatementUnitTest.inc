@@ -45,8 +45,19 @@ use FooBar;
 use FooB;
 use Unused16;
 use Unused17;
+use Used23;
+use Used24;
+use Used25;
+use Used26;
+use Used27;
+use Used28;
 
 /**
+ * @method Used23 myMethod(Used24 $param1, Used25 $param2)
+ * @property Used26 $foo
+ * @property-read Used27 $bar
+ * @property-write Used28 $baz
+ *
  * @Used10
  * @Used11\Table
  * @AliasUsed12(...)

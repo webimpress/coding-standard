@@ -269,6 +269,7 @@ class DocCommentSniff implements Sniff
         $allowEmptyLineBefore = [
             T_NAMESPACE,
             T_USE,
+            T_DOC_COMMENT_OPEN_TAG,
         ];
 
         $prev = $phpcsFile->findPrevious(T_WHITESPACE, $commentStart - 1, null, true);

@@ -53,6 +53,8 @@ All notable changes to this project will be documented in this file, in reverse 
     - `PHP\CorrectClassNameCase` - fixes caps in class/interface names used within the tag,
     - `PHP\DisallowFqn` - imports FQN used within the tag.
 
+- [#18](https://github.com/webimpress/coding-standard/pull/18) `Commenting\DocComment` - fixes requiring content straight after doc-block - allows empty line when next content is another doc-block
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

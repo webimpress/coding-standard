@@ -274,7 +274,7 @@ class Foo
         ];
     }
 
-    public function docCommentInFunctionCall() : callable
+    public function docCommentInFunctionCall() : void
     {
         $this->getName(
             /**
@@ -285,6 +285,25 @@ class Foo
                 return $a;
             }
         );
+    }
+
+    public function docCommentInSwitch(string $a)
+    {
+        switch ($a) {
+            case 'foo':
+                /** @var string $var */
+                $var = $this->getName();
+
+                return $var[0];
+            default:
+                /**
+                 * @param int[] $a
+                 * @return int
+                 */
+                return static function (array $a) {
+                   return PHP_INT_MAX;
+                };
+        }
     }
 
     /**

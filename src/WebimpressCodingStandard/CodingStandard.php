@@ -25,6 +25,7 @@ class CodingStandard
         '@param',
         '@return',
         '@throws',
+        '@method',
         '@property',
         '@property-read',
         '@property-write',

@@ -2,6 +2,9 @@
 
 namespace MyNamespace;
 
+use Other\MethodReturn;
+use Other\Param1;
+use Other\Param2;
 use DateTime;
 use ArrayObject;
 use ArrayAccess;
@@ -17,6 +20,7 @@ use ImportedClass;
  * Class MyClass
  *
  * @package MyNamespace
+ * @method MethodReturn myMethod(Param1 $param1, Param2|Param2Other $param2)
  * @property Date $date
  * @property Service\DateService $dateService
  * @property-read DateTime $dateTime

@@ -20,6 +20,7 @@ use function glob;
 use function implode;
 use function in_array;
 use function ltrim;
+use function preg_match_all;
 use function preg_quote;
 use function preg_replace;
 use function sprintf;
@@ -178,37 +179,52 @@ class DisallowFqnSniff implements Sniff
         }
 
         $string = $tokens[$stackPtr + 2]['content'];
-        [$types] = explode(' ', $string);
-        $typesArr = explode('|', $types);
+        [$type] = explode(' ', $string);
+        $types = [$type];
 
-        // Create local array with classes to import, as we want to update main one only in fix mode
-        $localToImport = [];
-        $newTypesArr = [];
-        foreach ($typesArr as $name) {
-            $suffix = strstr($name, '[');
-            $name = str_replace(['[', ']'], '', $name);
-
-            $newTypesArr[] = $this->getExpectedName($phpcsFile, $stackPtr + 2, $namespace, $name, $localToImport)
-                . $suffix;
+        if ($tokens[$stackPtr]['content'] === '@method'
+            && preg_match_all('/(?<=[\s(,])[^(\s,]+?(?=\s+\$)/', $string, $matches)
+        ) {
+            $types = array_merge($types, $matches[0]);
         }
 
-        $newTypes = implode('|', $newTypesArr);
+        foreach ($types as $typesString) {
+            $typesArr = explode('|', $typesString);
 
-        if ($newTypes !== $types) {
-            $error = 'Invalid class name references: expected %s; found %s';
-            $data = [
-                $newTypes,
-                $types,
-            ];
-            $fix = $phpcsFile->addFixableError($error, $stackPtr + 2, 'InvalidInPhpDocs', $data);
+            // Create local array with classes to import, as we want to update main one only in fix mode
+            $localToImport = [];
+            $newTypesArr = [];
+            foreach ($typesArr as $name) {
+                $suffix = strstr($name, '[');
+                $name = str_replace(['[', ']'], '', $name);
 
-            if ($fix) {
-                // Update array with references to import
-                if ($localToImport) {
-                    $toImport = array_merge($toImport, $localToImport);
+                $newTypesArr[] = $this->getExpectedName($phpcsFile, $stackPtr + 2, $namespace, $name, $localToImport)
+                    . $suffix;
+            }
+
+            $newTypes = implode('|', $newTypesArr);
+
+            if ($newTypes !== $typesString) {
+                $error = 'Invalid class name references: expected %s; found %s';
+                $data = [
+                    $newTypes,
+                    $typesString,
+                ];
+                $fix = $phpcsFile->addFixableError($error, $stackPtr + 2, 'InvalidInPhpDocs', $data);
+
+                if ($fix) {
+                    // Update array with references to import
+                    if ($localToImport) {
+                        $toImport = array_merge($toImport, $localToImport);
+                    }
+
+                    $string = preg_replace(
+                        '/(^|\s|,|\()' . preg_quote($typesString, '/') . '/',
+                        '\\1' . $newTypes,
+                        $string
+                    );
+                    $toFix[$stackPtr + 2] = $string;
                 }
-
-                $toFix[$stackPtr + 2] = preg_replace('/^' . preg_quote($types, '/') . '/', $newTypes, $string);
             }
         }
     }
@@ -574,10 +590,6 @@ class DisallowFqnSniff implements Sniff
      */
     private function importReferences(File $phpcsFile, int $namespacePtr, array $references) : void
     {
-        if (! $references) {
-            return;
-        }
-
         $tokens = $phpcsFile->getTokens();
         if (isset($tokens[$namespacePtr]['scope_opener'])) {
             $ptr = $tokens[$namespacePtr]['scope_opener'];

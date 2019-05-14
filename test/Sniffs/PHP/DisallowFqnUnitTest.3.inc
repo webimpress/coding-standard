@@ -8,6 +8,7 @@ use ImportedClass;
  * Class MyClass
  *
  * @package MyNamespace
+ * @method \Other\MethodReturn myMethod(\Other\Param1 $param1, \Other\Param2|\MyNamespace\Param2Other $param2)
  * @property \MyNamespace\Date $date
  * @property \MyNamespace\Service\DateService $dateService
  * @property-read \DateTime $dateTime

@@ -20,6 +20,7 @@ use function get_declared_traits;
 use function implode;
 use function in_array;
 use function ltrim;
+use function preg_match_all;
 use function preg_quote;
 use function preg_replace;
 use function str_replace;
@@ -261,32 +262,48 @@ class CorrectClassNameCaseSniff implements Sniff
         }
 
         $string = $tokens[$stackPtr + 2]['content'];
-        [$types] = explode(' ', $string);
-        $typesArr = explode('|', $types);
+        [$type] = explode(' ', $string);
+        $types = [$type];
 
-        $newTypesArr = [];
-        foreach ($typesArr as $type) {
-            $expected = $this->getExpectedName($phpcsFile, $type, $stackPtr + 2);
-
-            $newTypesArr[] = $expected;
+        if ($tokens[$stackPtr]['content'] === '@method'
+            && preg_match_all('/(?<=[\s(,])[^(\s,]+?(?=\s+\$)/', $string, $matches)
+        ) {
+            $types = array_merge($types, $matches[0]);
         }
 
-        $newTypes = implode('|', $newTypesArr);
+        foreach ($types as $typesString) {
+            $typesArr = explode('|', $typesString);
 
-        if ($newTypes !== $types) {
-            $error = 'Expected class name %s; found %s';
-            $data = [
-                $newTypes,
-                $types,
-            ];
-            $fix = $phpcsFile->addFixableError($error, $stackPtr + 2, 'InvalidInPhpDocs', $data);
+            $newTypesArr = [];
+            foreach ($typesArr as $type) {
+                $expected = $this->getExpectedName($phpcsFile, $type, $stackPtr + 2);
 
-            if ($fix) {
-                $phpcsFile->fixer->replaceToken(
-                    $stackPtr + 2,
-                    preg_replace('/^' . preg_quote($types, '/') . '/', $newTypes, $string)
+                $newTypesArr[] = $expected;
+            }
+
+            $newTypes = implode('|', $newTypesArr);
+
+            if ($newTypes !== $typesString) {
+                $error = 'Expected class name %s; found %s';
+                $data = [
+                    $newTypes,
+                    $typesString,
+                ];
+                $fix = $phpcsFile->addFixableError($error, $stackPtr + 2, 'InvalidInPhpDocs', $data);
+
+                $string = preg_replace(
+                    '/(^|\s|,|\()' . preg_quote($typesString, '/') . '/',
+                    '\\1' . $newTypes,
+                    $string
                 );
             }
+        }
+
+        if ($fix ?? false) {
+            $phpcsFile->fixer->replaceToken(
+                $stackPtr + 2,
+                $string
+            );
         }
     }
 

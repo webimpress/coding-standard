@@ -137,5 +137,10 @@ class FunctionParam
     /**
      * @param int,string $a
      */
-    public function invalidType($a);
+    abstract public function invalidType($a);
+
+    /**
+     * @param Other_Param $Foo
+     */
+    public function withUnderscore(With_Underscore $a, $foo = null) {}
 }

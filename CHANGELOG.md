@@ -35,6 +35,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#19](https://github.com/webimpress/coding-standard/pull/19) `Commenting\DocComment` - fixes issue with doc-block after colon (for example in switch statement) - empty line is no longer required before doc-block in that case
 
+- [#20](https://github.com/webimpress/coding-standard/pull/20) `Functions\ReturnType` - fixes false-positive error when function may return `$this`
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

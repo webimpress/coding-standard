@@ -10,7 +10,6 @@ use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_filter;
 use function array_merge;
-use function count;
 use function current;
 use function explode;
 use function implode;
@@ -321,7 +320,6 @@ class ParamSniff implements Sniff
             }
         }
 
-        $count = count($types);
         $break = false;
         foreach ($types as $key => $type) {
             $lower = strtolower($type);

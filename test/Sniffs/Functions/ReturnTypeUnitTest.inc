@@ -254,4 +254,17 @@ abstract class FunctionCommentReturn
     {
         return $this->thisParent();
     }
+
+    public function withReturnType($a): \Return_Type
+    {
+        return $a;
+    }
+
+    /**
+     * @return \Return_Type
+     */
+    public function withDocBlock($a)
+    {
+        return $a;
+    }
 }

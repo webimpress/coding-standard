@@ -37,6 +37,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#20](https://github.com/webimpress/coding-standard/pull/20) `Functions\ReturnType` - fixes false-positive error when function may return `$this`
 
+- [#21](https://github.com/webimpress/coding-standard/pull/21) fixes regular expression to check class name (type). Fixes the following sniffs:
+    - `Commenting\TagWithType` - types in doc-block comments,
+    - `Functions\Param` - param typehint and type within `@param` tag,
+    - `Functions\ReturnType` - return type declaration and type within `@return` tag.
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

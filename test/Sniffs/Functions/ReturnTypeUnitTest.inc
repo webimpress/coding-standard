@@ -238,4 +238,20 @@ abstract class FunctionCommentReturn
      * @return null[]
      */
     abstract public function returnNullArray();
+
+    /**
+     * @return $this
+     */
+    public function thisParent() : self
+    {
+        return parent::thisParent();
+    }
+
+    /**
+     * @return $this
+     */
+    public function thisOther() : self
+    {
+        return $this->thisParent();
+    }
 }

@@ -57,7 +57,6 @@ use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_PARENTHESIS;
 use const T_OPEN_SHORT_ARRAY;
 use const T_OPEN_SQUARE_BRACKET;
-use const T_PARENT;
 use const T_RETURN;
 use const T_SELF;
 use const T_SEMICOLON;
@@ -547,14 +546,11 @@ class ReturnTypeSniff implements Sniff
                         T_SELF,
                         T_STATIC,
                         T_STRING_CAST,
-                        T_PARENT,
                     ], true);
 
                     if ($isThis
                         && $tokens[$next]['code'] === T_VARIABLE
-                        && (strtolower($tokens[$next]['content']) !== '$this'
-                            || (($next = $phpcsFile->findNext(Tokens::$emptyTokens, $next + 1, null, true))
-                                && $tokens[$next]['code'] !== T_SEMICOLON))
+                        && strtolower($tokens[$next]['content']) !== '$this'
                     ) {
                         $isThis = false;
                     }
@@ -595,7 +591,7 @@ class ReturnTypeSniff implements Sniff
                     if ($matches = array_udiff(
                         preg_grep('/[^\]]$/', $this->returnDocTypes),
                         ['null', 'array', 'iterable'],
-                        function ($a, $b) {
+                        static function (string $a, string $b) {
                             return strcasecmp($a, $b);
                         }
                     )) {

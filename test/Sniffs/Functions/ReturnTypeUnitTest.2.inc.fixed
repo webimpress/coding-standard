@@ -61,9 +61,10 @@ abstract class FunctionCommentReturn
         return self::CONST;
         return static::method();
         return (string) $a;
-        return parent::method();
         return true;
         return $a;
+        return parent::method();
+        return $this->method();
         return $this;
     }
 

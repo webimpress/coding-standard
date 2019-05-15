@@ -27,6 +27,7 @@ class ParamUnitTest extends AbstractTestCase
                     98 => 1,
                     130 => 1,
                     135 => 1,
+                    143 => 2,
                 ];
         }
 

@@ -399,6 +399,11 @@ trait MethodsTrait
             return true;
         }
 
-        return (bool) preg_match('/^((?:\\\\?[a-z0-9]+)+(?:\[\])*)(\|(?:\\\\?[a-z0-9]+)+(?:\[\])*)*$/i', $type);
+        $classRegexp = '\\\\?[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*';
+
+        return (bool) preg_match(
+            '/^((?:' . $classRegexp . ')+(?:\[\])*)(\|(?:' . $classRegexp . ')+(?:\[\])*)*$/i',
+            $type
+        );
     }
 }

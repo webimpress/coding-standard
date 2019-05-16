@@ -327,6 +327,8 @@ class ReturnTypeSniff implements Sniff
             '?generator',
             '\generator',
             '?\generator',
+            'object',
+            '?object',
         ];
 
         if (! in_array($lowerReturnTypeValue, $needSpecificationTypes, true)) {
@@ -389,7 +391,7 @@ class ReturnTypeSniff implements Sniff
             if (! in_array($lowerReturnTypeValue, $this->simpleReturnTypes, true)) {
                 foreach ($this->returnDocTypes as $type) {
                     $lower = strtolower($type);
-                    if (array_filter($this->simpleReturnTypes, function ($v) use ($lower) {
+                    if (array_filter($this->simpleReturnTypes, static function (string $v) use ($lower) {
                         return $v === $lower || strpos($lower, $v . '[') === 0;
                     })) {
                         $error = 'Unexpected type "%s" found in return tag';
@@ -457,7 +459,7 @@ class ReturnTypeSniff implements Sniff
             case '?\traversable':
                 foreach ($this->returnDocTypes as $type) {
                     $lower = strtolower($type);
-                    if (in_array($lower, ['null', 'traversable', '\traversable'], true)) {
+                    if (in_array($lower, ['traversable', '\traversable'], true)) {
                         continue;
                     }
 
@@ -477,7 +479,7 @@ class ReturnTypeSniff implements Sniff
             case '?\generator':
                 foreach ($this->returnDocTypes as $type) {
                     $lower = strtolower($type);
-                    if (in_array($lower, ['null', 'generator', '\generator'], true)) {
+                    if (in_array($lower, ['generator', '\generator'], true)) {
                         continue;
                     }
 
@@ -487,6 +489,26 @@ class ReturnTypeSniff implements Sniff
                             $type,
                         ];
                         $phpcsFile->addError($error, $this->returnDoc + 2, 'NotGeneratorType', $data);
+                    }
+                }
+                break;
+
+            case 'object':
+            case '?object':
+                foreach ($this->returnDocTypes as $type) {
+                    $lower = strtolower($type);
+                    if ($lower === 'object') {
+                        continue;
+                    }
+
+                    if (in_array($lower, $simpleTypes, true)
+                        || strpos($lower, '[]') !== false
+                    ) {
+                        $error = 'Return type contains "%s" which is not an object type';
+                        $data = [
+                            $type,
+                        ];
+                        $phpcsFile->addError($error, $this->returnDoc + 2, 'NotObjectType', $data);
                     }
                 }
                 break;
@@ -820,7 +842,7 @@ class ReturnTypeSniff implements Sniff
         if ($expectedDoc
             && $this->returnDoc
             && $this->returnDocIsValid
-            && ! array_filter($this->returnDocTypes, function ($v) use ($expectedDoc) {
+            && ! array_filter($this->returnDocTypes, static function (string $v) use ($expectedDoc) {
                 return in_array(strtolower($v), $expectedDoc, true);
             })
         ) {

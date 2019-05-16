@@ -267,4 +267,28 @@ abstract class FunctionCommentReturn
     {
         return $a;
     }
+
+    /**
+     * @return null|Foo|Bar
+     */
+    public function objectTypeCanBeSpecified(string $a) : ?object
+    {
+        return new $a();
+    }
+
+    /**
+     * @return null|int|string
+     */
+    public function objectTypeCannotBeSimpleType(string $a) : ?object
+    {
+        return new $a();
+    }
+
+    /**
+     * @return Foo|Foo[]
+     */
+    public function objectTypeCannotBeArray(string $a) : object
+    {
+        return new $a();
+    }
 }

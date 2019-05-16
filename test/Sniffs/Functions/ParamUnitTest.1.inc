@@ -143,4 +143,40 @@ class FunctionParam
      * @param Other_Param $Foo
      */
     public function withUnderscore(With_Underscore $a, $foo = null) {}
+
+    /**
+     * @param Foo $a
+     * @param null|Foo|Bar $b
+     */
+    public function objectTypeCanBeSpecified(object $a, ?object $b = null) {}
+
+    /**
+     * @param int|Foo $a
+     */
+    public function objectTypeCannotBeSimpleType(object $a) {}
+
+    /**
+     * @param null|Foo[] $a
+     */
+    public function objectTypeCannotBeArray(?object $a) {}
+
+    /**
+     * @param iterable|int[] $a
+     */
+    public function iterableCanBeMixedWithOtherTypes(iterable $a) {}
+
+    /**
+     * @param null|int[] $a
+     * @param null|string[] $b
+     * @param null|float[] $c
+     * @param null|bool[] $d
+     * @param null|Foo $e
+     */
+    public function nullIsAllowed(
+        ?array $a,
+        ?iterable $b,
+        ?\Traversable $c,
+        ?\Generator $d,
+        ?object $e
+    ) {}
 }

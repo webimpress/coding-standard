@@ -112,7 +112,7 @@ class ParamSniff implements Sniff
             }
             $params[] = $clearName;
 
-            $param = array_filter($this->params, function (array $param) use ($clearName) {
+            $param = array_filter($this->params, static function (array $param) use ($clearName) {
                 return strtolower($param['name']) === $clearName;
             });
 
@@ -366,6 +366,7 @@ class ParamSniff implements Sniff
 
                 // iterable
                 if (in_array($lowerTypeHint, ['iterable', '?iterable'], true)
+                    && $lower !== 'iterable'
                     && in_array($lower, $simpleTypes, true)
                 ) {
                     $error = 'Param type contains "%s" which is not an iterable type';
@@ -386,7 +387,7 @@ class ParamSniff implements Sniff
                         '\traversable',
                         '?\traversable',
                     ], true)
-                    && ! in_array($lower, ['null', 'traversable', '\traversable'], true)
+                    && ! in_array($lower, ['traversable', '\traversable'], true)
                     && in_array($lower, $simpleTypes, true)
                 ) {
                     $error = 'Param type contains "%s" which is not a traversable type';
@@ -406,7 +407,7 @@ class ParamSniff implements Sniff
                         '\generator',
                         '?\generator',
                     ], true)
-                    && ! in_array($lower, ['null', 'generator', '\generator'], true)
+                    && ! in_array($lower, ['generator', '\generator'], true)
                     && in_array($lower, array_merge($simpleTypes, ['mixed']), true)
                 ) {
                     $error = 'Param type contains %s which is not a generator type';
@@ -414,6 +415,22 @@ class ParamSniff implements Sniff
                         $type,
                     ];
                     $phpcsFile->addError($error, $tagPtr + 2, 'NotGeneratorType', $data);
+
+                    $break = true;
+                    continue;
+                }
+
+                // object
+                if (in_array($lowerTypeHint, ['object', '?object'], true)
+                    && $lower !== 'object'
+                    && (in_array($lower, array_merge($simpleTypes, ['mixed']), true)
+                        || strpos($type, '[]') !== false)
+                ) {
+                    $error = 'Param type contains %s which is not an object type';
+                    $data = [
+                        $type,
+                    ];
+                    $phpcsFile->addError($error, $tagPtr + 2, 'NotObjectType', $data);
 
                     $break = true;
                     continue;
@@ -432,6 +449,8 @@ class ParamSniff implements Sniff
                     '?generator',
                     '\generator',
                     '?\generator',
+                    'object',
+                    '?object',
                 ];
                 // @phpcs:enable
 
@@ -441,7 +460,7 @@ class ParamSniff implements Sniff
                             && $lower !== $lowerTypeHint
                             && '?' . $lower !== $lowerTypeHint)
                         || (! in_array($lowerTypeHint, $simpleTypes, true)
-                            && array_filter($simpleTypes, function ($v) use ($lower) {
+                            && array_filter($simpleTypes, static function (string $v) use ($lower) {
                                 return $v === $lower || strpos($lower, $v . '[') === 0;
                             })))
                 ) {

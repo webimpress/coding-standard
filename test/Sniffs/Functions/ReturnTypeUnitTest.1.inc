@@ -306,4 +306,79 @@ interface MyInterface extends MyOne, MyTwo
     public function method2($myOne) : MyOne;
 
     public function method3($myTwo) : MyTwo;
+
+    /**
+     * @return array|int[]
+     */
+    public function typeCannotBeDuplicatedArray() : array;
+
+    /**
+     * @return iterable|int[]
+     */
+    public function typeCannotBeDuplicatedIterable() : iterable;
+
+    /**
+     * @return \Traversable|int[]
+     */
+    public function typeCannotBeDuplicatedTraversable() : \Traversable;
+
+    /**
+     * @return \Generator|int[]
+     */
+    public function typeCannotBeDuplicatedGenerator() : \Generator;
+
+    /**
+     * @return object|Foo
+     */
+    public function typeCannotBeDuplicatedObject() : object;
+
+    /**
+     * @return null|array Description
+     */
+    public function typeWithDescriptionArray() : ?array;
+
+    /**
+     * @return null|iterable Description
+     */
+    public function typeWithDescriptionIterable() : ?iterable;
+
+    /**
+     * @return null|\Traversable Description
+     */
+    public function typeWithDescriptionTraversable() : ?\Traversable;
+
+    /**
+     * @return null|\Generator Description
+     */
+    public function typeWithDescriptionGenerator() : ?\Generator;
+
+    /**
+     * @return null|object Description
+     */
+    public function typeWithDescriptionObject() : ?object;
+
+    /**
+     * @return null|int[]|array Description
+     */
+    public function typeSpecifiedWithDescriptionArray() : ?array;
+
+    /**
+     * @return null|int[]|iterable Description
+     */
+    public function typeSpecifiedWithDescriptionIterable() : ?iterable;
+
+    /**
+     * @return null|int[]|\Traversable Description
+     */
+    public function typeSpecifiedWithDescriptionTraversable() : ?\Traversable;
+
+    /**
+     * @return null|int[]|\Generator Description
+     */
+    public function typeSpecifiedWithDescriptionGenerator() : ?\Generator;
+
+    /**
+     * @return null|Foo|object Description
+     */
+    public function typeSpecifiedWithDescriptionObject() : ?object;
 }

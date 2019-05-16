@@ -5,7 +5,7 @@ namespace MyNamespace\Test\Functions;
 abstract class FunctionCommentReturn
 {
     /**
-     * @return array|int|\ArrayObject[]|\DateTime|\DateTime[]
+     * @return int|\ArrayObject[]|\DateTime|\DateTime[]
      */
     abstract public function arrayTypeSpecification() : array;
 
@@ -15,7 +15,7 @@ abstract class FunctionCommentReturn
     abstract public function nullArrayTypeSpecification() : ?array;
 
     /**
-     * @return iterable|string|\DateTime[]|MyIterableClass
+     * @return string|\DateTime[]|MyIterableClass
      */
     abstract public function iterableTypeSpecification() : iterable;
 
@@ -25,7 +25,7 @@ abstract class FunctionCommentReturn
     abstract public function nullIterableTypeSpecification() : ?iterable;
 
     /**
-     * @return int|\ArrayObject[]|\DateTime|\DateTime[]|\Traversable
+     * @return int|\ArrayObject[]|\DateTime|\DateTime[]
      */
     abstract public function traversableTypeSpecification() : Traversable;
 

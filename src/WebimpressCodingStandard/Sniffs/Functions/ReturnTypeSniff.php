@@ -793,7 +793,7 @@ class ReturnTypeSniff implements Sniff
 
                 if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean'])) {
                     $error = 'Function return type is not bool, but function returns boolean value here';
-                    $phpcsFile->addError($error, $ptr, 'ReturnFloat');
+                    $phpcsFile->addError($error, $ptr, 'ReturnBool');
                 }
                 return 'bool';
 

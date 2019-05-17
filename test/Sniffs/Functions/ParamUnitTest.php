@@ -28,6 +28,8 @@ class ParamUnitTest extends AbstractTestCase
                     130 => 1,
                     135 => 1,
                     143 => 2,
+                    154 => 1,
+                    159 => 1,
                 ];
         }
 
@@ -82,6 +84,16 @@ class ParamUnitTest extends AbstractTestCase
             259 => 2,
             261 => 1,
             266 => 1,
+            273 => 1,
+            275 => 1,
+            284 => 1,
+            286 => 1,
+            295 => 1,
+            297 => 1,
+            306 => 1,
+            308 => 1,
+            317 => 1,
+            319 => 1,
         ];
     }
 

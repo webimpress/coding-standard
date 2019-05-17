@@ -10,6 +10,7 @@ use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_filter;
 use function array_merge;
+use function count;
 use function current;
 use function explode;
 use function implode;
@@ -18,9 +19,13 @@ use function key;
 use function preg_grep;
 use function preg_replace;
 use function preg_split;
+use function sprintf;
+use function str_replace;
 use function strpos;
 use function strtolower;
+use function strtr;
 use function trim;
+use function ucfirst;
 
 use const T_ARRAY_HINT;
 use const T_CALLABLE;
@@ -112,7 +117,7 @@ class ParamSniff implements Sniff
             }
             $params[] = $clearName;
 
-            $param = array_filter($this->params, function (array $param) use ($clearName) {
+            $param = array_filter($this->params, static function (array $param) use ($clearName) {
                 return strtolower($param['name']) === $clearName;
             });
 
@@ -320,9 +325,40 @@ class ParamSniff implements Sniff
             }
         }
 
+        // @phpcs:disable WebimpressCodingStandard.Formatting.StringClassReference
+        $map = [
+            'array' => ['array'],
+            'iterable' => ['iterable'],
+            'traversable' => ['traversable', '\traversable'],
+            'generator' => ['generator', '\generator'],
+            'object' => ['object'],
+        ];
+        // @phpcs:enable
+
+        $count = strpos($lowerTypeHint, '?') === 0 ? 2 : 1;
+        $redundantTagCheck = ! $description || count($types) > $count;
+
         $break = false;
         foreach ($types as $key => $type) {
             $lower = strtolower($type);
+
+            if ($redundantTagCheck
+                && $lower !== 'null'
+                && in_array($lower, $map[strtr($lowerTypeHint, ['?' => '', '\\' => ''])] ?? [], true)
+            ) {
+                $this->redundantType(
+                    $phpcsFile,
+                    sprintf('Type "%s" is redundant', $type),
+                    $tagPtr + 2,
+                    sprintf('%sRedundant', ucfirst(str_replace('\\', '', $lower))),
+                    $lower,
+                    $types,
+                    $name,
+                    $description
+                );
+
+                continue;
+            }
 
             if ($lower === 'null'
                 && $typeHint
@@ -366,6 +402,7 @@ class ParamSniff implements Sniff
 
                 // iterable
                 if (in_array($lowerTypeHint, ['iterable', '?iterable'], true)
+                    && $lower !== 'iterable'
                     && in_array($lower, $simpleTypes, true)
                 ) {
                     $error = 'Param type contains "%s" which is not an iterable type';
@@ -386,7 +423,7 @@ class ParamSniff implements Sniff
                         '\traversable',
                         '?\traversable',
                     ], true)
-                    && ! in_array($lower, ['null', 'traversable', '\traversable'], true)
+                    && ! in_array($lower, ['traversable', '\traversable'], true)
                     && in_array($lower, $simpleTypes, true)
                 ) {
                     $error = 'Param type contains "%s" which is not a traversable type';
@@ -406,7 +443,7 @@ class ParamSniff implements Sniff
                         '\generator',
                         '?\generator',
                     ], true)
-                    && ! in_array($lower, ['null', 'generator', '\generator'], true)
+                    && ! in_array($lower, ['generator', '\generator'], true)
                     && in_array($lower, array_merge($simpleTypes, ['mixed']), true)
                 ) {
                     $error = 'Param type contains %s which is not a generator type';
@@ -414,6 +451,22 @@ class ParamSniff implements Sniff
                         $type,
                     ];
                     $phpcsFile->addError($error, $tagPtr + 2, 'NotGeneratorType', $data);
+
+                    $break = true;
+                    continue;
+                }
+
+                // object
+                if (in_array($lowerTypeHint, ['object', '?object'], true)
+                    && $lower !== 'object'
+                    && (in_array($lower, array_merge($simpleTypes, ['mixed']), true)
+                        || strpos($type, '[]') !== false)
+                ) {
+                    $error = 'Param type contains %s which is not an object type';
+                    $data = [
+                        $type,
+                    ];
+                    $phpcsFile->addError($error, $tagPtr + 2, 'NotObjectType', $data);
 
                     $break = true;
                     continue;
@@ -432,6 +485,8 @@ class ParamSniff implements Sniff
                     '?generator',
                     '\generator',
                     '?\generator',
+                    'object',
+                    '?object',
                 ];
                 // @phpcs:enable
 
@@ -441,7 +496,7 @@ class ParamSniff implements Sniff
                             && $lower !== $lowerTypeHint
                             && '?' . $lower !== $lowerTypeHint)
                         || (! in_array($lowerTypeHint, $simpleTypes, true)
-                            && array_filter($simpleTypes, function ($v) use ($lower) {
+                            && array_filter($simpleTypes, static function (string $v) use ($lower) {
                                 return $v === $lower || strpos($lower, $v . '[') === 0;
                             })))
                 ) {
@@ -492,6 +547,31 @@ class ParamSniff implements Sniff
             }
 
             $this->checkParam($phpcsFile, $param);
+        }
+    }
+
+    private function redundantType(
+        File $phpcsFile,
+        string $error,
+        int $ptr,
+        string $code,
+        string $redundantType,
+        array $types,
+        ?string $name,
+        ?string $description
+    ) : void {
+        $fix = $phpcsFile->addFixableError($error, $ptr, $code);
+
+        if ($fix) {
+            foreach ($types as $key => $type) {
+                if (strtolower($type) === $redundantType) {
+                    unset($types[$key]);
+                    break;
+                }
+            }
+
+            $content = trim(implode('|', $types) . ' ' . $name . ' ' . $description);
+            $phpcsFile->fixer->replaceToken($ptr, $content);
         }
     }
 }

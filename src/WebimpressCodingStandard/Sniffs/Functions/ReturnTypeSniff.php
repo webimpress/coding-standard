@@ -35,9 +35,12 @@ use const T_ANON_CLASS;
 use const T_ARRAY;
 use const T_ARRAY_CAST;
 use const T_BOOL_CAST;
+use const T_BOOLEAN_AND;
 use const T_BOOLEAN_NOT;
+use const T_BOOLEAN_OR;
 use const T_CLOSE_PARENTHESIS;
 use const T_CLOSURE;
+use const T_COALESCE;
 use const T_COLON;
 use const T_CONSTANT_ENCAPSED_STRING;
 use const T_DIR;
@@ -48,9 +51,21 @@ use const T_DOUBLE_QUOTED_STRING;
 use const T_FALSE;
 use const T_FILE;
 use const T_FUNCTION;
+use const T_GREATER_THAN;
+use const T_INLINE_ELSE;
 use const T_INLINE_THEN;
 use const T_INT_CAST;
+use const T_IS_EQUAL;
+use const T_IS_GREATER_OR_EQUAL;
+use const T_IS_IDENTICAL;
+use const T_IS_NOT_EQUAL;
+use const T_IS_NOT_IDENTICAL;
+use const T_IS_SMALLER_OR_EQUAL;
+use const T_LESS_THAN;
 use const T_LNUMBER;
+use const T_LOGICAL_AND;
+use const T_LOGICAL_OR;
+use const T_LOGICAL_XOR;
 use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_NULL;
@@ -62,6 +77,7 @@ use const T_OPEN_SQUARE_BRACKET;
 use const T_RETURN;
 use const T_SELF;
 use const T_SEMICOLON;
+use const T_SPACESHIP;
 use const T_STATIC;
 use const T_STRING;
 use const T_STRING_CAST;
@@ -745,9 +761,83 @@ class ReturnTypeSniff implements Sniff
         }
     }
 
+    private function endOfExpression(File $phpcsFile, int $ptr) : ?int
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        do {
+            if ($tokens[$ptr]['code'] === T_OPEN_PARENTHESIS
+                || $tokens[$ptr]['code'] === T_ARRAY
+            ) {
+                $ptr = $tokens[$ptr]['parenthesis_closer'];
+            } elseif ($tokens[$ptr]['code'] === T_OPEN_SQUARE_BRACKET
+                || $tokens[$ptr]['code'] === T_OPEN_CURLY_BRACKET
+                || $tokens[$ptr]['code'] === T_OPEN_SHORT_ARRAY
+            ) {
+                $ptr = $tokens[$ptr]['bracket_closer'];
+            } elseif (in_array(
+                $tokens[$ptr]['code'],
+                Tokens::$booleanOperators + Tokens::$comparisonTokens
+                    + [
+                        T_SEMICOLON,
+                        T_CLOSE_PARENTHESIS,
+                        T_INLINE_ELSE,
+                        T_INLINE_THEN,
+                    ],
+                true
+            )) {
+                return $ptr;
+            }
+        } while (++$ptr);
+
+        return null;
+    }
+
     private function getReturnValue(File $phpcsFile, int $ptr) : string
     {
         $tokens = $phpcsFile->getTokens();
+
+        $boolExpressionTokens = [
+            // comparision tokens
+            T_IS_EQUAL,
+            T_IS_IDENTICAL,
+            T_IS_NOT_EQUAL,
+            T_IS_NOT_IDENTICAL,
+            T_LESS_THAN,
+            T_GREATER_THAN,
+            T_IS_SMALLER_OR_EQUAL,
+            T_IS_GREATER_OR_EQUAL,
+            // boolean operators
+            T_BOOLEAN_AND,
+            T_BOOLEAN_OR,
+            T_LOGICAL_AND,
+            T_LOGICAL_OR,
+            T_LOGICAL_XOR,
+        ];
+
+        $endOfExpression = $this->endOfExpression($phpcsFile, $ptr);
+        $isBool = in_array($tokens[$endOfExpression]['code'], $boolExpressionTokens, true);
+
+        while ($endOfExpression && in_array($tokens[$endOfExpression]['code'], $boolExpressionTokens, true)) {
+            $endOfExpression = $this->endOfExpression($phpcsFile, $endOfExpression + 1);
+        }
+
+        if ($endOfExpression
+            && ($tokens[$endOfExpression]['code'] === T_INLINE_THEN
+                || $tokens[$endOfExpression]['code'] === T_COALESCE
+                || $tokens[$endOfExpression]['code'] === T_SPACESHIP)
+        ) {
+            return 'unknown';
+        }
+
+        if ($isBool) {
+            if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean'])) {
+                $error = 'Function return type is not bool, but function returns boolean value here';
+                $phpcsFile->addError($error, $ptr, 'ReturnBool');
+            }
+
+            return 'bool';
+        }
 
         switch ($tokens[$ptr]['code']) {
             case T_ARRAY:
@@ -769,28 +859,6 @@ class ReturnTypeSniff implements Sniff
 
             case T_BOOL_CAST:
             case T_BOOLEAN_NOT:
-                $end = $ptr;
-                while (++$end) {
-                    if ($tokens[$end]['code'] === T_OPEN_PARENTHESIS) {
-                        $end = $tokens[$end]['parenthesis_closer'];
-                        continue;
-                    }
-                    if ($tokens[$end]['code'] === T_OPEN_SQUARE_BRACKET
-                        || $tokens[$end]['code'] === T_OPEN_CURLY_BRACKET
-                        || $tokens[$end]['code'] === T_OPEN_SHORT_ARRAY
-                    ) {
-                        $end = $tokens[$end]['bracket_closer'];
-                        continue;
-                    }
-
-                    if (in_array($tokens[$end]['code'], [T_SEMICOLON, T_INLINE_THEN], true)) {
-                        break;
-                    }
-                }
-                if ($tokens[$end]['code'] !== T_SEMICOLON) {
-                    return 'unknown';
-                }
-
                 if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean'])) {
                     $error = 'Function return type is not bool, but function returns boolean value here';
                     $phpcsFile->addError($error, $ptr, 'ReturnBool');

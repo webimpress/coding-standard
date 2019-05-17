@@ -68,6 +68,8 @@ All notable changes to this project will be documented in this file, in reverse 
     - `Functions\Param` - param typehint and type within `@param` tag,
     - `Functions\ReturnType` - return type declaration and type within `@return` tag.
 
+- [#23](https://github.com/webimpress/coding-standard/pull/23) `Functions\ReturnType` - fixes recognising yoda comparison in return statement and type of returned value
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

@@ -291,4 +291,41 @@ abstract class FunctionCommentReturn
     {
         return new $a();
     }
+
+    public function yodaNull(?int $a) : bool
+    {
+        return null !== $a;
+    }
+
+    public function complexReturn($a, $b) : bool
+    {
+        return 0 === (static function() {
+            return ['y'];
+        })() + ['x'] + array('z') + $a[0] + $b{0};
+    }
+
+    public function ternaryUnrecognisedType1($a) : int
+    {
+        return null === $a ?: 'b';
+    }
+
+    public function ternaryUnrecognisedType2($b) : int
+    {
+        return null === $b && 1 < 2 ? 'a' : 'b';
+    }
+
+    public function ternaryUnrecognisedType3($a, $b) : int
+    {
+        return $a || $b ? 'a' : 'b';
+    }
+
+    public function coalesceUnrecognisedType() : int
+    {
+        return self::$a ?? 'b';
+    }
+
+    public function spaceshipUnrecognisedType(array $a, $b, $c) : string
+    {
+        return $a[0] * $b <=> $c ? ['a'] : 0.1;
+    }
 }

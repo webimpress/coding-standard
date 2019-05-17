@@ -47,7 +47,7 @@ class FunctionParam extends FunctionParamParent
     public function traversableSpecified(\Traversable $a) {}
 
     /**
-     * @param string|\DateTime[]|\Traversable $a
+     * @param string|\DateTime[] $a
      */
     public function traversableSpecifiedWrongly(\Traversable $a) {}
 
@@ -268,4 +268,59 @@ interface MyInterface extends MyOne, MyTwo
     public function method2(MyOne $myOne);
 
     public function method3(MyTwo $myTwo);
+
+    /**
+     * @param array|int[] $a1
+     * @param null|array $a2 Description
+     * @param null|array|int[] $a3 Description
+     */
+    public function typeArray(
+        array $a1,
+        ?array $a2,
+        ?array $a3 = null
+    ) : void;
+
+    /**
+     * @param iterable|int[] $i1
+     * @param null|iterable $i2 Description
+     * @param null|iterable|int[] $i3 Description
+     */
+    public function typeIterable(
+        iterable $i1,
+        ?iterable $i2,
+        ?iterable $i3 = null
+    ) : void;
+
+    /**
+     * @param \Traversable|int[] $t1
+     * @param null|\Traversable $t2 Description
+     * @param null|\Traversable|int[] $t3 Description
+     */
+    public function typeTraversable(
+        \Traversable $t1,
+        ?\Traversable $t2,
+        ?\Traversable $t3 = null
+    ) : void;
+
+    /**
+     * @param \Generator|int[] $g1
+     * @param null|\Generator $g2 Description
+     * @param null|\Generator|int[] $g3 Description
+     */
+    public function typeGenerator(
+        \Generator $g1,
+        ?\Generator $g2,
+        ?\Generator $g3 = null
+    ) : void;
+
+    /**
+     * @param object|Foo $o1
+     * @param null|object $o2 Description
+     * @param null|object|Foo $o3 Description
+     */
+    public function typeObject(
+        object $o1,
+        ?object $o2,
+        ?object $o3 = null
+    ) : void;
 }

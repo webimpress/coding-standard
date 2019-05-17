@@ -23,11 +23,13 @@ use function preg_grep;
 use function preg_replace;
 use function preg_split;
 use function sprintf;
+use function str_replace;
 use function strcasecmp;
 use function strpos;
 use function strtolower;
 use function strtr;
 use function trim;
+use function ucfirst;
 
 use const T_ANON_CLASS;
 use const T_ARRAY;
@@ -296,20 +298,8 @@ class ReturnTypeSniff implements Sniff
         if ($hasNullInDoc && strpos($this->returnTypeValue, '?') !== 0) {
             $error = 'Null type has been found in PHPDocs for return type.'
                 . ' It is not declared with function return type';
-            $fix = $phpcsFile->addFixableError($error, $this->returnDoc + 2, 'AdditionalNull');
 
-            if ($fix) {
-                foreach ($this->returnDocTypes as $key => $type) {
-                    if (strtolower($type) === 'null') {
-                        unset($this->returnDocTypes[$key]);
-                        break;
-                    }
-                }
-
-                $content = trim(implode('|', $this->returnDocTypes) . ' ' . $this->returnDocDescription);
-                $phpcsFile->fixer->replaceToken($this->returnDoc + 2, $content);
-            }
-
+            $this->redundantType($phpcsFile, $error, $this->returnDoc + 2, 'AdditionalNull', 'null');
             return;
         }
 
@@ -327,23 +317,25 @@ class ReturnTypeSniff implements Sniff
             '?generator',
             '\generator',
             '?\generator',
+            'object',
+            '?object',
         ];
 
-        if (! in_array($lowerReturnTypeValue, $needSpecificationTypes, true)) {
-            if ($this->typesMatch($this->returnTypeValue, $this->returnDocValue)) {
-                // There is no description and values are the same so PHPDoc tag is redundant.
-                if (! $this->returnDocDescription) {
-                    $error = 'Return tag is redundant';
-                    $fix = $phpcsFile->addFixableError($error, $this->returnDoc, 'RedundantReturnDoc');
+        if ($this->typesMatch($this->returnTypeValue, $this->returnDocValue)) {
+            // There is no description and values are the same so PHPDoc tag is redundant.
+            if (! $this->returnDocDescription) {
+                $error = 'Return tag is redundant';
+                $fix = $phpcsFile->addFixableError($error, $this->returnDoc, 'RedundantReturnDoc');
 
-                    if ($fix) {
-                        $this->removeTag($phpcsFile, $this->returnDoc);
-                    }
+                if ($fix) {
+                    $this->removeTag($phpcsFile, $this->returnDoc);
                 }
-
-                return;
             }
 
+            return;
+        }
+
+        if (! in_array($lowerReturnTypeValue, $needSpecificationTypes, true)) {
             if (in_array($lowerReturnTypeValue, ['parent', '?parent'], true)) {
                 if (! in_array(strtolower($this->returnDocValue), [
                     'parent',
@@ -389,7 +381,7 @@ class ReturnTypeSniff implements Sniff
             if (! in_array($lowerReturnTypeValue, $this->simpleReturnTypes, true)) {
                 foreach ($this->returnDocTypes as $type) {
                     $lower = strtolower($type);
-                    if (array_filter($this->simpleReturnTypes, function ($v) use ($lower) {
+                    if (array_filter($this->simpleReturnTypes, static function (string $v) use ($lower) {
                         return $v === $lower || strpos($lower, $v . '[') === 0;
                     })) {
                         $error = 'Unexpected type "%s" found in return tag';
@@ -411,6 +403,38 @@ class ReturnTypeSniff implements Sniff
             $phpcsFile->addError($error, $this->returnDoc + 2, 'DifferentTagAndDeclaration', $data);
 
             return;
+        }
+
+        $map = [
+            'array' => ['array'],
+            'iterable' => ['iterable'],
+            'traversable' => ['traversable', '\traversable'],
+            'generator' => ['generator', '\generator'],
+            'object' => ['object'],
+        ];
+
+        $count = strpos($lowerReturnTypeValue, '?') === 0 ? 2 : 1;
+
+        if (! $this->returnDocDescription || count($this->returnDocTypes) > $count) {
+            foreach ($this->returnDocTypes as $type) {
+                $lower = strtolower($type);
+
+                if ($lower === 'null') {
+                    continue;
+                }
+
+                if (! in_array($lower, $map[strtr($lowerReturnTypeValue, ['?' => '', '\\' => ''])], true)) {
+                    continue;
+                }
+
+                $this->redundantType(
+                    $phpcsFile,
+                    sprintf('Type "%s" is redundant', $type),
+                    $this->returnDoc + 2,
+                    sprintf('%sRedundant', ucfirst(str_replace('\\', '', $lower))),
+                    $lower
+                );
+            }
         }
 
         $simpleTypes = array_merge($this->simpleReturnTypes, ['mixed']);
@@ -457,7 +481,7 @@ class ReturnTypeSniff implements Sniff
             case '?\traversable':
                 foreach ($this->returnDocTypes as $type) {
                     $lower = strtolower($type);
-                    if (in_array($lower, ['null', 'traversable', '\traversable'], true)) {
+                    if (in_array($lower, ['traversable', '\traversable'], true)) {
                         continue;
                     }
 
@@ -477,7 +501,7 @@ class ReturnTypeSniff implements Sniff
             case '?\generator':
                 foreach ($this->returnDocTypes as $type) {
                     $lower = strtolower($type);
-                    if (in_array($lower, ['null', 'generator', '\generator'], true)) {
+                    if (in_array($lower, ['generator', '\generator'], true)) {
                         continue;
                     }
 
@@ -490,8 +514,45 @@ class ReturnTypeSniff implements Sniff
                     }
                 }
                 break;
+
+            case 'object':
+            case '?object':
+                foreach ($this->returnDocTypes as $type) {
+                    $lower = strtolower($type);
+                    if ($lower === 'object') {
+                        continue;
+                    }
+
+                    if (in_array($lower, $simpleTypes, true)
+                        || strpos($lower, '[]') !== false
+                    ) {
+                        $error = 'Return type contains "%s" which is not an object type';
+                        $data = [
+                            $type,
+                        ];
+                        $phpcsFile->addError($error, $this->returnDoc + 2, 'NotObjectType', $data);
+                    }
+                }
+                break;
         }
         // @phpcs:enable
+    }
+
+    private function redundantType(File $phpcsFile, string $error, int $ptr, string $code, string $redundantType) : void
+    {
+        $fix = $phpcsFile->addFixableError($error, $ptr, $code);
+
+        if ($fix) {
+            foreach ($this->returnDocTypes as $key => $type) {
+                if (strtolower($type) === $redundantType) {
+                    unset($this->returnDocTypes[$key]);
+                    break;
+                }
+            }
+
+            $content = trim(implode('|', $this->returnDocTypes) . ' ' . $this->returnDocDescription);
+            $phpcsFile->fixer->replaceToken($ptr, $content);
+        }
     }
 
     private function processReturnStatements(File $phpcsFile, int $stackPtr) : void
@@ -732,7 +793,7 @@ class ReturnTypeSniff implements Sniff
 
                 if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean'])) {
                     $error = 'Function return type is not bool, but function returns boolean value here';
-                    $phpcsFile->addError($error, $ptr, 'ReturnFloat');
+                    $phpcsFile->addError($error, $ptr, 'ReturnBool');
                 }
                 return 'bool';
 
@@ -820,7 +881,7 @@ class ReturnTypeSniff implements Sniff
         if ($expectedDoc
             && $this->returnDoc
             && $this->returnDocIsValid
-            && ! array_filter($this->returnDocTypes, function ($v) use ($expectedDoc) {
+            && ! array_filter($this->returnDocTypes, static function (string $v) use ($expectedDoc) {
                 return in_array(strtolower($v), $expectedDoc, true);
             })
         ) {

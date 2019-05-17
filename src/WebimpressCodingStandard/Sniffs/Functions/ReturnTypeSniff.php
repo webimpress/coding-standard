@@ -538,13 +538,13 @@ class ReturnTypeSniff implements Sniff
         // @phpcs:enable
     }
 
-    private function redundantType(File $phpcsFile, string $error, int $ptr, string $code, string $redundatType)
+    private function redundantType(File $phpcsFile, string $error, int $ptr, string $code, string $redundantType) : void
     {
         $fix = $phpcsFile->addFixableError($error, $ptr, $code);
 
         if ($fix) {
             foreach ($this->returnDocTypes as $key => $type) {
-                if (strtolower($type) === $redundatType) {
+                if (strtolower($type) === $redundantType) {
                     unset($this->returnDocTypes[$key]);
                     break;
                 }

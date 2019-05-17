@@ -10,6 +10,7 @@ use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_filter;
 use function array_merge;
+use function count;
 use function current;
 use function explode;
 use function implode;
@@ -18,9 +19,13 @@ use function key;
 use function preg_grep;
 use function preg_replace;
 use function preg_split;
+use function sprintf;
+use function str_replace;
 use function strpos;
 use function strtolower;
+use function strtr;
 use function trim;
+use function ucfirst;
 
 use const T_ARRAY_HINT;
 use const T_CALLABLE;
@@ -320,9 +325,40 @@ class ParamSniff implements Sniff
             }
         }
 
+        // @phpcs:disable WebimpressCodingStandard.Formatting.StringClassReference
+        $map = [
+            'array' => ['array'],
+            'iterable' => ['iterable'],
+            'traversable' => ['traversable', '\traversable'],
+            'generator' => ['generator', '\generator'],
+            'object' => ['object'],
+        ];
+        // @phpcs:enable
+
+        $count = strpos($lowerTypeHint, '?') === 0 ? 2 : 1;
+        $redundantTagCheck = ! $description || count($types) > $count;
+
         $break = false;
         foreach ($types as $key => $type) {
             $lower = strtolower($type);
+
+            if ($redundantTagCheck
+                && $lower !== 'null'
+                && in_array($lower, $map[strtr($lowerTypeHint, ['?' => '', '\\' => ''])] ?? [], true)
+            ) {
+                $this->redundantType(
+                    $phpcsFile,
+                    sprintf('Type "%s" is redundant', $type),
+                    $tagPtr + 2,
+                    sprintf('%sRedundant', ucfirst(str_replace('\\', '', $lower))),
+                    $lower,
+                    $types,
+                    $name,
+                    $description
+                );
+
+                continue;
+            }
 
             if ($lower === 'null'
                 && $typeHint
@@ -511,6 +547,31 @@ class ParamSniff implements Sniff
             }
 
             $this->checkParam($phpcsFile, $param);
+        }
+    }
+
+    private function redundantType(
+        File $phpcsFile,
+        string $error,
+        int $ptr,
+        string $code,
+        string $redundantType,
+        array $types,
+        ?string $name,
+        ?string $description
+    ) : void {
+        $fix = $phpcsFile->addFixableError($error, $ptr, $code);
+
+        if ($fix) {
+            foreach ($types as $key => $type) {
+                if (strtolower($type) === $redundantType) {
+                    unset($types[$key]);
+                    break;
+                }
+            }
+
+            $content = trim(implode('|', $types) . ' ' . $name . ' ' . $description);
+            $phpcsFile->fixer->replaceToken($ptr, $content);
         }
     }
 }

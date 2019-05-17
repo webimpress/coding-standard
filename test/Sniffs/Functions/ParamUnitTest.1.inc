@@ -161,11 +161,6 @@ class FunctionParam
     public function objectTypeCannotBeArray(?object $a) {}
 
     /**
-     * @param iterable|int[] $a
-     */
-    public function iterableCanBeMixedWithOtherTypes(iterable $a) {}
-
-    /**
      * @param null|int[] $a
      * @param null|string[] $b
      * @param null|float[] $c

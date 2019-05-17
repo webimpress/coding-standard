@@ -64,6 +64,10 @@ All notable changes to this project will be documented in this file, in reverse 
     - `Functions\Param` - param typehint and type within `@param` tag,
     - `Functions\ReturnType` - return type declaration and type within `@return` tag.
 
+- [#22](https://github.com/webimpress/coding-standard/pull/22) fixes recognising parameter types and return type declaration with PHPDocs tags. Affects the following sniffs:
+    - `Functions\Param` - param typehint and type within `@param` tag,
+    - `Functions\ReturnType` - return type declaration and type within `@return` tag.
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

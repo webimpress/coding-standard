@@ -328,4 +328,34 @@ abstract class FunctionCommentReturn
     {
         return $a[0] * $b <=> $c ? ['a'] : 0.1;
     }
+
+    /**
+     * @return self
+     */
+    abstract public function selfCanBeUsedAsClassTypeSpecification() : MyClass;
+
+    /**
+     * @return static
+     */
+    abstract public function staticCanBeUsedAsClassTypeSpecification() : MyClass;
+
+    /**
+     * @return parent
+     */
+    abstract public function parentCanBeUsedAsClassTypeSpecification() : MyClass;
+
+    /**
+     * @return self
+     */
+    abstract public function selfCanBeUsedAsObjectTypeSpecification() : object;
+
+    /**
+     * @return static
+     */
+    abstract public function staticCanBeUsedAsObjectTypeSpecification() : object;
+
+    /**
+     * @return parent
+     */
+    abstract public function parentCanBeUsedAsObjectTypeSpecification() : object;
 }

@@ -20,6 +20,7 @@ use function get_declared_traits;
 use function implode;
 use function in_array;
 use function ltrim;
+use function preg_match;
 use function preg_match_all;
 use function preg_quote;
 use function preg_replace;
@@ -313,6 +314,10 @@ class CorrectClassNameCaseSniff implements Sniff
     private function getExpectedName(File $phpcsFile, string $class, int $stackPtr) : string
     {
         $suffix = strstr($class, '[');
+        if ($suffix && ! preg_match('/^(\[\])+$/', $suffix)) {
+            return $class;
+        }
+
         $class = str_replace(['[', ']'], '', $class);
 
         $imports = $this->getGlobalUses($phpcsFile);

@@ -20,6 +20,7 @@ use function glob;
 use function implode;
 use function in_array;
 use function ltrim;
+use function preg_match;
 use function preg_match_all;
 use function preg_quote;
 use function preg_replace;
@@ -195,11 +196,7 @@ class DisallowFqnSniff implements Sniff
             $localToImport = [];
             $newTypesArr = [];
             foreach ($typesArr as $name) {
-                $suffix = strstr($name, '[');
-                $name = str_replace(['[', ']'], '', $name);
-
-                $newTypesArr[] = $this->getExpectedName($phpcsFile, $stackPtr + 2, $namespace, $name, $localToImport)
-                    . $suffix;
+                $newTypesArr[] = $this->getExpectedName($phpcsFile, $stackPtr + 2, $namespace, $name, $localToImport);
             }
 
             $newTypes = implode('|', $newTypesArr);
@@ -244,30 +241,34 @@ class DisallowFqnSniff implements Sniff
             return $name;
         }
 
-        // Remove leading slash from the class name
-        $name = ltrim($name, '\\');
+        $suffix = strstr($name, '[');
+        if ($suffix && ! preg_match('/^(\[\])+$/', $suffix)) {
+            return $name;
+        }
+
+        $name = str_replace(['[', ']'], '', ltrim($name, '\\'));
 
         if (stripos($name . '\\', $namespace . '\\') === 0) {
-            return substr($name, strlen($namespace) + 1);
+            return substr($name, strlen($namespace) + 1) . $suffix;
         }
 
         $alias = $this->getAliasFromName($name);
         foreach ($this->imported['class'] ?? [] as $class) {
             // If namespace or part of it is already imported
             if (stripos($name . '\\', $class['fqn'] . '\\') === 0) {
-                return $class['name'];
+                return $class['name'] . $suffix;
             }
         }
 
         // We can't suggest anything in that case
         if (! $this->isValidClassName($phpcsFile, $stackPtr, $alias, $name)) {
-            return '\\' . $name;
+            return '\\' . $name . $suffix;
         }
 
         // We need to import it
         $toImport += $this->import('class', $name, $alias);
 
-        return $alias;
+        return $alias . $suffix;
     }
 
     private function processString(

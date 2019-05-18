@@ -144,4 +144,9 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
             }
         };
     }
+
+    /**
+     * @param \Bar[]\Foo[] $param
+     */
+    abstract public function invalidTypeFormatIsNotChanged($param);
 }

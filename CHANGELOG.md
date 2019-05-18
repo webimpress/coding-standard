@@ -70,6 +70,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#23](https://github.com/webimpress/coding-standard/pull/23) `Functions\ReturnType` - fixes recognising yoda comparison in return statement and type of returned value
 
+- [#24](https://github.com/webimpress/coding-standard/pull/24) fixes error in fixer when recognised type was invalid. Affects the following sniffs:
+    - `PHP\CorrectClassNameCase`
+    - `PHP\DisallowFqn`
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

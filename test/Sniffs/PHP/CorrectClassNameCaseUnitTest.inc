@@ -91,4 +91,9 @@ class MyClass
     public function trav(iterable $a)
     {
     }
+
+    /**
+     * @param \Bar[]\Foo[] $param
+     */
+    abstract public function invalidTypeFormatIsNotChanged($param);
 }

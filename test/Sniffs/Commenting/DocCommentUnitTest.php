@@ -94,7 +94,13 @@ class DocCommentUnitTest extends AbstractTestCase
                     32 => 1,
                 ];
             case 'DocCommentUnitTest.10.inc':
-                return [];
+                return [
+                    25 => 1,
+                    28 => 1,
+                    29 => 1,
+                    60 => 1,
+                    61 => 1,
+                ];
         }
 
         return [

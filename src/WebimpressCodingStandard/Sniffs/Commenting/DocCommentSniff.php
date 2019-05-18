@@ -374,6 +374,8 @@ class DocCommentSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $firstTag = $tokens[$commentStart]['comment_tags'][0] ?? null;
 
+        $tagSpaces = [];
+
         $replaces = [];
         $next = $commentStart;
         $search = [T_DOC_COMMENT_STAR, T_DOC_COMMENT_CLOSE_TAG];
@@ -400,6 +402,13 @@ class DocCommentSniff implements Sniff
                             $openNestingTokens[] = $prev;
                         }
                     }
+                }
+
+                $lastInLine = $next + 1;
+                while ($tokens[$lastInLine + 1]['line'] === $tokens[$lastInLine]['line']
+                    && strpos($tokens[$lastInLine + 1]['content'], $phpcsFile->eolChar) === false
+                ) {
+                    ++$lastInLine;
                 }
 
                 $expectedSpaces = 1 + $this->indent * $nested;
@@ -453,8 +462,34 @@ class DocCommentSniff implements Sniff
                         true
                     );
 
+                    $closingBracket = false;
                     if (in_array($tokens[$next + 2]['content'][0], ['}', ')'], true)) {
-                        $expectedSpaces -= $this->indent;
+                        $expectedBracket = $tokens[$next + 2]['content'][0] === '}' ? '{' : '(';
+
+                        $lvl = -1;
+                        $token = $next;
+                        $expectedTokens = [T_DOC_COMMENT_STRING, T_DOC_COMMENT_TAG];
+                        while ($token = $phpcsFile->findPrevious($expectedTokens, $token - 1, $firstTag)) {
+                            $last = substr(trim($tokens[$token]['content']), -1);
+                            if (in_array($last, ['{', '('], true)) {
+                                ++$lvl;
+                            }
+
+                            if ($lvl === 0) {
+                                break;
+                            }
+
+                            if (in_array($tokens[$token]['content'][0], ['}', ')'], true)) {
+                                --$lvl;
+                            }
+                        }
+
+                        if (isset($tagSpaces[$token]) && $last === $expectedBracket) {
+                            $closingBracket = true;
+                            $expectedSpaces = $tagSpaces[$token];
+                        } else {
+                            $expectedSpaces -= $this->indent;
+                        }
                     } elseif (! in_array($prev2, $openNestingTokens, true)
                         && ! in_array($prev, $openNestingTokens, true)
                     ) {
@@ -470,12 +505,16 @@ class DocCommentSniff implements Sniff
                         && ($spaces < $expectedSpaces
                             || (($spaces - 1) % $this->indent) !== 0
                             || ($spaces > $expectedSpaces
-                                && $tokens[$prev]['line'] === $tokens[$next + 1]['line'] - 1))
+                                && $tokens[$prev]['line'] === $tokens[$next + 1]['line'] - 1)
+                            || ($spaces > $expectedSpaces
+                                && $closingBracket))
                     ) {
                         if ($tokens[$prev2]['line'] === $tokens[$next]['line'] - 1) {
                             if (isset($replaces[$prev][$spaces]) && $replaces[$prev][$spaces] !== $spaces) {
                                 $expectedSpaces = $replaces[$prev][$spaces];
-                            } elseif ($tokens[$prev]['line'] !== $tokens[$next + 1]['line'] - 1) {
+                            } elseif (! $closingBracket
+                                && $tokens[$prev]['line'] !== $tokens[$next + 1]['line'] - 1
+                            ) {
                                 $expectedSpaces = 1 + (int) max(
                                     round(($spaces - 1) / $this->indent) * $this->indent,
                                     $this->indent
@@ -506,8 +545,12 @@ class DocCommentSniff implements Sniff
                                 . ' or remove empty line above if it is description for the tag';
                             $phpcsFile->addError($error, $next + 1, 'AdditionalDescription');
                         }
+                    } else {
+                        $expectedSpaces = $spaces;
                     }
                 }
+
+                $tagSpaces[$lastInLine] = $expectedSpaces;
             }
         }
     }

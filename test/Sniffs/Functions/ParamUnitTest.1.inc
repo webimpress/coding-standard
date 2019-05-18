@@ -174,4 +174,26 @@ class FunctionParam
         ?\Generator $d,
         ?object $e
     ) {}
+
+    /**
+     * @param self $self
+     * @param static $static
+     * @param parent $parent
+     */
+    abstract public function canBeUsedAsClassTypeSpecification(
+        MyClass $self,
+        MyClass $static,
+        MyClass $parent
+    ) : void;
+
+    /**
+     * @param self $self
+     * @param static $static
+     * @param parent $parent
+     */
+    abstract public function canBeUsedAsObjectTypeSpecification(
+        object $self,
+        object $static,
+        object $parent
+    ) : void;
 }

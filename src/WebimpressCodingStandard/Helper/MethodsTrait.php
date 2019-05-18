@@ -82,25 +82,6 @@ trait MethodsTrait
     private $implementedInterfaceNames = [];
 
     /**
-     * Allowed simple type hints for method params.
-     *
-     * @var string[]
-     */
-    private $simpleTypeHints = [
-        'array',
-        'bool',
-        'callable',
-        'float',
-        'iterable',
-        'int',
-        'object',
-        'parent',
-        'resource',
-        'self',
-        'string',
-    ];
-
-    /**
      * @var string[]
      */
     private $simpleReturnTypes = [
@@ -118,12 +99,8 @@ trait MethodsTrait
         '?int',
         'object',
         '?object',
-        'parent',
-        '?parent',
         'resource',
         '?resource',
-        'self',
-        '?self',
         'string',
         '?string',
         'void',
@@ -218,7 +195,10 @@ trait MethodsTrait
         $suffix = strstr($class, '[');
         $clear = strtolower(strtr($class, ['?' => '', '[' => '', ']' => '']));
 
-        if (in_array($clear, $this->simpleReturnTypes + ['static' => 'static'], true)) {
+        $typeMap = $this->simpleReturnTypes
+            + ['parent' => 'parent', 'self' => 'self', 'static' => 'static'];
+
+        if (in_array($clear, $typeMap, true)) {
             return $prefix . $clear . $suffix;
         }
 

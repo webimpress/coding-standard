@@ -54,6 +54,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#25](https://github.com/webimpress/coding-standard/pull/25) fixes type suggestions, allows `self` and `parent` to be used as specification for complex types (like `object` or class/interface)
 
+- [#26](https://github.com/webimpress/coding-standard/pull/26) `Commenting\DocComment` fixes indents detection before closing brackets in doc-block comments
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

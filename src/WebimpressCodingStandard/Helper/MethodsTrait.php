@@ -93,10 +93,10 @@ trait MethodsTrait
         '?callable',
         'float',
         '?float',
-        'iterable',
-        '?iterable',
         'int',
         '?int',
+        'iterable',
+        '?iterable',
         'object',
         '?object',
         'resource',
@@ -164,10 +164,13 @@ trait MethodsTrait
             return 1;
         }
 
-        $aIsSimple = array_filter($this->simpleReturnTypes, function ($v) use ($a) {
+        $types = $this->simpleReturnTypes
+            + ['parent' => 'parent', 'self' => 'self', 'static' => 'static'];
+
+        $aIsSimple = array_filter($types, static function (string $v) use ($a) {
             return $v === $a || strpos($a, $v . '[') === 0;
         });
-        $bIsSimple = array_filter($this->simpleReturnTypes, function ($v) use ($b) {
+        $bIsSimple = array_filter($types, static function (string $v) use ($b) {
             return $v === $b || strpos($b, $v . '[') === 0;
         });
 

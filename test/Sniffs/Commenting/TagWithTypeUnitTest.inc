@@ -4,6 +4,11 @@ namespace MyNamespace\Test;
 
 class TagWithType
 {
+    /**
+     * @var array|bool|callable|float|int|iterable|object|parent|resource|self|static|string|MyClass
+     */
+    public $typesOrder;
+
     /** @var \Property_Type */
     public $className;
 

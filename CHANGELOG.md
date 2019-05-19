@@ -78,6 +78,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#26](https://github.com/webimpress/coding-standard/pull/26) `Commenting\DocComment` fixes indents detection before closing brackets in doc-block comments
 
+- [#27](https://github.com/webimpress/coding-standard/pull/27) `Commenting\TagWithType` fixes ordering types in PHPDoc tags
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

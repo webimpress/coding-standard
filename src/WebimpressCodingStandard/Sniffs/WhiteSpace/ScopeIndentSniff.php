@@ -38,8 +38,8 @@ use const T_COMMENT;
 use const T_CONSTANT_ENCAPSED_STRING;
 use const T_CONTINUE;
 use const T_DOC_COMMENT_OPEN_TAG;
-use const T_DOUBLE_ARROW;
 use const T_DOUBLE_QUOTED_STRING;
+use const T_ECHO;
 use const T_ELSEIF;
 use const T_EXIT;
 use const T_FOR;
@@ -63,7 +63,6 @@ use const T_SEMICOLON;
 use const T_START_HEREDOC;
 use const T_START_NOWDOC;
 use const T_STATIC;
-use const T_STRING;
 use const T_STRING_CONCAT;
 use const T_SWITCH;
 use const T_THROW;
@@ -72,6 +71,8 @@ use const T_USE;
 use const T_VARIABLE;
 use const T_WHILE;
 use const T_WHITESPACE;
+use const T_YIELD;
+use const T_YIELD_FROM;
 
 class ScopeIndentSniff implements Sniff
 {
@@ -96,21 +97,6 @@ class ScopeIndentSniff implements Sniff
         T_FOR => T_FOR,
         T_FOREACH => T_FOREACH,
         T_CATCH => T_CATCH,
-    ];
-
-    /**
-     * @var int[]
-     */
-    private $endOfStatement = [
-        T_SEMICOLON,
-        T_CLOSE_CURLY_BRACKET,
-        T_OPEN_CURLY_BRACKET,
-        T_OPEN_TAG,
-        T_COLON,
-        T_GOTO_LABEL,
-        T_COMMA,
-        T_OPEN_PARENTHESIS,
-        T_OPEN_SHORT_ARRAY,
     ];
 
     /**
@@ -146,10 +132,13 @@ class ScopeIndentSniff implements Sniff
             + Tokens::$booleanOperators
             + Tokens::$comparisonTokens
             + [
+                T_COLON => T_COLON,
+                T_GOTO_LABEL => T_GOTO_LABEL,
                 T_SEMICOLON => T_SEMICOLON,
                 T_OPEN_PARENTHESIS => T_OPEN_PARENTHESIS,
                 T_OPEN_CURLY_BRACKET => T_OPEN_CURLY_BRACKET,
                 T_OPEN_SHORT_ARRAY => T_OPEN_SHORT_ARRAY,
+                T_OPEN_SQUARE_BRACKET => T_OPEN_SQUARE_BRACKET,
                 T_ARRAY => T_ARRAY,
                 T_COMMA => T_COMMA,
                 T_INLINE_ELSE => T_INLINE_ELSE,
@@ -390,11 +379,11 @@ class ScopeIndentSniff implements Sniff
             ) {
                 $next = $phpcsFile->findNext(
                     Tokens::$emptyTokens
-                        + [
-                            T_OPEN_SHORT_ARRAY => T_OPEN_SHORT_ARRAY,
-                            T_OPEN_CURLY_BRACKET => T_OPEN_CURLY_BRACKET,
-                            T_OPEN_PARENTHESIS => T_OPEN_PARENTHESIS,
-                        ],
+                    + [
+                        T_OPEN_SHORT_ARRAY => T_OPEN_SHORT_ARRAY,
+                        T_OPEN_CURLY_BRACKET => T_OPEN_CURLY_BRACKET,
+                        T_OPEN_PARENTHESIS => T_OPEN_PARENTHESIS,
+                    ],
                     $i + 1,
                     null,
                     true
@@ -402,11 +391,11 @@ class ScopeIndentSniff implements Sniff
 
                 $prev = $phpcsFile->findPrevious(
                     Tokens::$emptyTokens
-                        + [
-                            T_CLOSE_SHORT_ARRAY => T_CLOSE_SHORT_ARRAY,
-                            T_CLOSE_CURLY_BRACKET => T_CLOSE_CURLY_BRACKET,
-                            T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
-                        ],
+                    + [
+                        T_CLOSE_SHORT_ARRAY => T_CLOSE_SHORT_ARRAY,
+                        T_CLOSE_CURLY_BRACKET => T_CLOSE_CURLY_BRACKET,
+                        T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
+                    ],
                     $tokens[$i]['parenthesis_closer'] - 1,
                     null,
                     true
@@ -444,11 +433,11 @@ class ScopeIndentSniff implements Sniff
             ) {
                 $prev = $phpcsFile->findPrevious(
                     Tokens::$emptyTokens
-                        + [
-                            T_CLOSE_SHORT_ARRAY => T_CLOSE_SHORT_ARRAY,
-                            T_CLOSE_CURLY_BRACKET => T_CLOSE_CURLY_BRACKET,
-                            T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
-                        ],
+                    + [
+                        T_CLOSE_SHORT_ARRAY => T_CLOSE_SHORT_ARRAY,
+                        T_CLOSE_CURLY_BRACKET => T_CLOSE_CURLY_BRACKET,
+                        T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
+                    ],
                     $i - 1,
                     null,
                     true
@@ -519,74 +508,62 @@ class ScopeIndentSniff implements Sniff
                 }
             }
 
-            if ($tokens[$i]['code'] === T_DOUBLE_ARROW) {
+            if ($tokens[$i]['code'] === T_OBJECT_OPERATOR) {
                 $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $i - 1, null, true);
 
-                if ($tokens[$prev]['line'] === $tokens[$i]['line']) {
-                    $next = $phpcsFile->findNext(Tokens::$emptyTokens, $i + 1, null, true);
+                if ($tokens[$prev]['line'] === $tokens[$i]['line']
+                    && ($prevObjectOperator = $this->hasPrevObjectOperator($phpcsFile, $i))
+                    && $tokens[$prevObjectOperator]['line'] < $tokens[$i]['line']
+                ) {
+                    // add line break before
+                    $error = 'Object operator must be in new line';
+                    $fix = $phpcsFile->addFixableError($error, $i, 'ObjectOperator');
 
-                    if ($tokens[$next]['code'] === T_OPEN_PARENTHESIS
-                        && $tokens[$tokens[$next]['parenthesis_closer']]['line'] > $tokens[$next]['line']
-                    ) {
-                        $after = $phpcsFile->findNext(
-                            Tokens::$emptyTokens,
-                            $tokens[$next]['parenthesis_closer'] + 1,
-                            null,
-                            true
-                        );
-                        if ($tokens[$after]['code'] === T_OBJECT_OPERATOR) {
-                            $newEI = $this->indent;
-                            $extraIndent += $newEI;
-                            $this->extras($after, $newEI);
+                    if ($fix) {
+                        $phpcsFile->fixer->addNewlineBefore($i);
+                    }
+                }
+
+                $fp = $this->findPrevious($phpcsFile, $i - 1, [T_OBJECT_OPERATOR]);
+                if (! $fp) {
+                    $endOfStatement = $phpcsFile->findEndOfStatement($i);
+                    $newLine = $this->hasContainNewLine($phpcsFile, $i, $endOfStatement);
+
+                    if ($newLine) {
+                        $prev = $phpcsFile->findPrevious(T_WHITESPACE, $i - 1, null, true);
+
+                        if ($tokens[$prev]['line'] === $tokens[$i]['line']) {
+                            $expectedIndent = $tokens[$i]['level'] * $this->indent;
+                            $ei = $this->alignObjectOperators
+                                ? $tokens[$i]['column'] - 1 - $expectedIndent - $extraIndent
+                                : $this->indent;
+
+                            if ($ei) {
+                                $fn = $this->findNext($phpcsFile, $i);
+                                $this->extras($fn, $ei);
+                                $extraIndent += $ei;
+                            }
                         }
                     }
                 }
             }
 
-            if ($tokens[$i]['code'] === T_OBJECT_OPERATOR) {
-                $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $i - 1, null, true);
+            if (in_array(
+                $tokens[$i]['code'],
+                Tokens::$assignmentTokens + Tokens::$includeTokens + [
+                    T_RETURN => T_RETURN,
+                    T_ECHO => T_ECHO,
+                    T_YIELD => T_YIELD,
+                    T_YIELD_FROM => T_YIELD_FROM,
+                ],
+                true
+            )) {
+                $endOfStatement = $phpcsFile->findEndOfStatement($i);
+                $newLine = $this->hasContainNewLine($phpcsFile, $i, $endOfStatement);
 
-                if ($tokens[$prev]['line'] === $tokens[$i]['line']) {
-                    if (($prevObjectOperator = $this->hasPrevObjectOperator($phpcsFile, $i))
-                        && $tokens[$prevObjectOperator]['line'] < $tokens[$i]['line']
-                    ) {
-                        // add line break before
-                        $error = 'Object operator must be in new line';
-                        $fix = $phpcsFile->addFixableError($error, $i, 'ObjectOperator');
-
-                        if ($fix) {
-                            $phpcsFile->fixer->addNewlineBefore($i);
-                        }
-                    }
-
-                    $next = $phpcsFile->findNext(
-                        Tokens::$emptyTokens + [
-                            T_STRING,
-                            T_VARIABLE,
-                            T_OPEN_CURLY_BRACKET,
-                            T_CLOSE_CURLY_BRACKET,
-                        ],
-                        $i + 1,
-                        null,
-                        true
-                    );
-
-                    if ($tokens[$next]['code'] === T_OPEN_PARENTHESIS
-                        && $tokens[$tokens[$next]['parenthesis_closer']]['line'] > $tokens[$next]['line']
-                    ) {
-                        $after = $phpcsFile->findNext(
-                            Tokens::$emptyTokens,
-                            $tokens[$next]['parenthesis_closer'] + 1,
-                            null,
-                            true
-                        );
-                        if ($tokens[$after]['code'] === T_OBJECT_OPERATOR) {
-                            $column = $tokens[$i]['column'];
-                            $newEI = $column - 1 - $extraIndent - $tokens[$i]['level'] * $this->indent;
-                            $extraIndent += $newEI;
-                            $this->extras($after, $newEI);
-                        }
-                    }
+                if ($newLine) {
+                    $this->extras($endOfStatement, $this->indent);
+                    $extraIndent += $this->indent;
                 }
             }
 
@@ -654,19 +631,38 @@ class ScopeIndentSniff implements Sniff
                         unset($this->extras[$next]);
                     }
                 } elseif ($tokens[$next]['code'] === T_OBJECT_OPERATOR) {
-                    if (isset($this->extras[$next])) {
-                        $extraIndent -= $this->extras[$next];
-                        unset($this->extras[$next]);
-                    }
+                    $fp = $this->findPrevious(
+                        $phpcsFile,
+                        $next,
+                        $this->breakToken + [T_OBJECT_OPERATOR => T_OBJECT_OPERATOR]
+                    );
+                    if ($tokens[$fp]['code'] !== T_OBJECT_OPERATOR) {
+                        if (in_array($tokens[$fp]['code'], [
+                            T_ARRAY,
+                            T_OPEN_PARENTHESIS,
+                            T_OPEN_SQUARE_BRACKET,
+                            T_OPEN_SHORT_ARRAY,
+                            T_OPEN_CURLY_BRACKET,
+                        ], true)) {
+                            $ei = $this->indent;
+                        } else {
+                            $nx = $phpcsFile->findNext(Tokens::$emptyTokens, $fp + 1, null, true);
+                            while ($tokens[$nx - 1]['line'] === $tokens[$nx]['line']) {
+                                --$nx;
+                            }
 
-                    $fn = $this->findNext($phpcsFile, $next);
-                    if ($fp = $this->findPrevious($phpcsFile, $next)) {
-                        $newEI = $fp - 1 - $expectedIndent - $extraIndent;
-                        $extraIndent += $newEI;
-                        $this->extras($fn, $newEI);
-                    } else {
-                        $extraIndent += $this->indent;
-                        $this->extras($fn, $this->indent);
+                            $indent = $tokens[$nx]['code'] === T_WHITESPACE
+                                ? $tokens[$nx]['length']
+                                : 0;
+
+                            $ei = $indent - $expectedIndent - $extraIndent + $this->indent;
+                        }
+
+                        if ($ei > 0) {
+                            $fn = $this->findNext($phpcsFile, $i);
+                            $this->extras($fn, $ei);
+                            $extraIndent += $ei;
+                        }
                     }
                 } elseif ($tokens[$next]['code'] === T_INLINE_THEN) {
                     $expectedIndent = $previousIndent - $extraIndent + $this->indent;
@@ -695,19 +691,6 @@ class ScopeIndentSniff implements Sniff
                         if ($t !== $firstNonEmpty) {
                             $expectedIndent += $this->indent;
                         }
-                    }
-                } elseif (! in_array($tokens[$prev]['code'], $this->endOfStatement, true)
-                    && $tokens[$next]['code'] !== T_OPEN_CURLY_BRACKET
-                ) {
-                    if ($this->getControlStructurePtr($phpcsFile, $next) !== false) {
-                        $addIndent = $expectedIndent + $extraIndent - $this->indent <= $previousIndent
-                            && ! in_array($tokens[$next]['code'], Tokens::$booleanOperators, true);
-                    } else {
-                        $addIndent = $expectedIndent + $extraIndent <= $previousIndent;
-                    }
-
-                    if ($addIndent) {
-                        $expectedIndent = ($depth + 1) * $this->indent;
                     }
                 }
 
@@ -852,10 +835,7 @@ class ScopeIndentSniff implements Sniff
         }
     }
 
-    /**
-     * Find previous token in object chain calls.
-     */
-    private function findPrevious(File $phpcsFile, int $ptr) : ?int
+    private function findPrevious(File $phpcsFile, int $ptr, array $search) : ?int
     {
         if ($this->alignObjectOperators) {
             $tokens = $phpcsFile->getTokens();
@@ -868,13 +848,9 @@ class ScopeIndentSniff implements Sniff
                     || $tokens[$ptr]['code'] === T_CLOSE_SQUARE_BRACKET
                 ) {
                     $ptr = $tokens[$ptr]['bracket_opener'];
-                } elseif ($tokens[$ptr]['code'] === T_OBJECT_OPERATOR) {
-                    return $tokens[$ptr]['column'];
-                } elseif (in_array(
-                    $tokens[$ptr]['code'],
-                    [T_SEMICOLON, T_OPEN_CURLY_BRACKET, T_OPEN_PARENTHESIS, T_OPEN_SHORT_ARRAY, T_OPEN_SQUARE_BRACKET],
-                    true
-                )) {
+                } elseif (in_array($tokens[$ptr]['code'], $search, true)) {
+                    return $ptr;
+                } elseif (in_array($tokens[$ptr]['code'], $this->breakToken, true)) {
                     break;
                 }
             }
@@ -888,18 +864,38 @@ class ScopeIndentSniff implements Sniff
      */
     private function findNext(File $phpcsFile, int $ptr) : ?int
     {
+        $breakTokensOperator = Tokens::$operators
+            + Tokens::$booleanOperators
+            + Tokens::$comparisonTokens
+            + [
+                T_INLINE_ELSE => T_INLINE_ELSE,
+                T_INLINE_THEN => T_INLINE_THEN,
+                T_STRING_CONCAT => T_STRING_CONCAT,
+            ];
+
+        $breakTokens = [
+            T_COLON => T_COLON,
+            T_SEMICOLON => T_SEMICOLON,
+            T_COMMA => T_COMMA,
+            T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
+            T_CLOSE_CURLY_BRACKET => T_CLOSE_CURLY_BRACKET,
+            T_CLOSE_SHORT_ARRAY => T_CLOSE_SHORT_ARRAY,
+            T_CLOSE_SQUARE_BRACKET => T_CLOSE_SQUARE_BRACKET,
+        ];
+
         $tokens = $phpcsFile->getTokens();
 
         while (++$ptr) {
             if ($tokens[$ptr]['code'] === T_OPEN_PARENTHESIS) {
                 $ptr = $tokens[$ptr]['parenthesis_closer'];
-            } elseif ($tokens[$ptr]['code'] === T_OPEN_CURLY_BRACKET) {
+            } elseif ($tokens[$ptr]['code'] === T_OPEN_CURLY_BRACKET
+                || $tokens[$ptr]['code'] === T_OPEN_SQUARE_BRACKET
+                || $tokens[$ptr]['code'] === T_OPEN_SHORT_ARRAY
+            ) {
                 $ptr = $tokens[$ptr]['bracket_closer'];
-            } elseif (in_array(
-                $tokens[$ptr]['code'],
-                [T_OBJECT_OPERATOR, T_SEMICOLON, T_CLOSE_PARENTHESIS, T_CLOSE_SHORT_ARRAY, T_COMMA],
-                true
-            )) {
+            } elseif (in_array($tokens[$ptr]['code'], $breakTokensOperator, true)) {
+                return $phpcsFile->findPrevious(Tokens::$emptyTokens, $ptr - 1, null, true);
+            } elseif (in_array($tokens[$ptr]['code'], $breakTokens, true)) {
                 return $ptr;
             }
         }
@@ -941,51 +937,31 @@ class ScopeIndentSniff implements Sniff
         for ($j = $fromPtr + 1; $j < $toPtr; ++$j) {
             switch ($tokens[$j]['code']) {
                 case T_OPEN_PARENTHESIS:
+                    $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $j - 1, null, true);
+                    if (! in_array($tokens[$prev]['code'], $this->functionToken, true)
+                        && $this->hasContainNewLine($phpcsFile, $j, $tokens[$j]['parenthesis_closer'])
+                    ) {
+                        return true;
+                    }
+
+                    // no break
                 case T_ARRAY:
                     $j = $tokens[$j]['parenthesis_closer'];
                     continue 2;
+                case T_ANON_CLASS:
                 case T_OPEN_CURLY_BRACKET:
                     if (isset($tokens[$j]['scope_closer'])) {
                         $j = $tokens[$j]['scope_closer'];
                     }
                     continue 2;
                 case T_OPEN_SHORT_ARRAY:
+                case T_OPEN_SQUARE_BRACKET:
                     $j = $tokens[$j]['bracket_closer'];
                     continue 2;
                 case T_WHITESPACE:
                     if (strpos($tokens[$j]['content'], $phpcsFile->eolChar) !== false) {
                         return true;
                     }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if the $ptr token is inside control structure
-     * and returns the control structure pointer;
-     * otherwise returns boolean `false`.
-     *
-     * @return false|int
-     */
-    private function getControlStructurePtr(File $phpcsFile, int $ptr)
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        if (isset($tokens[$ptr]['nested_parenthesis'])) {
-            foreach ($tokens[$ptr]['nested_parenthesis'] as $start => $end) {
-                // find expression before
-                $prev = $phpcsFile->findPrevious(
-                    Tokens::$emptyTokens,
-                    $start - 1,
-                    null,
-                    true
-                );
-
-                if (in_array($tokens[$prev]['code'], $this->controlStructures, true)) {
-                    return $prev;
-                }
             }
         }
 

@@ -85,9 +85,9 @@ if (false === $method(
 }
 
 if ($a
-        !== $b
+    !== $b
     && $c
-        instanceof \DateTime
+    instanceof \DateTime
 ) {
     echo 1;
 }

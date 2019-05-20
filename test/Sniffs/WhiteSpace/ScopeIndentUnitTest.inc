@@ -514,7 +514,7 @@ yield 'key' => (new DateTime(
         ));
 
         yield 'key2' => (new X(
-                'hi',
+                'hi'
             ))
             ->m()
             ->r();
@@ -577,7 +577,7 @@ $param2
    \Countable,
  \Traversable
 {
-     }
+     };
 
 interface MyInterface extends
  OtherInterface,
@@ -601,3 +601,15 @@ $array = [
 $object
     ->method((new MyClass())
     ->inner((string) $value))->outer();
+
+switch (true) {
+    case $object->something():
+        $method->test();
+        break;
+    case $obj->test():
+        return $qb->select();
+}
+
+$obj->hello()
+    && $object
+        ->world();

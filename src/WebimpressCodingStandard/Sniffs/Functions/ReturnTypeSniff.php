@@ -778,12 +778,12 @@ class ReturnTypeSniff implements Sniff
             } elseif (in_array(
                 $tokens[$ptr]['code'],
                 Tokens::$booleanOperators + Tokens::$comparisonTokens
-                    + [
-                        T_SEMICOLON,
-                        T_CLOSE_PARENTHESIS,
-                        T_INLINE_ELSE,
-                        T_INLINE_THEN,
-                    ],
+                + [
+                    T_SEMICOLON,
+                    T_CLOSE_PARENTHESIS,
+                    T_INLINE_ELSE,
+                    T_INLINE_THEN,
+                ],
                 true
             )) {
                 return $ptr;

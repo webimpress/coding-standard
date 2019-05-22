@@ -550,7 +550,9 @@ class ScopeIndentSniff implements Sniff
 
             if (in_array(
                 $tokens[$i]['code'],
-                Tokens::$assignmentTokens + Tokens::$includeTokens + [
+                Tokens::$assignmentTokens
+                + Tokens::$includeTokens
+                + [
                     T_RETURN => T_RETURN,
                     T_ECHO => T_ECHO,
                     T_YIELD => T_YIELD,

@@ -938,12 +938,9 @@ class ScopeIndentSniff implements Sniff
             switch ($tokens[$j]['code']) {
                 case T_OPEN_PARENTHESIS:
                     $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $j - 1, null, true);
-                    if (! in_array($tokens[$prev]['code'], $this->functionToken, true)
-                        && $this->hasContainNewLine($phpcsFile, $j, $tokens[$j]['parenthesis_closer'])
-                    ) {
-                        return true;
+                    if (! in_array($tokens[$prev]['code'], $this->functionToken, true)) {
+                        continue 2;
                     }
-
                     // no break
                 case T_ARRAY:
                     $j = $tokens[$j]['parenthesis_closer'];

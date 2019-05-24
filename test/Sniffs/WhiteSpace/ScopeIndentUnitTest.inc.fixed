@@ -614,3 +614,73 @@ switch (true) {
 $obj->hello()
 && $object
     ->world();
+
+$foo && $bar
+&& ($baz
+    || $ban);
+
+$sum = ($a
+        + $b) * 2;
+
+$var = $obj->foo()
+           ->bar()
+           ->baz()
+    && $sum === 10;
+
+$alignOperator->foo()->bar()
+                     ->baz()
+                     ->var();
+
+$var = $alignOperator->foo()->bar()
+                            ->baz()
+                            ->var();
+
+$variable = $object->hello()
+    && $other
+        ->foo()
+        ->bar();
+
+$variable = ($object->hello()
+        && $other
+            ->foo()
+            ->bar())
+    || $b === 1;
+
+$variable = $object->hello()
+    && ($other
+            ->foo()
+            ->bar()
+        || $other
+            ->baz()
+            ->var());
+
+if ($object->hello()
+    && $other
+        ->foo()
+        ->bar()
+    && $other
+        ->baz()
+        ->var()
+) {
+    return true;
+}
+
+if ($object->hello()
+    && ($other
+            ->foo()
+            ->bar()
+        || $other
+            ->baz()
+            ->var())
+) {
+    return true;
+}
+
+if ($a
+    !== $b
+    && $c
+    instanceof \DateTime
+) {
+    return $a && ($b
+            || $c);
+}

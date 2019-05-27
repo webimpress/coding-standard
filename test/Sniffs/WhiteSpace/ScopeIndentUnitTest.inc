@@ -514,7 +514,7 @@ yield 'key' => (new DateTime(
         ));
 
         yield 'key2' => (new X(
-                'hi',
+                'hi'
             ))
             ->m()
             ->r();
@@ -577,7 +577,7 @@ $param2
    \Countable,
  \Traversable
 {
-     }
+     };
 
 interface MyInterface extends
  OtherInterface,
@@ -601,3 +601,89 @@ $array = [
 $object
     ->method((new MyClass())
     ->inner((string) $value))->outer();
+
+switch (true) {
+    case $object->something():
+        $method->test();
+        break;
+    case $obj->test():
+        return $qb->select();
+}
+
+$obj->hello()
+&& $object
+    ->world();
+
+$foo && $bar
+&& ($baz
+    || $ban);
+
+$sum = ($a
+        + $b) * 2;
+
+$var = $obj->foo()
+           ->bar()
+           ->baz()
+    && $sum === 10;
+
+$alignOperator->foo()->bar()
+                     ->baz()
+                     ->var();
+
+$var = $alignOperator->foo()->bar()
+                            ->baz()
+                            ->var();
+
+$variable = $object->hello()
+    && $other
+        ->foo()
+        ->bar();
+
+$variable = ($object->hello()
+        && $other
+            ->foo()
+            ->bar())
+    || $b === 1;
+
+$variable = $object->hello()
+    && ($other
+            ->foo()
+            ->bar()
+        || $other
+            ->baz()
+            ->var());
+
+if ($object->hello()
+    && $other
+        ->foo()
+        ->bar()
+    && $other
+        ->baz()
+        ->var()
+) {
+    return true;
+}
+
+if ($object->hello()
+    && ($other
+            ->foo()
+            ->bar()
+        || $other
+            ->baz()
+            ->var())
+) {
+    return true;
+}
+
+if ($a
+    !== $b
+    && $c
+    instanceof \DateTime
+) {
+    return $a && ($b
+            || $c);
+}
+
+$a =
+    $a ? $f
+        : $b;

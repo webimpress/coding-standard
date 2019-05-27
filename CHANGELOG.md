@@ -80,6 +80,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#27](https://github.com/webimpress/coding-standard/pull/27) `Commenting\TagWithType` fixes ordering types in PHPDoc tags
 
+- [#28](https://github.com/webimpress/coding-standard/pull/28) `WhiteSpace\ScopeIndent` fixes false-positive
+
 ## 1.0.2 - 2019-05-12
 
 ### Added

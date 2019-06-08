@@ -52,6 +52,7 @@ class BraceBlankLineUnitTest extends AbstractTestCase
             127 => 1,
             131 => 1,
             135 => 1,
+            139 => 1,
         ];
     }
 

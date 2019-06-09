@@ -133,3 +133,9 @@ if (true) {
     // comment here
 
 }
+
+try {
+    new DateTime();
+} catch (Throwable $th) {
+
+}

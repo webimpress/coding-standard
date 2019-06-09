@@ -336,7 +336,7 @@ class ParamSniff implements Sniff
         // @phpcs:enable
 
         $count = strpos($lowerTypeHint, '?') === 0 ? 2 : 1;
-        $redundantTagCheck = ! $description || count($types) > $count;
+        $redundantTagCheck = count($types) > $count;
 
         $break = false;
         foreach ($types as $key => $type) {

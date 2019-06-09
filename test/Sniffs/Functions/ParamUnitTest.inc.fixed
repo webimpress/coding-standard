@@ -323,4 +323,27 @@ interface MyInterface extends MyOne, MyTwo
         ?object $o2,
         ?object $o3 = null
     ) : void;
+
+    /**
+     *
+     *
+     * @param null|int[] $a3
+     *
+     *
+     * @param null|Foo $o3
+     *
+     *
+     * @param null|Bar $i3
+     */
+    public function redundantTypes(
+        array $a1,
+        ?array $a2,
+        ?array $a3,
+        object $o1,
+        ?object $o2,
+        ?object $o3,
+        iterable $i1,
+        ?iterable $i2,
+        ?iterable $i3
+    ) : void;
 }

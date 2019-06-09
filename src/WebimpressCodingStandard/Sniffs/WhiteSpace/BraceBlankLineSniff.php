@@ -44,8 +44,8 @@ class BraceBlankLineSniff implements Sniff
         }
 
         $closer = $tokens[$stackPtr]['bracket_closer'];
-        $prev = $phpcsFile->findPrevious(T_WHITESPACE, $closer - 1, null, true);
-        if ($tokens[$closer]['line'] > $tokens[$prev]['line'] + 1) {
+        $prev = $phpcsFile->findPrevious(T_WHITESPACE, $closer - 1, $stackPtr + 1, true);
+        if ($prev && $tokens[$closer]['line'] > $tokens[$prev]['line'] + 1) {
             $error = 'Blank line found before closing brace';
             $fix = $phpcsFile->addFixableError($error, $closer, 'SpacingBeforeClose');
 

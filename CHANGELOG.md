@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#30](https://github.com/webimpress/coding-standard/pull/30) `Functions\Param` - fixes duplicated error and fixer conflict
 
+- [#31](https://github.com/webimpress/coding-standard/pull/31) `WhiteSpace\BraceBlankLine` - fixes fixer conflict with empty structures
+
 ## 1.0.3 - 2019-05-28
 
 ### Added

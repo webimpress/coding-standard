@@ -139,7 +139,7 @@ class AlphabeticallySortedTraitsSniff implements Sniff
 
     private function clearName(string $name) : string
     {
-        return str_replace('\\', ':', $name);
+        return str_replace('\\', ' ', $name);
     }
 
     /**

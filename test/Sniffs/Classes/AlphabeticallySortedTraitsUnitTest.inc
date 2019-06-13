@@ -37,5 +37,12 @@ class Foo
         };
 
         $closure = function () use ($x) {};
+
+        $class = new class {
+            use Psr\NamespaceSeparator;
+            use PSR7Number;
+            use Psr_Underscore;
+            use PsrLetter;
+        };
     }
 }

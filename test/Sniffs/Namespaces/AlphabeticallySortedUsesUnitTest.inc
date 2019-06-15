@@ -36,3 +36,10 @@ namespace C {
 
     use const PHP_EOL; use const PHP_VERSION_ID;
 }
+
+namespace D {
+    use Psr\NamespaceSeparator;
+    use PSR7Number;
+    use Psr_Underscore;
+    use PsrLetter;
+}

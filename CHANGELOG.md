@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#34](https://github.com/webimpress/coding-standard/pull/34) fixes removing unused imports in files without namespaces
 
 ## 1.0.4 - 2019-07-11
 

@@ -433,7 +433,7 @@ class CorrectClassNameCaseSniff implements Sniff
 
                 foreach ($imports as $alias => $import) {
                     if (strtolower($import['fqn']) === strtolower($fullClassName)) {
-                        $this->error($phpcsFile, $start, $end, $import['name'], $class);
+                        $this->error($phpcsFile, $start, $end, $import['name'], $class, $import['ptr']);
                         return;
                     }
                 }
@@ -455,8 +455,14 @@ class CorrectClassNameCaseSniff implements Sniff
     /**
      * Reports new fixable error.
      */
-    private function error(File $phpcsFile, int $start, int $end, string $expected, string $actual) : void
-    {
+    private function error(
+        File $phpcsFile,
+        int $start,
+        int $end,
+        string $expected,
+        string $actual,
+        ?int $ptr = null
+    ) : void {
         $error = 'Expected class name %s; found %s';
         $data = [
             $expected,
@@ -466,6 +472,11 @@ class CorrectClassNameCaseSniff implements Sniff
 
         if ($fix) {
             $phpcsFile->fixer->beginChangeset();
+            if ($ptr) {
+                $content = $phpcsFile->getTokens()[$ptr]['content'];
+                $phpcsFile->fixer->replaceToken($ptr, '');
+                $phpcsFile->fixer->addContentBefore($ptr + 1, $content);
+            }
             for ($i = $start; $i < $end - 1; $i++) {
                 $phpcsFile->fixer->replaceToken($i, '');
             }

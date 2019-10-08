@@ -160,7 +160,7 @@ class AlphabeticallySortedTraitsSniff implements Sniff
             return $this->compareUseStatements($a, $b);
         });
 
-        $phpcsFile->fixer->addContent($first['ptrUse'], implode($phpcsFile->eolChar, array_map(function ($use) {
+        $phpcsFile->fixer->addContent($first['ptrUse'], implode($phpcsFile->eolChar, array_map(static function ($use) {
             return $use['string'];
         }, $uses)));
 

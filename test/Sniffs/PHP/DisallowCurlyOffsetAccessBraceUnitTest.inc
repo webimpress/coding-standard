@@ -1,0 +1,12 @@
+<?php
+
+class DisallowCurlyOffsetAccessBraceUnitTest
+{
+    public function test(array $arr, string $str)
+    {
+        $arr[] = $str{0};
+        $str{0} = $arr{0};
+
+        return $this->{'get' . $str}($arr);
+    }
+}

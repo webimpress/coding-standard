@@ -14,6 +14,7 @@ use function in_array;
 use const T_ANON_CLASS;
 use const T_CLOSE_CURLY_BRACKET;
 use const T_CLOSURE;
+use const T_COLON;
 use const T_FOR;
 use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_TAG;
@@ -44,7 +45,7 @@ class RedundantSemicolonSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $stackPtr - 1, null, true);
-        if (in_array($tokens[$prev]['code'], [T_OPEN_TAG, T_OPEN_CURLY_BRACKET], true)) {
+        if (in_array($tokens[$prev]['code'], [T_OPEN_TAG, T_OPEN_CURLY_BRACKET, T_COLON], true)) {
             $error = 'Redundant semicolon at the beginning of scope';
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'BeginningOfScope');
 

@@ -80,11 +80,9 @@ class ValidVariableNameSniff extends AbstractVariableSniff
         $content = $tokens[$stackPtr]['content'];
 
         $pattern = '|(?<!\\\\)(?:\\\\{2})*\${?([a-zA-Z0-9_]+)}?|';
-        if (! preg_match_all($pattern, $content, $matches)) {
-            return;
-        }
+        preg_match_all($pattern, $content, $matches);
 
-        foreach ($matches[1] as $varName) {
+        foreach ($matches[1] ?? [] as $varName) {
             if (! Common::isCamelCaps($varName, false, true, true)) {
                 $error = 'Variable "$%s" is not in valid camel caps format';
                 $data = [$varName];

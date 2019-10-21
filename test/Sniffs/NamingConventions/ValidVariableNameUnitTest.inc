@@ -31,4 +31,4 @@ $string .= $camelCase;
 $string .= "{$myIP}";
 
 $userID = 'invalid due to two uppercase characters next to each other';
-$InvalidVariable = 'as first letter cannot be uppercase';
+$InvalidVariable = "as first letter cannot be uppercase";

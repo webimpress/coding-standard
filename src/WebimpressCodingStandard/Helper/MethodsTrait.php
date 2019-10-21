@@ -308,10 +308,10 @@ trait MethodsTrait
 
         $ns = strtolower($this->currentNamespace);
         $lowerClassName = strtolower($this->className);
-        $lowerFQCN = ($ns ? '\\' . $ns : '') . '\\' . $lowerClassName;
+        $lowerFqcn = ($ns ? '\\' . $ns : '') . '\\' . $lowerClassName;
         $lower = strtolower($name);
 
-        return $lower === $lowerFQCN
+        return $lower === $lowerFqcn
             || $lower === $lowerClassName;
     }
 
@@ -322,10 +322,10 @@ trait MethodsTrait
         }
 
         $lowerParentClassName = strtolower($this->parentClassName);
-        $lowerFQCN = strtolower($this->getFQCN($lowerParentClassName));
+        $lowerFqcn = strtolower($this->getFQCN($lowerParentClassName));
         $lower = strtolower($name);
 
-        return $lower === $lowerFQCN
+        return $lower === $lowerFqcn
             || $lower === $lowerParentClassName;
     }
 

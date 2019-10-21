@@ -21,9 +21,14 @@ echo \Library::$_variable;
 echo \Library::$_another_variable;
 
 class Foo {
-    protected $_this_is_not_handled_by_this_sniff;
+    protected $_invalid;
+    protected $userID;
 }
 
-$string = "This $_some_variable is not {$handled_by} this sniff.";
+$string = "This {$_some_variable} is now ${handled_by} this $sniff.";
 $string .= $_some_variable;
 $string .= $camelCase;
+$string .= "{$myIP}";
+
+$userID = 'invalid due to two uppercase characters next to each other';
+$InvalidVariable = 'as first letter cannot be uppercase';

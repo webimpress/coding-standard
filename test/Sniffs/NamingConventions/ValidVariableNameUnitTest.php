@@ -13,7 +13,13 @@ class ValidVariableNameUnitTest extends AbstractTestCase
         return [
             15 => 1,
             16 => 1,
-            28 => 1,
+            24 => 1,
+            25 => 1,
+            28 => 2,
+            29 => 1,
+            31 => 1,
+            33 => 1,
+            34 => 1,
         ];
     }
 

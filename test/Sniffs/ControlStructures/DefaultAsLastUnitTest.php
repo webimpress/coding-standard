@@ -11,8 +11,8 @@ class DefaultAsLastUnitTest extends AbstractTestCase
     protected function getErrorList(string $testFile = '') : array
     {
         return [
-            10 => 1,
-            16 => 1,
+            14 => 1,
+            18 => 1,
         ];
     }
 

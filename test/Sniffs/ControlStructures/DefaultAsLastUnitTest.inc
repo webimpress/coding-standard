@@ -6,8 +6,6 @@ switch (true) {
     case 2:
         break;
     default:
-        break;
-    case 3:
         switch (true) {
             case 1:
                 break;
@@ -16,6 +14,7 @@ switch (true) {
             case 2:
                 break;
         }
+        break;
     case 4:
         break;
 }

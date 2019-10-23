@@ -687,3 +687,11 @@ if ($a
 $a =
     $a ? $f
         : $b;
+
+$a === $b
+    ? $this->test(
+        $a
+    )
+    : $this->test(
+        $b
+    );

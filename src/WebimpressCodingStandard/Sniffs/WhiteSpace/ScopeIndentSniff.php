@@ -559,7 +559,7 @@ class ScopeIndentSniff implements Sniff
                 if ($tokens[$prev]['line'] === $tokens[$i]['line']
                     && ! ($fp = $this->findPrevious($phpcsFile, $i, [T_OBJECT_OPERATOR]))
                 ) {
-                    $endOfStatement = $phpcsFile->findEndOfStatement($i);
+                    $endOfStatement = $this->findNext($phpcsFile, $i);
                     $newLine = $this->hasContainNewLine($phpcsFile, $i, $endOfStatement);
 
                     if ($newLine) {

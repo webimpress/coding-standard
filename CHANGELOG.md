@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#35](https://github.com/webimpress/coding-standard/pull/35) adds `PHP\StaticCallback` sniff which detects closures and check if these can be marked as static
 
+- [#36](https://github.com/webimpress/coding-standard/pull/36) adds `PHP\DisallowCurlyOffsetAccessBrace` sniff which detects array and string offset access using curly brackets.
+  This functionality is deprecated as of PHP 7.4 so sniff can be useful when providing compatibility with PHP 7.4.
+
 ### Changed
 
 - Nothing.

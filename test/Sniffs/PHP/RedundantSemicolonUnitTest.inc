@@ -29,3 +29,9 @@ $a = $b{0};
 $hello = 1;;
 
 $world = $hello; /* comment */;;;
+
+switch (true) {
+    case 1:;
+}
+
+label:;

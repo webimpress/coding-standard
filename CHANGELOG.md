@@ -22,7 +22,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#43](https://github.com/webimpress/coding-standard/pull/43) fixes `WhiteSpace\ScopeIndent` sniff - case with object calls within ternary operator 
+- [#43](https://github.com/webimpress/coding-standard/pull/43) fixes `WhiteSpace\ScopeIndent` sniff - case with object calls within ternary operator
+
+- [#40](https://github.com/webimpress/coding-standard/pull/40) fixes `PHP\RedundantSemicolon` sniff to remove redundant semicolon after colon and goto label 
 
 ## 1.0.5 - 2019-10-06
 

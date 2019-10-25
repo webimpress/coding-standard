@@ -15,6 +15,7 @@ use function end;
 use function in_array;
 use function ltrim;
 use function max;
+use function min;
 use function preg_match;
 use function str_repeat;
 use function strlen;
@@ -559,7 +560,7 @@ class ScopeIndentSniff implements Sniff
                 if ($tokens[$prev]['line'] === $tokens[$i]['line']
                     && ! ($fp = $this->findPrevious($phpcsFile, $i, [T_OBJECT_OPERATOR]))
                 ) {
-                    $endOfStatement = $this->findNext($phpcsFile, $i);
+                    $endOfStatement = min($phpcsFile->findEndOfStatement($i), $this->findNext($phpcsFile, $i));
                     $newLine = $this->hasContainNewLine($phpcsFile, $i, $endOfStatement);
 
                     if ($newLine) {

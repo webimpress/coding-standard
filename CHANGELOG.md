@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#38](https://github.com/webimpress/coding-standard/pull/38) adds `ControlStructures\RedundantCase` sniff which detects redundant cases within a switch control structure
 
+- [#41](https://github.com/webimpress/coding-standard/pull/41) adds `ControlStructures\DefaultAsLast` sniff which requires `default` case to be last case in a switch control structure
+
 ### Changed
 
 - Nothing.

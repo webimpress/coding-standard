@@ -100,7 +100,7 @@ class VariableCommentSniff extends AbstractVariableSniff
             );
 
             $tagName = strtolower($tokens[$tag]['content']);
-            $isValidTag = array_filter(array_merge($this->allowedTags, ['@var']), function ($v) use ($tagName) {
+            $isValidTag = array_filter(array_merge($this->allowedTags, ['@var']), static function ($v) use ($tagName) {
                 return strtolower($v) === $tagName;
             });
 
@@ -132,7 +132,7 @@ class VariableCommentSniff extends AbstractVariableSniff
 
                 while (isset($tags[$key + 1]) && $tags[$key + 1] < $i) {
                     $tagName = strtolower($tokens[$tags[$key + 1]]['content']);
-                    if ($isValidTag && ! array_filter($this->nestedTags, function ($v) use ($tagName) {
+                    if ($isValidTag && ! array_filter($this->nestedTags, static function ($v) use ($tagName) {
                         return strtolower($v) === $tagName;
                     })) {
                         $error = 'Tag %s cannot be nested';

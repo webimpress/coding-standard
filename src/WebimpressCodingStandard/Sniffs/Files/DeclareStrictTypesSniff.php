@@ -109,7 +109,7 @@ class DeclareStrictTypesSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $tags = array_map(function ($value) {
+        $tags = array_map(static function ($value) {
             return strtolower($value);
         }, $this->containsTags);
 

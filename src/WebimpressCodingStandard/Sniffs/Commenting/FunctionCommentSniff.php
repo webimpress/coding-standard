@@ -155,7 +155,7 @@ class FunctionCommentSniff implements Sniff
                 $last = $i;
                 while (isset($tags[$key + 1]) && $tags[$key + 1] < $i) {
                     $tagName = strtolower($tokens[$tags[$key + 1]]['content']);
-                    if (! array_filter($this->nestedTags, function ($v) use ($tagName) {
+                    if (! array_filter($this->nestedTags, static function ($v) use ($tagName) {
                         return strtolower($v) === $tagName;
                     })) {
                         $error = 'Tag %s cannot be nested';

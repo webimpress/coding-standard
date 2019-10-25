@@ -19,6 +19,8 @@ class RedundantSemicolonUnitTest extends AbstractTestCase
             21 => 1,
             29 => 1,
             31 => 3,
+            34 => 1,
+            37 => 1,
         ];
     }
 

@@ -27,6 +27,8 @@
         <!-- Replaced by WebimpressCodingStandard.WhiteSpace.CommaSpacing -->
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeComma"/>
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg"/>
+        <!-- Replaced by WebimpressCodingStandard.NamingConventions.ValidVariableName -->
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
     </rule>
 
     <!-- Generic Rules -->

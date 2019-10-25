@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#36](https://github.com/webimpress/coding-standard/pull/36) adds `PHP\DisallowCurlyOffsetAccessBrace` sniff which detects array and string offset access using curly brackets.
   This functionality is deprecated as of PHP 7.4 so sniff can be useful when providing compatibility with PHP 7.4.
 
+- [#38](https://github.com/webimpress/coding-standard/pull/38) adds `ControlStructures\RedundantCase` sniff which detects redundant cases within a switch control structure
+
 ### Changed
 
 - Nothing.

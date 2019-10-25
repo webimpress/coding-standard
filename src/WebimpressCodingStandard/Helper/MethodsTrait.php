@@ -263,13 +263,13 @@ trait MethodsTrait
             return false;
         }
 
-        $fqcnTypeHint = strtolower($this->getFQCN($lowerTypeHint));
+        $fqcnTypeHint = strtolower($this->getFqcn($lowerTypeHint));
         foreach ($types as $key => $type) {
             if ($type === 'null') {
                 continue;
             }
 
-            $types[$key] = strtolower($this->getFQCN($type));
+            $types[$key] = strtolower($this->getFqcn($type));
         }
         $fqcnTypes = implode('|', $types);
 
@@ -279,7 +279,7 @@ trait MethodsTrait
                     || $fqcnTypeHint . '|null' === $fqcnTypes));
     }
 
-    private function getFQCN(string $class) : string
+    private function getFqcn(string $class) : string
     {
         // It is a simple type
         if (in_array(strtolower($class), $this->simpleReturnTypes, true)) {
@@ -308,10 +308,10 @@ trait MethodsTrait
 
         $ns = strtolower($this->currentNamespace);
         $lowerClassName = strtolower($this->className);
-        $lowerFQCN = ($ns ? '\\' . $ns : '') . '\\' . $lowerClassName;
+        $lowerFqcn = ($ns ? '\\' . $ns : '') . '\\' . $lowerClassName;
         $lower = strtolower($name);
 
-        return $lower === $lowerFQCN
+        return $lower === $lowerFqcn
             || $lower === $lowerClassName;
     }
 
@@ -322,10 +322,10 @@ trait MethodsTrait
         }
 
         $lowerParentClassName = strtolower($this->parentClassName);
-        $lowerFQCN = strtolower($this->getFQCN($lowerParentClassName));
+        $lowerFqcn = strtolower($this->getFqcn($lowerParentClassName));
         $lower = strtolower($name);
 
-        return $lower === $lowerFQCN
+        return $lower === $lowerFqcn
             || $lower === $lowerParentClassName;
     }
 

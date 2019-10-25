@@ -17,9 +17,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#39](https://github.com/webimpress/coding-standard/pull/39) adds `Arrays\DuplicateKey` sniff which detects duplicated keys in arrays
 
+- [#42](https://github.com/webimpress/coding-standard/pull/42) adds requiring camelCase names for class members and variables used in strings - extended sniff `NamingConventions\ValidVariableName`.
+  Disallowed are two capital letters next to each other (strict mode).
+
 ### Changed
 
-- Nothing.
+- [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.
 
 ### Deprecated
 
@@ -27,7 +30,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#42](https://github.com/webimpress/coding-standard/pull/42) excludes `PSR2.Classes.PropertyDeclaration.Underscore` check, as it is now covered by `NamingConventions\ValidVariableName` sniff
 
 ### Fixed
 

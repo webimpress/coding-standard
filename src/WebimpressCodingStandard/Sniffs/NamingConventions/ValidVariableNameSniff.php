@@ -9,6 +9,7 @@ use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 use PHP_CodeSniffer\Util\Common;
 
 use function ltrim;
+use function preg_match_all;
 
 use const T_DOUBLE_COLON;
 use const T_WHITESPACE;
@@ -48,8 +49,8 @@ class ValidVariableNameSniff extends AbstractVariableSniff
             return; // skip MyClass::$variable, there might be no control over the declaration
         }
 
-        if (! Common::isCamelCaps($varName, false, true, false)) {
-            $error = 'Variable "%s" is not in valid camel caps format';
+        if (! Common::isCamelCaps($varName, false, true, true)) {
+            $error = 'Variable "$%s" is not in valid camel caps format';
             $data = [$varName];
             $phpcsFile->addError($error, $stackPtr, 'NotCamelCaps', $data);
         }
@@ -60,7 +61,14 @@ class ValidVariableNameSniff extends AbstractVariableSniff
      */
     protected function processMemberVar(File $phpcsFile, $stackPtr) : void
     {
-        // handled by PSR2.Classes.PropertyDeclaration
+        $tokens = $phpcsFile->getTokens();
+        $varName = ltrim($tokens[$stackPtr]['content'], '$');
+
+        if (! Common::isCamelCaps($varName, false, true, true)) {
+            $error = 'Property "$%s" is not in valid camel caps format';
+            $data = [$varName];
+            $phpcsFile->addError($error, $stackPtr, 'NotCamelCapsProperty', $data);
+        }
     }
 
     /**
@@ -68,6 +76,18 @@ class ValidVariableNameSniff extends AbstractVariableSniff
      */
     protected function processVariableInString(File $phpcsFile, $stackPtr) : void
     {
-        // handled by Squiz.Strings.DoubleQuoteUsage
+        $tokens = $phpcsFile->getTokens();
+        $content = $tokens[$stackPtr]['content'];
+
+        $pattern = '|(?<!\\\\)(?:\\\\{2})*\${?([a-zA-Z0-9_]+)}?|';
+        preg_match_all($pattern, $content, $matches);
+
+        foreach ($matches[1] ?? [] as $varName) {
+            if (! Common::isCamelCaps($varName, false, true, true)) {
+                $error = 'Variable "$%s" is not in valid camel caps format';
+                $data = [$varName];
+                $phpcsFile->addError($error, $stackPtr, 'NotCamelCapsInString', $data);
+            }
+        }
     }
 }

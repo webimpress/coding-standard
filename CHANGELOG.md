@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#41](https://github.com/webimpress/coding-standard/pull/41) adds `ControlStructures\DefaultAsLast` sniff which requires `default` case to be last case in a switch control structure
 
+- [#39](https://github.com/webimpress/coding-standard/pull/39) adds `Arrays\DuplicateKey` sniff which detects duplicated keys in arrays
+
 ### Changed
 
 - Nothing.

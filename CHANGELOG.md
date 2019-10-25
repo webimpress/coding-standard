@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#43](https://github.com/webimpress/coding-standard/pull/43) fixes `WhiteSpace\ScopeIndent` sniff - case with object calls within ternary operator 
 
 ## 1.0.5 - 2019-10-06
 

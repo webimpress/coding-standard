@@ -64,7 +64,7 @@ class CodingStandardTagsSniff implements Sniff
         while ($next = $phpcsFile->findNext([T_COMMENT, T_DOC_COMMENT_TAG], $next + 1)) {
             if ($tokens[$next]['code'] === T_DOC_COMMENT_TAG) {
                 $lower = strtolower($tokens[$next]['content']);
-                if ($tag = key(array_filter($this->replacements, function ($key) use ($lower) {
+                if ($tag = key(array_filter($this->replacements, static function ($key) use ($lower) {
                     return strtolower($key) === $lower;
                 }, ARRAY_FILTER_USE_KEY))) {
                     $this->overrideToken($phpcsFile, $next);

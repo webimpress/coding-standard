@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#35](https://github.com/webimpress/coding-standard/pull/35) adds `PHP\StaticCallback` sniff which detects closures and check if these can be marked as static
 
 ### Changed
 

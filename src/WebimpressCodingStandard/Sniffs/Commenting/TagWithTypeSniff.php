@@ -326,7 +326,7 @@ class TagWithTypeSniff implements Sniff
                 && ($lower === 'mixed' || strpos($lower, 'mixed[') === 0)
             ) {
                 if ($count > 2
-                    || ! array_filter($this->types, function ($type) {
+                    || ! array_filter($this->types, static function ($type) {
                         return strtolower($type) === 'null';
                     })
                 ) {
@@ -427,7 +427,7 @@ class TagWithTypeSniff implements Sniff
                 $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'BoolAndTrue');
 
                 if ($fix) {
-                    $types = array_filter($this->types, function ($v) {
+                    $types = array_filter($this->types, static function ($v) {
                         return strtolower($v) !== 'true';
                     });
                     $content = trim(implode('|', $types) . ' ' . $this->description);
@@ -442,7 +442,7 @@ class TagWithTypeSniff implements Sniff
                 $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'BoolAndFalse');
 
                 if ($fix) {
-                    $types = array_filter($this->types, function ($v) {
+                    $types = array_filter($this->types, static function ($v) {
                         return strtolower($v) !== 'false';
                     });
                     $content = trim(implode('|', $types) . ' ' . $this->description);
@@ -456,7 +456,7 @@ class TagWithTypeSniff implements Sniff
             $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'TrueAndFalse');
 
             if ($fix) {
-                $types = array_filter($this->types, function ($v) {
+                $types = array_filter($this->types, static function ($v) {
                     return ! in_array(strtolower($v), ['true', 'false'], true);
                 });
                 $types[] = 'bool';

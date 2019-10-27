@@ -9,9 +9,11 @@ use PHP_CodeSniffer\Sniffs\AbstractScopeSniff;
 use PHP_CodeSniffer\Util\Tokens;
 
 use const T_ANON_CLASS;
+use const T_CLASS;
 use const T_CONST;
 use const T_FUNCTION;
 use const T_INTERFACE;
+use const T_VAR;
 use const T_VARIABLE;
 
 class ConstAfterTraitsSniff extends AbstractScopeSniff
@@ -43,7 +45,12 @@ class ConstAfterTraitsSniff extends AbstractScopeSniff
                     T_VAR => T_VAR,
                 ], $find - 1, null, true);
 
-                $from = $phpcsFile->findPrevious(Tokens::$emptyTokens + Tokens::$scopeModifiers, $stackPtr - 1, null, true);
+                $from = $phpcsFile->findPrevious(
+                    Tokens::$emptyTokens + Tokens::$scopeModifiers,
+                    $stackPtr - 1,
+                    null,
+                    true
+                );
                 $eos = $phpcsFile->findEndOfStatement($stackPtr);
 
                 $toMove = $phpcsFile->getTokensAsString($from + 1, $eos - $from);

@@ -1,0 +1,59 @@
+<?php
+
+class PropertyBeforeMethodClass
+{
+    use MyTrait;
+    use MyOtherTrait {
+        func1 as func2;
+    }
+
+    /** property comment **/
+    var $property1 = 'val';
+
+    /** method comment */
+    public function method()
+    {
+    }
+
+    /** constant comment */
+    const CONST_1 = 'const';
+}
+
+trait PropertyBeforeMethodTrait
+{
+
+    /** property2 comment */
+    public ?MyName\MyClass $property2;
+
+    /** property3 comment */
+    private int $property3 = 12;
+    /** method1 comment */
+    public function method1() {}
+
+    /** method2 comment */
+    public function method2() {}
+}
+
+$a = new class() {
+
+    /** property comment */
+    protected static $prop;
+    /** method comment */
+    public function __construct()
+    {
+    }
+    const CONST_3 = 'const';
+};
+
+$b = new class() {
+
+    /** property comment */
+    public static $prop;
+    /** method comment */
+    public function method()
+    {
+    }
+
+    /** const comment */
+    public const CONST_4 = 'const';
+};

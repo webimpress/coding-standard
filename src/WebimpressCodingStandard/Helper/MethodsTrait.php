@@ -149,11 +149,11 @@ trait MethodsTrait
         $b = strtolower(str_replace('\\', ':', $b));
 
         if ($a === 'null' || strpos($a, 'null[') === 0) {
-            return -1;
+            return $this->nullPosition === 'last' ? 1 : -1;
         }
 
         if ($b === 'null' || strpos($b, 'null[') === 0) {
-            return 1;
+            return $this->nullPosition === 'last' ? -1 : 1;
         }
 
         if ($a === 'true' || $a === 'false') {

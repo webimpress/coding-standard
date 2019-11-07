@@ -15,6 +15,10 @@ class AlphabeticallySortedUsesUnitTest extends AbstractTestCase
                 return [
                     6 => 1,
                 ];
+            case 'AlphabeticallySortedUsesUnitTest.2.inc':
+                return [
+                    4 => 1,
+                ];
         }
 
         return [

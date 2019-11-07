@@ -1,0 +1,33 @@
+<?php
+
+use A;
+use A\Tag;
+use A\Tag\Tags;
+use A\TagManager;
+use B;
+use C\Response as MyResponse;
+use C\Response\HtmlResponse;
+
+use function X;
+use function Y;
+
+use const C;
+use const D;
+
+class J {
+    use MyTrait;
+
+    public function closure($foo)
+    {
+        return function ($x) use ($foo) {
+            return $x <=> $foo;
+        };
+    }
+
+    public function anonym()
+    {
+        return new class() {
+            use AnotherTrait;
+        };
+    }
+}

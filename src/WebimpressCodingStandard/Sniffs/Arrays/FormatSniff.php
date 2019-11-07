@@ -6,16 +6,14 @@ namespace WebimpressCodingStandard\Sniffs\Arrays;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractArraySniff;
+use PHP_CodeSniffer\Util\Tokens;
 
+use function ltrim;
 use function str_repeat;
 use function strlen;
-use function strpos;
+use function trim;
 
-use const T_CLOSE_CURLY_BRACKET;
 use const T_CLOSE_SHORT_ARRAY;
-use const T_COMMENT;
-use const T_DOC_COMMENT_OPEN_TAG;
-use const T_DOUBLE_ARROW;
 use const T_WHITESPACE;
 
 /**
@@ -39,6 +37,8 @@ use const T_WHITESPACE;
  *     ];
  *     ```
  *   - array closing bracket in new line (code: `ClosingBracketInNewLine`).
+ *   - no comment before arrow (code `CommentBeforeArrow`)
+ *   - no blank line before arrow (code: `BlankLineBeforeArrow`)
  */
 class FormatSniff extends AbstractArraySniff
 {
@@ -124,57 +124,68 @@ class FormatSniff extends AbstractArraySniff
             }
         }
 
-        $previousLine = $tokens[$arrayStart]['line'];
-        $next = $arrayStart;
-        while ($next = $phpcsFile->findNext(T_WHITESPACE, $next + 1, $arrayEnd, true)) {
-            if ($previousLine === $tokens[$next]['line']) {
-                if ($tokens[$next]['code'] !== T_COMMENT) {
-                    $error = 'There must be one array element per line';
-                    $fix = $phpcsFile->addFixableError($error, $next, 'OneElementPerLine');
+        // $previousLine = $tokens[$arrayStart]['line'];
+        foreach ($indices as $element) {
+            $start = $element['index_start'] ?? $element['value_start'];
 
-                    if ($fix) {
-                        $phpcsFile->fixer->beginChangeset();
-                        if ($tokens[$next - 1]['code'] === T_WHITESPACE) {
-                            $phpcsFile->fixer->replaceToken($next - 1, '');
-                        }
-                        $phpcsFile->fixer->addNewlineBefore($next);
-                        $phpcsFile->fixer->endChangeset();
+            // For some reasons empty array has value_start = false
+            if (! $start) {
+                continue;
+            }
+
+            $nonEmpty = $phpcsFile->findPrevious(Tokens::$emptyTokens, $start - 1, null, true);
+            if ($tokens[$start]['line'] === $tokens[$nonEmpty]['line']) {
+                $error = 'There must be one array element per line';
+                $fix = $phpcsFile->addFixableError($error, $start, 'OneElementPerLine');
+
+                if ($fix) {
+                    $phpcsFile->fixer->beginChangeset();
+                    $phpcsFile->fixer->addNewline($nonEmpty);
+                    if ($tokens[$nonEmpty + 1]['code'] === T_WHITESPACE) {
+                        $phpcsFile->fixer->replaceToken($nonEmpty + 1, '');
                     }
-                }
-            } else {
-                if ($previousLine < $tokens[$next]['line'] - 1
-                    && (! empty($tokens[$stackPtr]['conditions'])
-                        || $previousLine === $tokens[$arrayStart]['line'])
-                ) {
-                    $firstOnLine = $phpcsFile->findFirstOnLine([], $next, true);
-
-                    $error = 'Blank line is not allowed here';
-                    $fix = $phpcsFile->addFixableError($error, $firstOnLine - 1, 'BlankLine');
-
-                    if ($fix) {
-                        $phpcsFile->fixer->replaceToken($firstOnLine - 1, '');
-                    }
+                    $phpcsFile->fixer->endChangeset();
                 }
             }
 
-            if ($tokens[$next]['code'] === T_COMMENT
-                && (strpos($tokens[$next]['content'], '//') === 0
-                    || strpos($tokens[$next]['content'], '#') === 0)
-            ) {
-                $end = $next;
-            } elseif ($tokens[$next]['code'] === T_DOC_COMMENT_OPEN_TAG) {
-                $end = $tokens[$next]['comment_closer'];
-            } else {
-                $end = $phpcsFile->findEndOfStatement($next);
-                if ($tokens[$end]['code'] === T_DOUBLE_ARROW
-                    || $tokens[$end]['code'] === T_CLOSE_CURLY_BRACKET
-                ) {
-                    $end = $phpcsFile->findEndOfStatement($end);
+            $prev = $phpcsFile->findPrevious(T_WHITESPACE, $start - 1, null, true);
+            if ($tokens[$prev]['line'] < $tokens[$start]['line'] - 1) {
+                $blankLine = $tokens[$prev]['line'] === $tokens[$prev + 1]['line'] ? $prev + 2 : $prev + 1;
+                $error = 'Blank line is not allowed here';
+
+                $fix = $phpcsFile->addFixableError($error, $blankLine, 'BlankLine');
+                if ($fix) {
+                    $phpcsFile->fixer->replaceToken($blankLine, '');
                 }
             }
 
-            $previousLine = $tokens[$end]['line'];
-            $next = $end;
+            if (! isset($element['arrow'])) {
+                continue;
+            }
+
+            $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $element['arrow'] - 1, null, true);
+            $content = $phpcsFile->getTokensAsString($prev + 1, $element['arrow'] - $prev - 1);
+            if (trim($content) !== '') {
+                $error = 'Comment is not allowed before arrow in array';
+                $comment = $phpcsFile->findNext(Tokens::$commentTokens, $prev + 1);
+
+                $fix = $phpcsFile->addFixableError($error, $comment, 'CommentBeforeArrow');
+                if ($fix) {
+                    $phpcsFile->fixer->beginChangeset();
+                    $phpcsFile->fixer->addContentBefore($element['index_start'], ltrim($content));
+                    for ($i = $comment; $i < $element['arrow']; ++$i) {
+                        $phpcsFile->fixer->replaceToken($i, '');
+                    }
+                    $phpcsFile->fixer->endChangeset();
+                }
+            } elseif ($tokens[$prev]['line'] < $tokens[$element['arrow']]['line'] - 1) {
+                $error = 'Blank line is not allowed before arrow in array';
+
+                $fix = $phpcsFile->addFixableError($error, $prev + 2, 'BlankLineBeforeArrow');
+                if ($fix) {
+                    $phpcsFile->fixer->replaceToken($prev + 2, '');
+                }
+            }
         }
 
         if ($first = $phpcsFile->findFirstOnLine([], $arrayEnd, true)) {

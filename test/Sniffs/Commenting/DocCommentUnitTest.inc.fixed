@@ -318,4 +318,11 @@ $c = 'xyz';
     public function allowSpaceBetweenTwoPhpDocBlock()
     {
     }
+
+    /**
+     * @return void
+     */
+    public function wrongAdditionalStarsWithOpenAndCloseTags()
+    {
+    }
 }

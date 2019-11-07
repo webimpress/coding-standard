@@ -78,6 +78,7 @@ class DocCommentSniff implements Sniff
             return;
         }
 
+        $this->checkTags($phpcsFile, $commentStart, $commentEnd);
         $this->checkBeforeOpen($phpcsFile, $commentStart);
         $this->checkAfterClose($phpcsFile, $commentStart, $commentEnd);
         $this->checkCommentIndents($phpcsFile, $commentStart, $commentEnd);
@@ -158,6 +159,34 @@ class DocCommentSniff implements Sniff
         }
 
         return true;
+    }
+
+    /**
+     * Check if there is no additional * with comment open and close tags
+     */
+    private function checkTags(File $phpcsFile, int $commentStart, int $commentEnd) : void
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        if ($tokens[$commentStart]['content'] !== '/**') {
+            $error = 'Invalid PHPDoc open tag; expected /** but found %s';
+            $data = [$tokens[$commentStart]['content']];
+
+            $fix = $phpcsFile->addFixableError($error, $commentStart, 'InvalidOpen', $data);
+            if ($fix) {
+                $phpcsFile->fixer->replaceToken($commentStart, '/**');
+            }
+        }
+
+        if ($tokens[$commentEnd]['content'] !== '*/') {
+            $error = 'Invalid PHPDoc close tag; expected */ but found %s';
+            $data = [$tokens[$commentEnd]['content']];
+
+            $fix = $phpcsFile->addFixableError($error, $commentEnd, 'InvalidClose', $data);
+            if ($fix) {
+                $phpcsFile->fixer->replaceToken($commentEnd, '*/');
+            }
+        }
     }
 
     /**

@@ -25,6 +25,9 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#47](https://github.com/webimpress/coding-standard/pull/47) adds `Commenting\TagName` sniff which checks if PHPDoc tags have additional characters at the end of the name.
   By default `:` and `;` are disallowed and removed by fixer, but the list of disallowed characters can be configured by option `disallowedEndChars`
 
+- [#48](https://github.com/webimpress/coding-standard/pull/48) adds configuration option `nullPosition` to `Commenting\TagWithType` sniff. Default value is `first` to keep backward compatibility.
+  The other allowed value is `last` so then `null` values in type list is at the last position.
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

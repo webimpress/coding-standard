@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.
 
+- [#44](https://github.com/webimpress/coding-standard/pull/44) changes `PSR1.Methods.CamelCapsMethodName` with `Generic.NamingConventions.CamelCapsFunctionName` so from now method names must be in strict camelCas. It means two capital letters next to each other are not allowed.
+
 ### Deprecated
 
 - Nothing.

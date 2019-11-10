@@ -33,6 +33,9 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#50](https://github.com/webimpress/coding-standard/pull/50) adds check for open and close of doc block comment in `Commenting\DocComment`.
   Only short version is allowed: `/**` and `*/`. Additional asterisk are disallowed.
 
+- [#51](https://github.com/webimpress/coding-standard/pull/51) adds check for blank lines and comments before arrow in arrays in `Array\Format` sniff.
+  Arrow must be after the index value, can be in new line, but any additional lines or comments are disallowed. 
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.
@@ -49,7 +52,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#51](https://github.com/webimpress/coding-standard/pull/51) fixes multiple cases when empty line before comment in array was not allowed
 
 ## 1.0.6 - TBD
 

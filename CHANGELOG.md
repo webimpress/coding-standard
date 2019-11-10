@@ -20,6 +20,8 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) adds requiring camelCase names for class members and variables used in strings - extended sniff `NamingConventions\ValidVariableName`.
   Disallowed are two capital letters next to each other (strict mode).
 
+- [#45](https://github.com/webimpress/coding-standard/pull/45) adds `Classes\ConstBeforeProperty` sniff to require constant definitions in classes and interfaces before properties and methods
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

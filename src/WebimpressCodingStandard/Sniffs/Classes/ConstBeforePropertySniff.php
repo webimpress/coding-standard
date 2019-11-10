@@ -16,7 +16,7 @@ use const T_INTERFACE;
 use const T_VAR;
 use const T_VARIABLE;
 
-class ConstAfterTraitsSniff extends AbstractScopeSniff
+class ConstBeforePropertySniff extends AbstractScopeSniff
 {
     public function __construct()
     {

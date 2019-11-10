@@ -6,7 +6,7 @@ namespace WebimpressCodingStandardTest\Sniffs\Classes;
 
 use WebimpressCodingStandardTest\Sniffs\AbstractTestCase;
 
-class ConstAfterTraitsUnitTest extends AbstractTestCase
+class ConstBeforePropertyUnitTest extends AbstractTestCase
 {
     protected function getErrorList(string $testFile = '') : array
     {

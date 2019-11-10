@@ -1,6 +1,6 @@
 <?php
 
-class ConstAfterTraitsClass
+class ConstBeforePropertyClass
 {
     use MyTrait;
     use MyOtherTrait {
@@ -14,7 +14,7 @@ class ConstAfterTraitsClass
     const CONST_1 = 'const';
 }
 
-interface ConstAfterTraitsInterface
+interface ConstBeforePropertyInterface
 {
     /** method comment */
     public function method();

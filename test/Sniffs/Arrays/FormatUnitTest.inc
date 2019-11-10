@@ -87,3 +87,49 @@ $a = [
      */
     // 'key' => 'val',
 ];
+
+$a = [
+    'a',
+
+    // b
+
+    'c',
+];
+
+$a = [
+    'a',
+
+    /*
+     multiline comment
+     */
+
+    'b',
+];
+
+$x = [
+    // comment
+    'a', 'b',
+    'd',
+
+
+    // comment 1
+    'i' => 'd',
+    //comment 2
+    'j'
+
+    //comment 3
+
+    =>'r',
+
+    'r'
+    . 'x ',
+    // comment 4
+    'x1'
+
+    => 'y1',
+];
+
+$a = [
+    // COMMENT
+];
+$a = [  /**/ ];

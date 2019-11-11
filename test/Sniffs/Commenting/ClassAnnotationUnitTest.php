@@ -19,6 +19,10 @@ class ClassAnnotationUnitTest extends AbstractTestCase
                     13 => 1,
                     44 => 1,
                 ];
+            case 'ClassAnnotationUnitTest.3.inc':
+                return [
+                    4 => 1,
+                ];
         }
 
         return [

@@ -21,6 +21,13 @@ class PropertyCommentWithoutAnnotations
 
     /**
      * @var bool
+     * @ORM\Boolean
+     * @Config(key="value")
+     */
+    var $var;
+
+    /**
+     * @var bool
      * @ORM\Column(@ORM\Value({"var", "bar", "baz"}))
      */
     private $baz;

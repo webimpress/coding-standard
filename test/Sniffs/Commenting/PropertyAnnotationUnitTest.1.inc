@@ -18,4 +18,11 @@ class PropertyCommentWithAnyAnnotations
      * })
      */
     public $bar;
+
+    /**
+     * @var bool
+     * @ORM\Boolean
+     * @Config(key="value")
+     */
+    var $var;
 }

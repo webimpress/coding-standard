@@ -36,6 +36,9 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#51](https://github.com/webimpress/coding-standard/pull/51) adds check for blank lines and comments before arrow in arrays in `Array\Format` sniff.
   Arrow must be after the index value, can be in new line, but any additional lines or comments are disallowed. 
 
+- [#54](https://github.com/webimpress/coding-standard/pull/54) adds `Namespaces\UniqueImport` sniff to detect if class/function/constant is imported only once.
+  Sniff checks also if the name is used only once. The same name can be used for class/function/constant, and constant names are case sensitive.
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

@@ -381,4 +381,9 @@ interface MyInterface extends MyOne, MyTwo
      * @return null|Foo Description
      */
     public function typeSpecifiedWithDescriptionObject() : ?object;
+
+    /**
+     *
+     */
+    public function moreThanOneSpace() : ?int;
 }

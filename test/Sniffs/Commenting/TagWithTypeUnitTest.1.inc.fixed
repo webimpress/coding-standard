@@ -331,4 +331,11 @@ interface MyInterface extends MyOne, MyTwo
      * @param null|mixed[] $mixedArray
      */
     public function method5($mixed, array $mixedArray = null);
+
+    /**
+     * @param     int        $p1  Description
+     * @return    iterable        Description
+     * @throws    Exception       Description
+     */
+    public function moreThanOneSpace(int $p1) : iterable;
 }

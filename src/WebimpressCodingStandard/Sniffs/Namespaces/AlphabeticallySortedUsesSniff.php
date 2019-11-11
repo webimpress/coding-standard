@@ -20,6 +20,7 @@ use function uasort;
 
 use const T_NAMESPACE;
 use const T_NS_SEPARATOR;
+use const T_OPEN_TAG;
 use const T_SEMICOLON;
 use const T_STRING;
 use const T_USE;
@@ -31,16 +32,25 @@ class AlphabeticallySortedUsesSniff implements Sniff
      */
     public function register() : array
     {
-        return [T_NAMESPACE];
+        return [T_OPEN_TAG, T_NAMESPACE];
     }
 
     /**
      * @param int $stackPtr
+     * @return int
      */
     public function process(File $phpcsFile, $stackPtr)
     {
-        $uses = $this->getUseStatements($phpcsFile, $stackPtr);
         $tokens = $phpcsFile->getTokens();
+
+        if ($tokens[$stackPtr]['code'] === T_OPEN_TAG) {
+            $namespace = $phpcsFile->findNext(T_NAMESPACE, $stackPtr + 1);
+            if ($namespace) {
+                return $namespace;
+            }
+        }
+
+        $uses = $this->getUseStatements($phpcsFile, $stackPtr);
 
         $lastUse = null;
         foreach ($uses as $use) {
@@ -61,7 +71,7 @@ class AlphabeticallySortedUsesSniff implements Sniff
                     $this->fixAlphabeticalOrder($phpcsFile, $uses);
                 }
 
-                return;
+                return $stackPtr + 1;
             }
 
             // Check empty lines between use statements.
@@ -130,6 +140,10 @@ class AlphabeticallySortedUsesSniff implements Sniff
 
             $lastUse = $use;
         }
+
+        return $tokens[$stackPtr]['code'] === T_OPEN_TAG
+            ? $phpcsFile->numTokens + 1
+            : $stackPtr + 1;
     }
 
     /**

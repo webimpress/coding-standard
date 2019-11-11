@@ -304,4 +304,9 @@ class VarTag extends VarTagParent {
      * @var Exception\Hello Description.
      */
     public $a;
+
+    /**
+     * @var    int Some  long  description
+     */
+    public $moreThanOneSpace;
 }

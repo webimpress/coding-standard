@@ -29,6 +29,15 @@ abstract class MethodCommentWithoutAnnotations
     private static function baz() : void
     {
     }
+
+    /**
+     * @ORM\FinalMethod
+     * @Config(key="value")
+     */
+    final public function finalMethod()
+    {
+        return __CLASS__;
+    }
 }
 
 new class ()

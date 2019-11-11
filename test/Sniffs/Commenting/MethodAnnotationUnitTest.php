@@ -17,6 +17,7 @@ class MethodAnnotationUnitTest extends AbstractTestCase
                 return [
                     9 => 1,
                     19 => 1,
+                    30 => 1,
                 ];
         }
 
@@ -25,6 +26,8 @@ class MethodAnnotationUnitTest extends AbstractTestCase
             9 => 1,
             18 => 1,
             27 => 1,
+            34 => 1,
+            35 => 1,
         ];
     }
 

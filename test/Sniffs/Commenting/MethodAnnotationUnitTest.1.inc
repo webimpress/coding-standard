@@ -23,4 +23,13 @@ class MethodCommentWithAnyAnnotations
     public function bar() : void
     {
     }
+
+    /**
+     * @ORM\FinalMethod
+     * @Config(key="value")
+     */
+    final function finalMethod() : string
+    {
+        return __CLASS__;
+    }
 }

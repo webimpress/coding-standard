@@ -26,6 +26,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#40](https://github.com/webimpress/coding-standard/pull/40) fixes `PHP\RedundantSemicolon` sniff to remove redundant semicolon after colon and goto label 
 
+- [#55](https://github.com/webimpress/coding-standard/pull/55) fixes `Namespaces\AlphabeticallySortedUses` sniff to work with files without namespaces
+
 ## 1.0.5 - 2019-10-06
 
 ### Added

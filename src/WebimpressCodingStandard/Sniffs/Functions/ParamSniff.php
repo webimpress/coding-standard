@@ -98,7 +98,7 @@ class ParamSniff implements Sniff
                 continue;
             }
 
-            $split = preg_split('/\s/', $tokens[$tag + 2]['content'], 3);
+            $split = preg_split('/\s+/', $tokens[$tag + 2]['content'], 3);
             if (! isset($split[1]) || ! $this->isVariable($split[1])) {
                 // Missing param type or it's not a variable
                 continue;

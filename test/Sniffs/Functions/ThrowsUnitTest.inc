@@ -310,4 +310,12 @@ class ThrowUnitTest
             throw new Exception();
         });
     }
+
+    /**
+     * @throws    Exception    Description
+     */
+    public function moreThanOneSpace()
+    {
+        throw new Exception();
+    }
 }

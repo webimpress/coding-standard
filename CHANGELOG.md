@@ -88,6 +88,10 @@ All notable changes to this project will be documented in this file, in reverse 
   - `Commenting\MethodAnnotation` sniff - `final` methods.
   - `Commenting\PropertyAnnotation` sniff - properties defined with `var`.
 
+- [#57](https://github.com/webimpress/coding-standard/pull/57) fixes parsing content of `@param` and `@var` tags with multiple spaces before variable name. Affects the following sniffs:
+  - `Commenting\TagWithType`,
+  - `Functions\Param`.
+
 ## 1.0.5 - 2019-10-06
 
 ### Added

@@ -346,4 +346,9 @@ interface MyInterface extends MyOne, MyTwo
         ?iterable $i2,
         ?iterable $i3
     ) : void;
+
+    /**
+     * @param   int     $p1
+     */
+    public function moreThanOneSpace(int $p1) : void;
 }

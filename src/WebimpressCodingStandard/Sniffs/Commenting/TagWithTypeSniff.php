@@ -196,7 +196,7 @@ class TagWithTypeSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $split = preg_split('/\s/', $tokens[$tagPtr + 2]['content'], 3);
+        $split = preg_split('/\s+/', $tokens[$tagPtr + 2]['content'], 3);
 
         if (! isset($split[1])) {
             if ($this->isVariable($split[0])) {
@@ -244,7 +244,7 @@ class TagWithTypeSniff implements Sniff
         $condition = end($tokens[$tagPtr]['conditions']);
         $isMemberVar = isset(Tokens::$ooScopeTokens[$condition]);
 
-        $split = preg_split('/\s/', $tokens[$tagPtr + 2]['content'], 3);
+        $split = preg_split('/\s+/', $tokens[$tagPtr + 2]['content'], 3);
         if ($nested > 0 || ! $isMemberVar) {
             if (! isset($split[1])) {
                 if ($this->isVariable($split[0])) {

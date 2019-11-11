@@ -304,6 +304,11 @@ class VarTag extends VarTagParent {
      * @var \RuntimeException\Hello Description.
      */
     public $a;
+
+    /**
+     * @var    int    $moreThanOneSpace   Some  long  description
+     */
+    public $moreThanOneSpace;
 }
 
 // @phpcs:set WebimpressCodingStandard.Commenting.TagWithType nullPosition last

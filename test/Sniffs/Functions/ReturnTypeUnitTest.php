@@ -80,6 +80,7 @@ class ReturnTypeUnitTest extends AbstractTestCase
                     371 => 1,
                     376 => 1,
                     381 => 1,
+                    386 => 1,
                 ];
             case 'ReturnTypeUnitTest.2.inc':
                 return [

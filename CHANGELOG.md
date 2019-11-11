@@ -83,6 +83,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#55](https://github.com/webimpress/coding-standard/pull/55) fixes `Namespaces\AlphabeticallySortedUses` sniff to work with files without namespaces
 
+- [#56](https://github.com/webimpress/coding-standard/pull/56) fixes Annotations sniffs for specific cases:
+  - `Commenting\ClassAnnotation` sniff - `final` classes.
+  - `Commenting\MethodAnnotation` sniff - `final` methods.
+  - `Commenting\PropertyAnnotation` sniff - properties defined with `var`.
+
 ## 1.0.5 - 2019-10-06
 
 ### Added

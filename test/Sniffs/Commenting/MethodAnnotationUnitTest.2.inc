@@ -24,4 +24,13 @@ class MethodCommentWithSpecifiedAnnotations
     {
         return mt_rand();
     }
+
+    /**
+     * @ORM\FinalMethod
+     * @Config(key="value")
+     */
+    final function finalMethod() : string
+    {
+        return __CLASS__;
+    }
 }

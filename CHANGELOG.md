@@ -39,11 +39,18 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#54](https://github.com/webimpress/coding-standard/pull/54) adds `Namespaces\UniqueImport` sniff to detect if class/function/constant is imported only once.
   Sniff checks also if the name is used only once. The same name can be used for class/function/constant, and constant names are case sensitive.
 
+- [#37](https://github.com/webimpress/coding-standard/pull/37) adds additional sniffs to `WebimpressCodingStandard` ruleset:
+  - `Generic.ControlStructures.DisallowYodaConditions`,
+  - `Squiz.Operators.IncrementDecrementUsage`,
+  - `Squiz.PHP.DisallowMultipleAssignments` (with `Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure` exclusion).
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.
 
 - [#44](https://github.com/webimpress/coding-standard/pull/44) changes `PSR1.Methods.CamelCapsMethodName` with `Generic.NamingConventions.CamelCapsFunctionName` so from now method names must be in strict camelCas. It means two capital letters next to each other are not allowed.
+
+- [#37](https://github.com/webimpress/coding-standard/pull/37) updates the `squizlabs/php_codesniffer` dependency to `^3.5.2`
 
 ### Deprecated
 

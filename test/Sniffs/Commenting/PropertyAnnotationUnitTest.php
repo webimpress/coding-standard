@@ -18,6 +18,8 @@ class PropertyAnnotationUnitTest extends AbstractTestCase
                     9 => 1,
                     17 => 1,
                     26 => 1,
+                    33 => 1,
+                    39 => 1,
                 ];
         }
 
@@ -28,6 +30,10 @@ class PropertyAnnotationUnitTest extends AbstractTestCase
             24 => 1,
             25 => 1,
             31 => 1,
+            32 => 1,
+            38 => 1,
+            43 => 1,
+            44 => 1,
         ];
     }
 

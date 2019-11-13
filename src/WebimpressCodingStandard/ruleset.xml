@@ -33,6 +33,11 @@
         <exclude name="PSR1.Methods.CamelCapsMethodName"/>
     </rule>
 
+    <!-- Only one space after type in property declaration - PHP 7.4+ -->
+    <rule ref="PSR2.Classes.PropertyDeclaration.SpacingAfterType">
+        <severity>5</severity>
+    </rule>
+
     <!-- Generic Rules -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.Classes.DuplicateClassName"/>

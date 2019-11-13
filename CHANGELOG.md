@@ -20,7 +20,12 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) adds requiring camelCase names for class members and variables used in strings - extended sniff `NamingConventions\ValidVariableName`.
   Disallowed are two capital letters next to each other (strict mode).
 
+- [#60](https://github.com/webimpress/coding-standard/pull/60) extends `Classes\TraitUsage` sniff to check if traits declarations are on the top of the class.
+  Traits must be specified before constants, properties and methods.
+
 - [#45](https://github.com/webimpress/coding-standard/pull/45) adds `Classes\ConstBeforeProperty` sniff to require constant definitions in classes and interfaces before properties and methods
+
+- [#46](https://github.com/webimpress/coding-standard/pull/46) adds `Classes\PropertyBeforeMethod` sniff to require property definitions in classes before methods
 
 - [#47](https://github.com/webimpress/coding-standard/pull/47) adds `Commenting\TagName` sniff which checks if PHPDoc tags have additional characters at the end of the name.
   By default `:` and `;` are disallowed and removed by fixer, but the list of disallowed characters can be configured by option `disallowedEndChars`
@@ -43,9 +48,6 @@ All notable changes to this project will be documented in this file, in reverse 
   - `Generic.ControlStructures.DisallowYodaConditions`,
   - `Squiz.Operators.IncrementDecrementUsage`,
   - `Squiz.PHP.DisallowMultipleAssignments` (with `Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure` exclusion).
-
-- [#60](https://github.com/webimpress/coding-standard/pull/60) extends `Classes\TraitUsage` sniff to check if traits declarations are on the top of the class.
-  Traits must be specified before constants, properties and methods.
 
 ### Changed
 

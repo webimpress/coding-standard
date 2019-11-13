@@ -57,7 +57,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#51](https://github.com/webimpress/coding-standard/pull/51) fixes multiple cases when empty line before comment in array was not allowed
 
-## 1.0.6 - TBD
+## 1.0.6 - 2019-11-13
 
 ### Added
 

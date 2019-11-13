@@ -251,7 +251,10 @@ class VariableCommentSniff extends AbstractVariableSniff
             $fix = $phpcsFile->addFixableError($error, $foundVar + 2, 'PropertyDocMissingNull', $data);
 
             if ($fix) {
-                $content = trim('null|' . implode('|', $types) . ' ' . $description);
+                $content = 'null|' . implode('|', $types);
+                if ($description !== null) {
+                    $content .= ' ' . $description;
+                }
                 $phpcsFile->fixer->replaceToken($foundVar + 2, $content);
             }
         }
@@ -300,7 +303,10 @@ class VariableCommentSniff extends AbstractVariableSniff
 
                 if ($fix) {
                     unset($types[$key]);
-                    $content = trim(implode('|', $types) . ' ' . $description);
+                    $content = implode('|', $types);
+                    if ($description !== null) {
+                        $content .= ' ' . $description;
+                    }
                     $phpcsFile->fixer->replaceToken($foundVar + 2, $content);
                 }
 
@@ -494,7 +500,10 @@ class VariableCommentSniff extends AbstractVariableSniff
                 }
             }
 
-            $content = trim(implode('|', $types) . ' ' . $description);
+            $content = implode('|', $types);
+            if ($description !== null) {
+                $content .= ' ' . $description;
+            }
             $phpcsFile->fixer->replaceToken($ptr, $content);
         }
     }

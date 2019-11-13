@@ -6,5 +6,23 @@ use function array_keys as k;
 
 use const T_ARRAY as TA;
 
+use function MyNamespace\crt as foo;
+use const OtherNamespace\B as A;
+
+use function X\func1, Z\func3;
+use const Y\C2;
+
+use const ConstCaseSensitive\Foo;
+
+
 count([new DateTime(), T_WHITESPACE]);
 k([new AO(), TA]);
+foo(A);
+func1(func3(C2, Foo));
+
+class MyClass {
+    const MY_CONST = 1;
+    public function my_func()
+    {
+    }
+}

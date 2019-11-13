@@ -125,4 +125,7 @@ class PropertiesWithTypes extends ParentClassName implements Interface1, Interfa
 
     /** @var object|int|DateTime */
     public object $o2;
+
+    /** @var array|Something[]*/
+    public array $noSpaceAfterTypeVar;
 }

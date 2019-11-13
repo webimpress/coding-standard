@@ -32,6 +32,7 @@ class VariableCommentUnitTest extends AbstractTestCase
             120 => 2,
             123 => 2,
             126 => 2,
+            129 => 1,
         ];
     }
 

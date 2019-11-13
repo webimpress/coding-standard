@@ -27,6 +27,10 @@
         <!-- Replaced by WebimpressCodingStandard.WhiteSpace.CommaSpacing -->
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeComma"/>
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg"/>
+        <!-- Replaced by WebimpressCodingStandard.Formatting.Reference.UnexpectedSpace -->
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterReference"/>
+        <!-- Replaced by WebimpressCodingStandard.Formatting.NoSpaceAfterSplat.SpaceFound -->
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterVariadic"/>
         <!-- Replaced by WebimpressCodingStandard.NamingConventions.ValidVariableName -->
         <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
         <!-- Replaced by Generic.NamingConventions.CamelCapsFunctionName -->
@@ -40,6 +44,7 @@
     <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
     <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
     <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.ControlStructures.DisallowYodaConditions"/>
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
         <properties>
             <property name="maxPadding" value="1"/>
@@ -95,7 +100,11 @@
     <!-- Squiz Rules -->
     <rule ref="Squiz.Classes.ClassFileName"/>
     <rule ref="Squiz.Classes.SelfMemberReference"/>
+    <rule ref="Squiz.Operators.IncrementDecrementUsage"/>
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+    <rule ref="Squiz.PHP.DisallowMultipleAssignments">
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure"/>
+    </rule>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
     <rule ref="Squiz.PHP.NonExecutableCode"/>
     <rule ref="Squiz.Scope.StaticThisUsage"/>

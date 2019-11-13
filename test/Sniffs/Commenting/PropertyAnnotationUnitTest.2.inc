@@ -26,4 +26,17 @@ class PropertyCommentWithSpecifiedAnnotations
      * @Config(key="value")
      */
     var $var;
+
+    /**
+     * @var null|DateTime
+     * @ORM\WithType
+     * @Config(require="PHP 7.4")
+     */
+    private ?\DateTime $typed;
+
+    /**
+     * @ORM\CallbackFunction
+     * @Config(require="PHP 7.4")
+     */
+    private callable $callback;
 }

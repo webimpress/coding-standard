@@ -15,14 +15,18 @@ use function substr;
 use function trim;
 
 use const T_ABSTRACT;
+use const T_CALLABLE;
 use const T_DOC_COMMENT_CLOSE_TAG;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_FINAL;
+use const T_NS_SEPARATOR;
+use const T_NULLABLE;
 use const T_PRIVATE;
 use const T_PROTECTED;
 use const T_PUBLIC;
 use const T_STATIC;
+use const T_STRING;
 use const T_VAR;
 use const T_WHITESPACE;
 
@@ -61,6 +65,10 @@ trait AnnotationsTrait
             T_FINAL,
             T_WHITESPACE,
             T_VAR,
+            T_STRING,
+            T_NS_SEPARATOR,
+            T_NULLABLE,
+            T_CALLABLE,
         ];
 
         $tokens = $phpcsFile->getTokens();

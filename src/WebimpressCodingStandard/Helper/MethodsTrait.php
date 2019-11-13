@@ -32,6 +32,7 @@ use const T_DOC_COMMENT_CLOSE_TAG;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
 use const T_INTERFACE;
+use const T_VARIABLE;
 use const T_WHITESPACE;
 
 /**
@@ -121,7 +122,9 @@ trait MethodsTrait
 
         $tokens = $phpcsFile->getTokens();
 
-        if ($tokens[$stackPtr]['code'] !== T_DOC_COMMENT_TAG) {
+        if ($tokens[$stackPtr]['code'] !== T_DOC_COMMENT_TAG
+            && $tokens[$stackPtr]['code'] !== T_VARIABLE
+        ) {
             $this->methodName = $phpcsFile->getDeclarationName($stackPtr);
             $this->isSpecialMethod = $this->methodName === '__construct' || $this->methodName === '__destruct';
         }

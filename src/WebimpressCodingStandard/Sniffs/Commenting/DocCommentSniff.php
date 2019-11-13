@@ -97,6 +97,7 @@ class DocCommentSniff implements Sniff
 
         $this->checkSpacesAfterStar($phpcsFile, $commentStart, $commentEnd);
         $this->checkBlankLinesInComment($phpcsFile, $commentStart, $commentEnd);
+        $this->checkStarInEveryLine($phpcsFile, $commentStart, $commentEnd);
 
         $this->checkBlankLineBeforeTags($phpcsFile, $commentStart);
     }
@@ -580,6 +581,66 @@ class DocCommentSniff implements Sniff
                 }
 
                 $tagSpaces[$lastInLine] = $expectedSpaces;
+            }
+        }
+    }
+
+    private function checkStarInEveryLine(File $phpcsFile, int $commentStart, int $commentEnd) : void
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        $firstLine = $tokens[$commentStart]['line'] + 1;
+        $lastLine = $tokens[$commentEnd]['line'] - 1;
+
+        $indentToken = $tokens[$commentStart - 1];
+        if ($indentToken['code'] === T_WHITESPACE
+            && $indentToken['line'] === $tokens[$commentStart]['line']
+        ) {
+            $indent = strlen($indentToken['content']) + 1;
+        } else {
+            $indent = 1;
+        }
+
+        $currentLine = $firstLine - 1;
+        for ($i = $commentStart; $i < $commentEnd; ++$i) {
+            $line = $tokens[$i]['line'];
+            if ($line > $lastLine) {
+                break;
+            }
+
+            if ($line === $currentLine + 1) {
+                $currentLine = $line;
+                if ($tokens[$i]['code'] === T_DOC_COMMENT_STAR) {
+                    continue;
+                }
+
+                if ($tokens[$i]['code'] === T_DOC_COMMENT_WHITESPACE
+                    && $tokens[$i + 1]['line'] === $line
+                    && $tokens[$i + 1]['code'] === T_DOC_COMMENT_STAR
+                ) {
+                    continue;
+                }
+
+                // blank line in a comment, skipping here
+                if ($tokens[$i]['code'] === T_DOC_COMMENT_WHITESPACE
+                    && $tokens[$i + 1]['line'] > $line
+                ) {
+                    continue;
+                }
+
+                $error = 'Missing star at the beginning doc-block comment line';
+                $fix = $phpcsFile->addFixableError($error, $i, 'MissingStar');
+
+                if ($fix) {
+                    if ($tokens[$i]['code'] === T_DOC_COMMENT_WHITESPACE) {
+                        $len = $tokens[$i]['length'];
+                        $spaces = max($len - $indent - 1, 1);
+                        $content = str_repeat(' ', $indent) . '*' . str_repeat(' ', $spaces);
+                        $phpcsFile->fixer->replaceToken($i, $content);
+                    } else {
+                        $phpcsFile->fixer->addContentBefore($i, str_repeat(' ', $indent) . '* ');
+                    }
+                }
             }
         }
     }

@@ -324,3 +324,18 @@ class Foo
     {
     }
 }
+
+/**
+hey
+hello
+ */
+
+/**
+    hi
+    hello
+ */
+
+/**
+ @var int $param
+ */
+$param = 1;

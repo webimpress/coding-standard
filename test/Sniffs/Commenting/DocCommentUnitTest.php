@@ -182,6 +182,11 @@ class DocCommentUnitTest extends AbstractTestCase
             260 => 1,
             320 => 1,
             322 => 1,
+            329 => 1,
+            330 => 1,
+            334 => 1,
+            335 => 1,
+            339 => 1,
         ];
     }
 

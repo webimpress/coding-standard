@@ -65,6 +65,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#37](https://github.com/webimpress/coding-standard/pull/37) updates the `squizlabs/php_codesniffer` dependency to `^3.5.2`
 
+- [#61](https://github.com/webimpress/coding-standard/pull/61) replaces `Squiz.WhiteSpace.OperatorSpacing` with `WebimpressCodingStandard.WhiteSpace.OperatorAndKeywordSpacing` sniff.
+  This sniff still extends `Squiz.WhiteSpace.OperatorSpacing` but check additional tokens: `as` and `insteadof` and Logical Operators.
+  It also disallows mor then one empty line before operators, and for `as`, `insteadof`, and `instanceof` requires single space before and after.
+
 ### Deprecated
 
 - Nothing.

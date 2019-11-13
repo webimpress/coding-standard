@@ -10,6 +10,8 @@ use PHP_CodeSniffer\Util\Tokens;
 use WebimpressCodingStandard\CodingStandard;
 
 use function array_column;
+use function array_keys;
+use function end;
 use function sort;
 use function str_replace;
 use function strcasecmp;
@@ -45,6 +47,40 @@ class TraitUsageSniff implements Sniff
         }
 
         $tokens = $phpcsFile->getTokens();
+
+        $keys = array_keys($tokens[$stackPtr]['conditions']);
+        $classPtr = end($keys);
+        $scopeOpener = $tokens[$classPtr]['scope_opener'];
+
+        $start = $scopeOpener;
+        while ($next = $phpcsFile->findNext(Tokens::$emptyTokens, $start + 1, $stackPtr, true)) {
+            if ($tokens[$next]['code'] === T_USE) {
+                $start = $phpcsFile->findEndOfStatement($next, T_COMMA);
+                continue;
+            }
+
+            break;
+        }
+
+        if ($next) {
+            $error = 'Trait must be at the beginning of the class';
+            $fix = $phpcsFile->addFixableError($error, $stackPtr, 'FirstInClass');
+
+            if ($fix) {
+                $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $stackPtr - 1, null, true);
+                $end = $phpcsFile->findEndOfStatement($stackPtr, T_COMMA);
+                $content = $phpcsFile->getTokensAsString($prev + 1, $end - $prev);
+
+                $phpcsFile->fixer->beginChangeset();
+                for ($i = $prev + 1; $i <= $end; ++$i) {
+                    $phpcsFile->fixer->replaceToken($i, '');
+                }
+                $phpcsFile->fixer->addContent($start, $content);
+                $phpcsFile->fixer->endChangeset();
+            }
+
+            return;
+        }
 
         // No blank line before use keyword.
         $prev = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);

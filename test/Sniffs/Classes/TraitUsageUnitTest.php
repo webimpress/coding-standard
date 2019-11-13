@@ -22,6 +22,9 @@ class TraitUsageUnitTest extends AbstractTestCase
             26 => 3,
             27 => 2,
             36 => 1,
+            48 => 1,
+            50 => 1,
+            55 => 1,
         ];
     }
 

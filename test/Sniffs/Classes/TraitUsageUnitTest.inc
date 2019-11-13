@@ -39,3 +39,18 @@ class Foo
         $closure = function () use ($x) {};
     }
 }
+
+class TraitsOnTop
+{
+    /** @var int */
+    var $prop1 = 1;
+    const CONST_1 = 1;
+    use Trait1;
+    // This is a comment
+    use Trait2 {
+        m1 as m2;
+        m3 insteadof m3;
+    }
+    static protected int $var = 'value';
+    use \MyNamespace\Trait3, Trait4;
+}

@@ -235,7 +235,9 @@ class VariableCommentSniff extends AbstractVariableSniff
         }
 
         // Property has typehint and there is @var tag.
-        [$typeStr, $description] = preg_split('/\s/', $tokens[$foundVar + 2]['content'], 2);
+        $split = preg_split('/\s/', $tokens[$foundVar + 2]['content'], 2);
+        $typeStr = $split[0];
+        $description = $split[1] ?? null;
 
         $types = explode('|', $typeStr);
         $propertyName = $tokens[$stackPtr]['content'];

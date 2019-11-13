@@ -51,6 +51,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#59](https://github.com/webimpress/coding-standard/pull/59) extends `Commenting\DocComment` sniff to check if every line of DocBlock comment starts with `*`
 
+- [#53](https://github.com/webimpress/coding-standard/pull/53) adds support for use groups in `Namespaces\UnusedUseStatement` sniff
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.
@@ -70,6 +72,8 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Fixed
 
 - [#51](https://github.com/webimpress/coding-standard/pull/51) fixes multiple cases when empty line before comment in array was not allowed
+
+- [#53](https://github.com/webimpress/coding-standard/pull/53) reworks implementation of `Namespaces\UnusedUseStatement` sniff which solves numerous issues with detecting if class/function/constant is used within the file 
 
 ## 1.0.6 - 2019-11-13
 

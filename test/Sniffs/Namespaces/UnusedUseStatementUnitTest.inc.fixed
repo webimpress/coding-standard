@@ -17,7 +17,6 @@ use Used10;
 use Used11;
 use FooBar\Used12 as AliasUsed12;
 use FooBar\Used13;
-use Unused6, Unused7;
 use Used14;
 use Unused5\Used15;
 use Used16 as AliasUsed16;
@@ -34,6 +33,10 @@ use Used25;
 use Used26;
 use Used27;
 use Used28;
+use MyApp\OtherNamespace\Used30 as AliasUsed30;
+use Abc\Used31, Ghi\Used32;
+use FooBar\Used33;
+use FooBar\Used34; // PHP 7.2+
 
 /**
  * @method Used23 myMethod(Used24 $param1, Used25 $param2)
@@ -127,7 +130,8 @@ class Foo
     /**
      * @Used21(param=@Used22, value=@Used23, key=@FooBar, foo="@Unused16", bar="something @Unused17 bar")
      */
-    protected function testAnnotations()
+    protected function testAnnotations(Used29 $u29, AliasUsed30 $u30, Used31 $u31, Used32 $u32)
     {
+        return static function (Used33 $u33, Used34 $u34) {};
     }
 }

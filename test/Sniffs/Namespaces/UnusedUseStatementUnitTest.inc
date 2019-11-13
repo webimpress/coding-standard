@@ -51,6 +51,17 @@ use Used25;
 use Used26;
 use Used27;
 use Used28;
+use UnusedGroup\{Unused18, Unused19};
+use MyApp\{
+    MyNamespace\Used29,
+    OtherNamespace\Used30 as AliasUsed30,
+    Unused20
+};
+use Abc\Used31, Def\Unused21, Ghi\Used32, Jkl\Unused22;
+use FooBar\{Used33};
+use FooBar\{Used34,}; // PHP 7.2+
+use FooBar\{Unused23};
+use EmptyGroup\{};
 
 /**
  * @method Used23 myMethod(Used24 $param1, Used25 $param2)
@@ -144,7 +155,8 @@ class Foo
     /**
      * @Used21(param=@Used22, value=@Used23, key=@FooBar, foo="@Unused16", bar="something @Unused17 bar")
      */
-    protected function testAnnotations()
+    protected function testAnnotations(Used29 $u29, AliasUsed30 $u30, Used31 $u31, Used32 $u32)
     {
+        return static function (Used33 $u33, Used34 $u34) {};
     }
 }

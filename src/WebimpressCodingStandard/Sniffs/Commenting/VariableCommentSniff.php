@@ -25,7 +25,6 @@ use function strpos;
 use function strtolower;
 use function strtr;
 use function substr;
-use function trim;
 use function ucfirst;
 
 use const T_CALLABLE;
@@ -230,7 +229,10 @@ class VariableCommentSniff extends AbstractVariableSniff
         }
 
         // There is no type hint for the property
-        if ($typeHint === '') {
+        if ($typeHint === ''
+            || $tokens[$foundVar + 2]['code'] !== T_DOC_COMMENT_STRING
+            || $tokens[$foundVar + 2]['line'] !== $tokens[$foundVar]['line']
+        ) {
             return;
         }
 

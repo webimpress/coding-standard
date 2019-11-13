@@ -128,4 +128,21 @@ class PropertiesWithTypes extends ParentClassName implements Interface1, Interfa
 
     /** @var array|Something[]*/
     public array $noSpaceAfterTypeVar;
+
+    /** @var */
+    public int $int1;
+
+    /**@var*/
+    public int $int2;
+
+    /**
+     * @var array|int[]
+     */
+    public array $arr;
+
+    /**
+     * @var
+object
+     */
+    public object $o;
 }

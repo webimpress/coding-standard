@@ -44,6 +44,9 @@ All notable changes to this project will be documented in this file, in reverse 
   - `Squiz.Operators.IncrementDecrementUsage`,
   - `Squiz.PHP.DisallowMultipleAssignments` (with `Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure` exclusion).
 
+- [#60](https://github.com/webimpress/coding-standard/pull/60) extends `Classes\TraitUsage` sniff to check if traits declarations are on the top of the class.
+  Traits must be specified before constants, properties and methods.
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

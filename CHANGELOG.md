@@ -49,6 +49,8 @@ All notable changes to this project will be documented in this file, in reverse 
   - `Squiz.Operators.IncrementDecrementUsage`,
   - `Squiz.PHP.DisallowMultipleAssignments` (with `Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure` exclusion).
 
+- [#59](https://github.com/webimpress/coding-standard/pull/59) extends `Commenting\DocComment` sniff to check if every line of DocBlock comment starts with `*`
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

@@ -77,3 +77,12 @@ namespace Second {
 
     $b = $a instanceof InstanceOf1;
 }
+
+namespace Third {
+    use Something\B;
+    use Something\D;
+
+    class A implements B, \C, D
+    {
+    }
+}

@@ -422,6 +422,7 @@ class UnusedUseStatementSniff implements Sniff
                 Tokens::$emptyTokens + [
                     T_STRING => T_STRING,
                     T_NS_SEPARATOR => T_NS_SEPARATOR,
+                    T_COMMA => T_COMMA,
                 ],
                 $beforePtr - 1,
                 null,

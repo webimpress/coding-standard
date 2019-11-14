@@ -258,6 +258,10 @@ class UnusedUseStatementSniff implements Sniff
         // file. If it is then the use statement is not necessary.
         $namespacePtr = $phpcsFile->findPrevious(T_NAMESPACE, $usePtr);
 
+        $namespaceEnd = $namespacePtr !== false && isset($tokens[$namespacePtr]['scope_closer'])
+            ? $tokens[$namespacePtr]['scope_closer']
+            : null;
+
         $type = 'class';
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $usePtr + 1, null, true);
         if ($tokens[$next]['code'] === T_STRING
@@ -377,7 +381,7 @@ class UnusedUseStatementSniff implements Sniff
                 }
             }
 
-            $classUsed = $phpcsFile->findNext($this->checkInTokens, $classUsed + 1);
+            $classUsed = $phpcsFile->findNext($this->checkInTokens, $classUsed + 1, $namespaceEnd);
         }
 
         return false;
@@ -413,8 +417,12 @@ class UnusedUseStatementSniff implements Sniff
         }
 
         // Trait usage
-        if ($beforeCode === T_USE && CodingStandard::isTraitUse($phpcsFile, $beforePtr)) {
-            return 'class';
+        if ($beforeCode === T_USE) {
+            if (CodingStandard::isTraitUse($phpcsFile, $beforePtr)) {
+                return 'class';
+            }
+
+            return null;
         }
 
         if ($beforeCode === T_COMMA) {
@@ -445,7 +453,7 @@ class UnusedUseStatementSniff implements Sniff
             return 'function';
         }
 
-        if (in_array($afterCode, [T_DOUBLE_COLON, T_VARIABLE, T_ELLIPSIS], true)) {
+        if (in_array($afterCode, [T_DOUBLE_COLON, T_VARIABLE, T_ELLIPSIS, T_NS_SEPARATOR], true)) {
             return 'class';
         }
 

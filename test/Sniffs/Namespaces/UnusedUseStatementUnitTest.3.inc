@@ -86,3 +86,9 @@ namespace Third {
     {
     }
 }
+
+namespace Fourth {
+    use Something\Foo;
+
+    Foo\A::class;
+}

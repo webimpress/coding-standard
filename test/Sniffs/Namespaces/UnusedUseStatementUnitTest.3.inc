@@ -92,3 +92,46 @@ namespace Fourth {
 
     Foo\A::class;
 }
+
+namespace Fifth {
+    use MyNamespace\MyClass1;
+    use MyNamespace\MyClass2;
+    use MyNamespace\MyType1;
+    use MyNamespace\MyType2;
+    use MyNamespace\MyType3;
+
+    use function file_get_contents;
+    use function file_put_contents;
+
+    use const MyNamespace\CONST_1;
+    use const MyNamespace\CONST_2;
+
+    switch (true) {
+        case 1:
+            file_put_contents(__FILE__, __DIR__);
+            break;
+        case 2:
+            CONST_1 + $a;
+            break;
+        case 3:
+            MyClass1::class;
+            break;
+        case 4;
+            file_get_contents(__FILE__);
+            break;
+        case 5;
+            CONST_2 + $b;
+            break;
+        case 6;
+            MyClass2::class;
+            break;
+    }
+
+    abstract class MyAbstractClass {
+        abstract public function myMethod1() : MyType1;
+
+        public function myMethod2() : MyType2 {
+            static function () use ($a) : MyType3 {};
+        }
+    }
+}

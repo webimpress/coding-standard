@@ -20,6 +20,7 @@ use function trim;
 
 use const T_AS;
 use const T_BITWISE_OR;
+use const T_CLOSE_PARENTHESIS;
 use const T_CLOSE_USE_GROUP;
 use const T_COLON;
 use const T_COMMA;
@@ -39,6 +40,7 @@ use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_NULLABLE;
 use const T_OBJECT_OPERATOR;
+use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_PARENTHESIS;
 use const T_OPEN_USE_GROUP;
 use const T_SEMICOLON;
@@ -408,7 +410,6 @@ class UnusedUseStatementSniff implements Sniff
         if (in_array($beforeCode, [
             T_NEW,
             T_NULLABLE,
-            T_COLON,
             T_EXTENDS,
             T_IMPLEMENTS,
             T_INSTANCEOF,
@@ -453,8 +454,25 @@ class UnusedUseStatementSniff implements Sniff
             return 'function';
         }
 
-        if (in_array($afterCode, [T_DOUBLE_COLON, T_VARIABLE, T_ELLIPSIS, T_NS_SEPARATOR], true)) {
+        if (in_array($afterCode, [
+            T_DOUBLE_COLON,
+            T_VARIABLE,
+            T_ELLIPSIS,
+            T_NS_SEPARATOR,
+            T_OPEN_CURLY_BRACKET,
+        ], true)) {
             return 'class';
+        }
+
+        if ($beforeCode === T_COLON) {
+            $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $beforePtr - 1, null, true);
+            if ($prev !== false
+                && $tokens[$prev]['code'] === T_CLOSE_PARENTHESIS
+                && isset($tokens[$prev]['parenthesis_owner'])
+                && $tokens[$tokens[$prev]['parenthesis_owner']]['code'] === T_FUNCTION
+            ) {
+                return 'class';
+            }
         }
 
         if ($afterCode === T_BITWISE_OR) {

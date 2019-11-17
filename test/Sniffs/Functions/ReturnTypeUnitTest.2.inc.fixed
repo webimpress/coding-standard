@@ -471,4 +471,17 @@ abstract class FunctionCommentReturn
     {
         return $this;
     }
+
+    /**
+     * @return int[]|float[]|string|array|bool|MyClass|MyIterator
+     */
+    public function generatorIterator() : \Iterator
+    {
+        yield 1;
+        yield 1.2;
+        yield 'string';
+        yield [];
+        yield true;
+        yield null;
+    }
 }

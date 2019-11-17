@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace WebimpressCodingStandard\Sniffs\Functions;
 
+use Generator;
+use Iterator;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
+use Traversable;
 use WebimpressCodingStandard\Helper\MethodsTrait;
 
 use function array_filter;
@@ -19,6 +22,7 @@ use function current;
 use function explode;
 use function implode;
 use function in_array;
+use function ltrim;
 use function preg_grep;
 use function preg_replace;
 use function preg_split;
@@ -333,6 +337,10 @@ class ReturnTypeSniff implements Sniff
             '?generator',
             '\generator',
             '?\generator',
+            'iterator',
+            '?iterator',
+            '\iterator',
+            '?\iterator',
             'object',
             '?object',
         ];
@@ -426,6 +434,7 @@ class ReturnTypeSniff implements Sniff
             'iterable' => ['iterable'],
             'traversable' => ['traversable', '\traversable'],
             'generator' => ['generator', '\generator'],
+            'iterator' => ['iterator', '\iterator'],
             'object' => ['object'],
         ];
 
@@ -487,6 +496,26 @@ class ReturnTypeSniff implements Sniff
                             $type,
                         ];
                         $phpcsFile->addError($error, $this->returnDoc + 2, 'NotIterableType', $data);
+                    }
+                }
+                break;
+
+            case 'iterator':
+            case '?iterator':
+            case '\iterator':
+            case '?\iterator':
+                foreach ($this->returnDocTypes as $type) {
+                    $lower = strtolower($type);
+                    if (in_array($lower, ['iterator', '\iterator'], true)) {
+                        continue;
+                    }
+
+                    if (in_array($lower, $simpleTypes, true)) {
+                        $error = 'Return type contains "%s" which is not an Iterator type';
+                        $data = [
+                            $type,
+                        ];
+                        $phpcsFile->addError($error, $this->returnDoc + 2, 'NotIteratorType', $data);
                     }
                 }
                 break;
@@ -599,11 +628,48 @@ class ReturnTypeSniff implements Sniff
                 continue;
             }
 
+            $isYield = $tokens[$i]['code'] !== T_RETURN;
+            if ($isYield && $this->returnType && $this->returnTypeIsValid) {
+                $type = strtolower(ltrim($this->returnTypeValue, '?'));
+
+                if ($type !== 'iterable'
+                    && ((! isset($this->importedClasses[$type]['fqn'])
+                            && ! in_array(ltrim($type, '\\'), [
+                                'generator',
+                                'iterator',
+                                'traversable',
+                            ], true))
+                        || (isset($this->importedClasses[$type]['fqn'])
+                            && ! in_array($this->importedClasses[$type]['fqn'], [
+                                Generator::class,
+                                Iterator::class,
+                                Traversable::class,
+                            ], true)))
+                ) {
+                    $phpcsFile->addError(
+                        sprintf(
+                            'Generators may only declare a return type of Generator, Iterator, Traversable,'
+                            . ' or iterable, %s is not permitted',
+                            $this->returnTypeValue
+                        ),
+                        $this->returnType,
+                        'InvalidGeneratorType'
+                    );
+
+                    return;
+                }
+            }
+
             $next = $phpcsFile->findNext(Tokens::$emptyTokens, $i + 1, null, true);
             if ($tokens[$next]['code'] === T_SEMICOLON) {
                 $this->returnCodeVoid($phpcsFile, $i);
             } else {
                 $this->returnCodeValue($phpcsFile, $i);
+
+                if ($isYield) {
+                    return;
+                }
+
                 $returnValues[$next] = $this->getReturnValue($phpcsFile, $next);
 
                 if ($this->returnDoc

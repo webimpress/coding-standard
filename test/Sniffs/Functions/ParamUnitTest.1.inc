@@ -196,4 +196,9 @@ class FunctionParam
         object $static,
         object $parent
     ) : void;
+
+    /**
+     * @param int|array|string|bool[]|float[]|MyIterator|\Iterator $iterator
+     */
+    abstract protected function nonIteratorTypes(\Iterator $iterator) : void;
 }

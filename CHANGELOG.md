@@ -57,6 +57,10 @@ All notable changes to this project will be documented in this file, in reverse 
   - `Commenting\PropertyAnnotation` - ensure that type is skipped when detecting the comment before property,
   - `Commenting\VariableComment` - add multiple checks to ensure type declaration is consistent with type provided in PHPDoc (`@var` tag). In case type declaration is provided and PHPDoc does not contain any additional information, `@var` tag can be omitted.                                     
 
+- [#62](https://github.com/webimpress/coding-standard/pull/62) adds support for `Iterator` type in `Functions\Param` and `Functions\ReturnType` sniffs
+
+- [#62](https://github.com/webimpress/coding-standard/pull/62) adds check for return type of function with `yield`. Generators may only declare a return type of `Generator`, `Iterator`, `Traversable` or `iterable`.
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

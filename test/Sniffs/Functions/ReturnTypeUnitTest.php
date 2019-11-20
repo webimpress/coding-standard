@@ -153,19 +153,21 @@ class ReturnTypeUnitTest extends AbstractTestCase
                     452 => 1,
                     460 => 1,
                     468 => 1,
+                    476 => 4,
                 ];
             case 'ReturnTypeUnitTest.3.inc':
                 return [
-                    8 => 1,
-                    24 => 1,
-                    40 => 1,
-                    56 => 1,
-                    72 => 1,
-                    96 => 1,
-                    120 => 1,
-                    144 => 1,
-                    160 => 1,
-                    168 => 1,
+                    10 => 1,
+                    26 => 1,
+                    42 => 1,
+                    58 => 1,
+                    74 => 1,
+                    98 => 1,
+                    122 => 1,
+                    146 => 1,
+                    162 => 1,
+                    170 => 1,
+                    228 => 1,
                 ];
         }
 
@@ -180,6 +182,8 @@ class ReturnTypeUnitTest extends AbstractTestCase
             36 => 1,
             41 => 1,
             46 => 1,
+            54 => 1,
+            59 => 1,
             95 => 1,
             99 => 1,
             108 => 1,

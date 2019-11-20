@@ -331,6 +331,7 @@ class ParamSniff implements Sniff
             'iterable' => ['iterable'],
             'traversable' => ['traversable', '\traversable'],
             'generator' => ['generator', '\generator'],
+            'iterator' => ['iterator', '\iterator'],
             'object' => ['object'],
         ];
         // @phpcs:enable
@@ -444,7 +445,7 @@ class ParamSniff implements Sniff
                         '?\generator',
                     ], true)
                     && ! in_array($lower, ['generator', '\generator'], true)
-                    && in_array($lower, array_merge($simpleTypes, ['mixed']), true)
+                    && in_array($lower, $simpleTypes, true)
                 ) {
                     $error = 'Param type contains %s which is not a generator type';
                     $data = [
@@ -456,10 +457,30 @@ class ParamSniff implements Sniff
                     continue;
                 }
 
+                // iterator
+                if (in_array($lowerTypeHint, [
+                        'iterator',
+                        '?iterator',
+                        '\iterator',
+                        '?\iterator',
+                    ], true)
+                    && ! in_array($lower, ['iterator', '\iterator'], true)
+                    && in_array($lower, $simpleTypes, true)
+                ) {
+                    $error = 'Param type contains %s which is not an Iterator type';
+                    $data = [
+                        $type,
+                    ];
+                    $phpcsFile->addError($error, $tagPtr + 2, 'NotIteratorType', $data);
+
+                    $break = true;
+                    continue;
+                }
+
                 // object
                 if (in_array($lowerTypeHint, ['object', '?object'], true)
                     && $lower !== 'object'
-                    && (in_array($lower, array_merge($simpleTypes, ['mixed']), true)
+                    && (in_array($lower, $simpleTypes, true)
                         || strpos($type, '[]') !== false)
                 ) {
                     $error = 'Param type contains %s which is not an object type';
@@ -485,6 +506,10 @@ class ParamSniff implements Sniff
                     '?generator',
                     '\generator',
                     '?\generator',
+                    'iterator',
+                    '?iterator',
+                    '\iterator',
+                    '?\iterator',
                     'object',
                     '?object',
                 ];

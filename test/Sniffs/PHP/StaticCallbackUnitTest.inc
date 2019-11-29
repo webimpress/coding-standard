@@ -57,4 +57,20 @@ class StaticClosure
             $this->bar();
         })();
     }
+
+    public function nested()
+    {
+        $callback1 = static function () {
+            return new class (new class ($this) {}) {};
+        };
+
+        $callback2 = static function () {
+            return new class (new class () {
+                public $id;
+                public function __construct() {
+                    $this->id = 1;
+                }
+            }) {};
+        };
+    }
 }

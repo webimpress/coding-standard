@@ -42,7 +42,7 @@ class StaticCallbackSniff implements Sniff
 
         $start = $tokens[$stackPtr]['scope_opener'];
         $close = $tokens[$stackPtr]['scope_closer'];
-        $hasThis = $this->hasThis($phpcsFile, $start, $close, [T_VARIABLE, T_ANON_CLASS]);
+        $hasThis = $this->hasThis($phpcsFile, $start, $close);
 
         if (! $isStatic && ! $hasThis) {
             $fix = $phpcsFile->addFixableError('Closure can be static', $stackPtr, 'Static');
@@ -68,13 +68,13 @@ class StaticCallbackSniff implements Sniff
         }
     }
 
-    private function hasThis(File $phpcsFile, int $start, int $close, array $search) : bool
+    private function hasThis(File $phpcsFile, int $start, int $close) : bool
     {
         $tokens = $phpcsFile->getTokens();
 
-        while ($next = $phpcsFile->findNext($search, $start + 1, $close)) {
+        while ($next = $phpcsFile->findNext([T_ANON_CLASS, T_VARIABLE], $start + 1, $close)) {
             if ($tokens[$next]['code'] === T_ANON_CLASS) {
-                if ($this->hasThis($phpcsFile, $next, $tokens[$next]['scope_opener'], [T_VARIABLE])) {
+                if ($this->hasThis($phpcsFile, $next, $tokens[$next]['scope_opener'])) {
                     return true;
                 }
 

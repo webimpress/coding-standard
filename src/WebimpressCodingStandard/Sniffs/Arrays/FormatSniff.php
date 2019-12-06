@@ -132,11 +132,6 @@ class FormatSniff extends AbstractArraySniff
         foreach ($indices as $element) {
             $start = $element['index_start'] ?? $element['value_start'];
 
-            // For some reasons empty array has value_start = false
-            if (! $start) {
-                continue;
-            }
-
             $nonEmpty = $phpcsFile->findPrevious(Tokens::$emptyTokens, $start - 1, null, true);
             if ($tokens[$start]['line'] === $tokens[$nonEmpty]['line']) {
                 $error = 'There must be one array element per line';

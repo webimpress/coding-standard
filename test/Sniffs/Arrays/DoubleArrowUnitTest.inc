@@ -1,4 +1,6 @@
-<?php // @phpcs:set WebimpressCodingStandard.Arrays.DoubleArrow maxPadding 1
+<?php
+// @phpcs:set WebimpressCodingStandard.Arrays.DoubleArrow maxPadding 1
+// @phpcs:set WebimpressCodingStandard.Arrays.DoubleArrow ignoreNewLineArrayArrow true
 
 $s = ['a'    => 'b', 'c'=>'d'];
 $m = [

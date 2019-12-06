@@ -10,8 +10,10 @@ use PHPUnit\Framework\TestCase;
 use function basename;
 use function copy;
 use function exec;
+use function file_exists;
 use function glob;
 use function implode;
+use function str_replace;
 use function sys_get_temp_dir;
 use function tempnam;
 
@@ -25,7 +27,10 @@ class IntegrationTest extends TestCase
         $tmpname = tempnam(sys_get_temp_dir(), '') . '_' . basename($file);
         copy($file, $tmpname);
 
-        exec('vendor/bin/phpcbf ' . $tmpname, $output, $returnVal);
+        $rulesetFile = str_replace('.php', '.xml', $file);
+        $options = file_exists($rulesetFile) ? ' --standard=' . $rulesetFile : '';
+
+        exec('vendor/bin/phpcbf ' . $tmpname . $options, $output, $returnVal);
 
         self::assertSame(1, $returnVal, 'Output: ' . "\n" . implode("\n", $output));
         self::assertFileEquals($file . '.fixed', $tmpname);

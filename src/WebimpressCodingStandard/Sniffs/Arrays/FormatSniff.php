@@ -128,7 +128,6 @@ class FormatSniff extends AbstractArraySniff
             }
         }
 
-        // $previousLine = $tokens[$arrayStart]['line'];
         foreach ($indices as $element) {
             $start = $element['index_start'] ?? $element['value_start'];
 

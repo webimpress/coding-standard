@@ -8,6 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractArraySniff;
 use PHP_CodeSniffer\Util\Common;
 use PHP_CodeSniffer\Util\Tokens;
+use WebimpressCodingStandard\Helper\ArrayTrait;
 
 use function abs;
 use function str_repeat;
@@ -24,6 +25,8 @@ use const T_WHITESPACE;
  */
 class DoubleArrowSniff extends AbstractArraySniff
 {
+    use ArrayTrait;
+
     /**
      * The maximum amount of padding before the alignment is ignored.
      *
@@ -70,6 +73,7 @@ class DoubleArrowSniff extends AbstractArraySniff
      */
     protected function processMultiLineArray($phpcsFile, $stackPtr, $arrayStart, $arrayEnd, $indices)
     {
+        $indices = $this->getIndices($phpcsFile, $arrayStart, $arrayEnd);
         $tokens = $phpcsFile->getTokens();
 
         $spaces = $this->calculateExpectedSpaces($phpcsFile, $indices);

@@ -42,6 +42,11 @@ class FormatUnitTest extends AbstractTestCase
             123 => 1,
             128 => 1,
             135 => 2,
+            138 => 1,
+            140 => 1,
+            142 => 1,
+            144 => 1,
+            146 => 1,
         ];
     }
 

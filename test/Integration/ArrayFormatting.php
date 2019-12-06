@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+
+    $a => static function () {
+        return [1, 2, 3];
+    },
+
+    $b ?? $c,
+    $d ? [$e] : [$f],
+
+];

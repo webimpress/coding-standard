@@ -47,6 +47,9 @@ class DoubleArrowUnitTest extends AbstractTestCase
             3 => 1,
             5 => 1,
             9 => 1,
+            13 => 1,
+            14 => 1,
+            16 => 1,
         ];
     }
 

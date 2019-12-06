@@ -51,6 +51,7 @@ use const T_DOUBLE_COLON;
 use const T_ECHO;
 use const T_ELLIPSIS;
 use const T_EXTENDS;
+use const T_FN;
 use const T_FUNCTION;
 use const T_IMPLEMENTS;
 use const T_INCLUDE;
@@ -319,6 +320,12 @@ class DisallowFqnSniff implements Sniff
             T_NULLABLE,
         ];
 
+        $functionTokens = [
+            T_CLOSURE,
+            T_FN,
+            T_FUNCTION,
+        ];
+
         if (in_array($tokens[$prev]['code'], $prevClassTokens, true)
             || in_array($tokens[$next]['code'], [T_VARIABLE, T_ELLIPSIS, T_DOUBLE_COLON], true)
         ) {
@@ -332,14 +339,14 @@ class DisallowFqnSniff implements Sniff
 
                 if ($tokens[$before]['code'] === T_CLOSE_PARENTHESIS
                     && isset($tokens[$before]['parenthesis_owner'])
-                    && in_array($tokens[$tokens[$before]['parenthesis_owner']]['code'], [T_FUNCTION, T_CLOSURE], true)
+                    && in_array($tokens[$tokens[$before]['parenthesis_owner']]['code'], $functionTokens, true)
                 ) {
                     $type = 'class';
                 }
             } elseif ($tokens[$next]['code'] === T_BITWISE_AND) {
                 if (! empty($tokens[$stackPtr]['nested_parenthesis'])
                     && ($owner = $tokens[end($tokens[$stackPtr]['nested_parenthesis'])]['parenthesis_owner'] ?? 0)
-                    && in_array($tokens[$owner]['code'], [T_FUNCTION, T_CLOSURE], true)
+                    && in_array($tokens[$owner]['code'], $functionTokens, true)
                 ) {
                     $type = 'class';
                 }

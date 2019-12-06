@@ -44,6 +44,7 @@ use const T_DOUBLE_QUOTED_STRING;
 use const T_ECHO;
 use const T_ELSEIF;
 use const T_EXIT;
+use const T_FN;
 use const T_FOR;
 use const T_FOREACH;
 use const T_FUNCTION;
@@ -198,6 +199,7 @@ class ScopeIndentSniff implements Sniff
                 T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
                 T_USE => T_USE,
                 T_CLOSURE => T_CLOSURE,
+                T_FN => T_FN,
                 T_ARRAY => T_ARRAY,
                 T_ANON_CLASS => T_ANON_CLASS,
             ];

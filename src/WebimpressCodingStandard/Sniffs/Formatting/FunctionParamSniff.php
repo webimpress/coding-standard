@@ -11,6 +11,7 @@ use PHP_CodeSniffer\Util\Tokens;
 use const T_BITWISE_AND;
 use const T_CLOSURE;
 use const T_ELLIPSIS;
+use const T_FN;
 use const T_FUNCTION;
 use const T_WHITESPACE;
 
@@ -21,7 +22,7 @@ class FunctionParamSniff implements Sniff
      */
     public function register() : array
     {
-        return [T_CLOSURE, T_FUNCTION];
+        return [T_CLOSURE, T_FN, T_FUNCTION];
     }
 
     /**

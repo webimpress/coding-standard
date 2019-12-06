@@ -11,6 +11,7 @@ use PHP_CodeSniffer\Util\Tokens;
 use function in_array;
 
 use const T_AS;
+use const T_FN_ARROW;
 use const T_INSTANCEOF;
 use const T_INSTEADOF;
 use const T_WHITESPACE;
@@ -28,6 +29,7 @@ class OperatorAndKeywordSpacingSniff extends OperatorSpacingSniff
         T_INSTEADOF,
         T_INSTANCEOF,
         T_AS,
+        T_FN_ARROW,
     ];
 
     public function register() : array
@@ -36,6 +38,7 @@ class OperatorAndKeywordSpacingSniff extends OperatorSpacingSniff
         $tokens += Tokens::$booleanOperators;
         $tokens[] = T_AS;
         $tokens[] = T_INSTEADOF;
+        $tokens[] = T_FN_ARROW;
 
         return $tokens;
     }

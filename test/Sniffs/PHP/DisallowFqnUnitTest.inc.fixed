@@ -26,6 +26,8 @@ use const Name\CONST_IN_SWITCH;
 use const Name\OTHER_CONST_IN_SWITCH;
 use MyTrait;
 use B;
+use InFnClosure\Param1;
+use InFnClosure\ReturnType1;
 
 use \ArrayObject as AO;
 
@@ -174,4 +176,9 @@ class TheClass extends ParentClass      implements ArrayAccess, Countable
      * @param \Bar[]\Foo[] $param
      */
     abstract public function invalidTypeFormatIsNotChanged($param);
+
+    public function fnClosure()
+    {
+        return fn (Param1 &$param1) : ReturnType1 => $param1;
+    }
 }

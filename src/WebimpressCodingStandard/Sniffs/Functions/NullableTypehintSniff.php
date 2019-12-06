@@ -10,6 +10,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use function strtolower;
 
 use const T_CLOSURE;
+use const T_FN;
 use const T_FUNCTION;
 use const T_NULLABLE;
 
@@ -25,7 +26,7 @@ class NullableTypehintSniff implements Sniff
      */
     public function register() : array
     {
-        return [T_FUNCTION, T_CLOSURE];
+        return [T_CLOSURE, T_FN, T_FUNCTION];
     }
 
     /**

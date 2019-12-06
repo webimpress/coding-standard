@@ -16,6 +16,9 @@ class StaticCallbackUnitTest extends AbstractTestCase
             24 => 1,
             56 => 1,
             63 => 1,
+            79 => 1,
+            81 => 1,
+            83 => 1,
         ];
     }
 

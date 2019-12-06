@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="Webimpress Coding Standard">
+    <rule ref="../../src/WebimpressCodingStandard/ruleset.xml"/>
+
+    <rule ref="WebimpressCodingStandard.Arrays.DoubleArrow">
+        <properties>
+            <property name="maxPadding" value="30"/>
+            <property name="ignoreNewLineArrayArrow" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="WebimpressCodingStandard.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="ignoreNewLineArrayArrow" value="true"/>
+        </properties>
+    </rule>
+
+    <rule ref="WebimpressCodingStandard.WhiteSpace.OperatorAndKeywordSpacing">
+        <properties>
+            <property name="ignoreSpacingBeforeAssignments" value="true"/>
+        </properties>
+    </rule>
+</ruleset>

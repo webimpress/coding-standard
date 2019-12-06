@@ -61,6 +61,19 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#62](https://github.com/webimpress/coding-standard/pull/62) adds check for return type of function with `yield`. Generators may only declare a return type of `Generator`, `Iterator`, `Traversable` or `iterable`.
 
+- [#63](https://github.com/webimpress/coding-standard/pull/63) adds ability to align array arrows when in new line. To use it, there is an example configuration:
+  ```
+  // configuration of double arrow alignment
+  WebimpressCodingStandard.Arrays.DoubleArrow.maxPadding = 50
+  WebimpressCodingStandard.Arrays.DoubleArrow.ignoreNewLineArrayArrow = false
+
+  // ignore indent or double arrow when at the beggining of the line
+  WebimpressCodingStandard.WhiteSpace.ScopeIndent.ignoreNewLineArrayArrow = true
+
+  // ignore spacing before double arrow (so we can have more than one space)
+  WebimpressCodingStandard.WhiteSpace.OperatorAndKeywordSpacing.ignoreSpacingBeforeAssignments = true
+  ```
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

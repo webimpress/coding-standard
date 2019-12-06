@@ -39,6 +39,7 @@ use const T_COMMENT;
 use const T_CONSTANT_ENCAPSED_STRING;
 use const T_CONTINUE;
 use const T_DOC_COMMENT_OPEN_TAG;
+use const T_DOUBLE_ARROW;
 use const T_DOUBLE_QUOTED_STRING;
 use const T_ECHO;
 use const T_ELSEIF;
@@ -86,6 +87,15 @@ class ScopeIndentSniff implements Sniff
      * @var bool
      */
     public $alignObjectOperators = true;
+
+    /**
+     * Ignore alignment of array arrows which are at the beginning of new line.
+     * If set to true, other sniff should check alignment of these arrows
+     * - for example WebimpressCodingStandard.Arrays.DoubleArrow
+     *
+     * @var bool
+     */
+    public $ignoreNewLineArrayArrow = false;
 
     /**
      * @var int[]
@@ -740,6 +750,8 @@ class ScopeIndentSniff implements Sniff
                             $expectedIndent += $this->indent;
                         }
                     }
+                } elseif ($this->ignoreNewLineArrayArrow && $tokens[$next]['code'] === T_DOUBLE_ARROW) {
+                    continue;
                 }
 
                 $expectedIndent += $extraIndent;

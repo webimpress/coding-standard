@@ -712,3 +712,7 @@ $a = [
             int $d
         ) => $d,
 ];
+
+$fn1 = fn (int $a) : int => $a;
+
+$fn2 = fn (int $b) : int => $b;

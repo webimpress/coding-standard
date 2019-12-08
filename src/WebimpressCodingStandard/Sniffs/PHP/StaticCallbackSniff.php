@@ -10,6 +10,7 @@ use PHP_CodeSniffer\Util\Tokens;
 
 use const T_ANON_CLASS;
 use const T_CLOSURE;
+use const T_FN;
 use const T_STATIC;
 use const T_VARIABLE;
 use const T_WHITESPACE;
@@ -21,7 +22,7 @@ class StaticCallbackSniff implements Sniff
      */
     public function register() : array
     {
-        return [T_CLOSURE];
+        return [T_CLOSURE, T_FN];
     }
 
     /**

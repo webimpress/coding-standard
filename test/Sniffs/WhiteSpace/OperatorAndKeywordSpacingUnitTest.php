@@ -21,6 +21,7 @@ class OperatorAndKeywordSpacingUnitTest extends AbstractTestCase
             27 => 1,
             31 => 1,
             35 => 1,
+            39 => 2,
         ];
     }
 

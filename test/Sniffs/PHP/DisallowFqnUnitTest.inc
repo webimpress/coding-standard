@@ -149,4 +149,9 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
      * @param \Bar[]\Foo[] $param
      */
     abstract public function invalidTypeFormatIsNotChanged($param);
+
+    public function fnClosure()
+    {
+        return fn (\InFnClosure\Param1 &$param1) : \InFnClosure\ReturnType1 => $param1;
+    }
 }

@@ -74,6 +74,8 @@ All notable changes to this project will be documented in this file, in reverse 
   WebimpressCodingStandard.WhiteSpace.OperatorAndKeywordSpacing.ignoreSpacingBeforeAssignments = true
   ```
 
+- [#67](https://github.com/webimpress/coding-standard/pull/67) adds support for PHP 7.4 arrow functions.
+
 ### Changed
 
 - [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.

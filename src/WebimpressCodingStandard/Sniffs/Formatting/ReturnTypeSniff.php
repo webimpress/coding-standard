@@ -17,6 +17,8 @@ use const T_CALLABLE;
 use const T_CLOSE_PARENTHESIS;
 use const T_CLOSURE;
 use const T_COLON;
+use const T_FN;
+use const T_FN_ARROW;
 use const T_FUNCTION;
 use const T_NS_SEPARATOR;
 use const T_NULLABLE;
@@ -62,7 +64,7 @@ class ReturnTypeSniff implements Sniff
      */
     public function register() : array
     {
-        return [T_CLOSURE, T_FUNCTION];
+        return [T_CLOSURE, T_FN, T_FUNCTION];
     }
 
     /**
@@ -76,7 +78,7 @@ class ReturnTypeSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         $parenthesisCloser = $tokens[$stackPtr]['parenthesis_closer'];
-        $eol = $phpcsFile->findNext([T_SEMICOLON, T_OPEN_CURLY_BRACKET], $stackPtr + 1);
+        $eol = $phpcsFile->findNext([T_FN_ARROW, T_SEMICOLON, T_OPEN_CURLY_BRACKET], $stackPtr + 1);
         if ($use = $phpcsFile->findNext(T_USE, $parenthesisCloser + 1, $eol)) {
             $parenthesisCloser = $phpcsFile->findNext(T_CLOSE_PARENTHESIS, $use + 1);
         }

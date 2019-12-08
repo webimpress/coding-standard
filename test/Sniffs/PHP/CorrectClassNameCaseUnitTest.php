@@ -73,6 +73,7 @@ class CorrectClassNameCaseUnitTest extends AbstractTestCase
             83 => 1,
             84 => 1,
             89 => 1,
+            102 => 2,
         ];
     }
 

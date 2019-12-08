@@ -19,3 +19,5 @@ $closure = function (
     string $f = NULL
 ) {
 };
+
+$fn = fn(int $a = null, int $b = null) => $a ?? $b;

@@ -15,6 +15,7 @@ class NullableTypehintUnitTest extends AbstractTestCase
                 return [
                     7 => 1,
                     17 => 1,
+                    23 => 1,
                 ];
         }
 
@@ -23,6 +24,7 @@ class NullableTypehintUnitTest extends AbstractTestCase
             9 => 1,
             16 => 1,
             19 => 1,
+            23 => 1,
         ];
     }
 

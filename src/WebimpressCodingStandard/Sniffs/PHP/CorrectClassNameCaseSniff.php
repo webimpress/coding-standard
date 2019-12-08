@@ -40,6 +40,8 @@ use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
 use const T_DOUBLE_COLON;
 use const T_EXTENDS;
+use const T_FN;
+use const T_FN_ARROW;
 use const T_FUNCTION;
 use const T_IMPLEMENTS;
 use const T_NEW;
@@ -90,8 +92,9 @@ class CorrectClassNameCaseSniff implements Sniff
             T_IMPLEMENTS,
             T_EXTENDS,
             // params of function/closures and return type declaration
-            T_FUNCTION,
             T_CLOSURE,
+            T_FN,
+            T_FUNCTION,
             // PHPDocs tags
             T_DOC_COMMENT_TAG,
         ];
@@ -114,8 +117,9 @@ class CorrectClassNameCaseSniff implements Sniff
             case T_USE:
                 $this->checkUse($phpcsFile, $stackPtr);
                 return;
-            case T_FUNCTION:
             case T_CLOSURE:
+            case T_FN:
+            case T_FUNCTION:
                 $this->checkFunctionParams($phpcsFile, $stackPtr);
                 $this->checkReturnType($phpcsFile, $stackPtr);
                 return;
@@ -239,7 +243,7 @@ class CorrectClassNameCaseSniff implements Sniff
      */
     private function checkReturnType(File $phpcsFile, int $stackPtr) : void
     {
-        $eol = $phpcsFile->findNext([T_SEMICOLON, T_OPEN_CURLY_BRACKET], $stackPtr + 1);
+        $eol = $phpcsFile->findNext([T_FN_ARROW, T_SEMICOLON, T_OPEN_CURLY_BRACKET], $stackPtr + 1);
         if ($before = $phpcsFile->findPrevious([T_COLON, T_NULLABLE], $eol - 1)) {
             $first = $phpcsFile->findNext(Tokens::$emptyTokens, $before + 1, null, true);
             $last = $phpcsFile->findPrevious(Tokens::$emptyTokens, $eol - 1, null, true);

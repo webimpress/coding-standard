@@ -54,6 +54,7 @@ use const T_DOUBLE_CAST;
 use const T_DOUBLE_QUOTED_STRING;
 use const T_FALSE;
 use const T_FILE;
+use const T_FN;
 use const T_FUNCTION;
 use const T_GREATER_THAN;
 use const T_INLINE_ELSE;
@@ -615,6 +616,7 @@ class ReturnTypeSniff implements Sniff
         for ($i = $tokens[$stackPtr]['scope_opener'] + 1; $i < $tokens[$stackPtr]['scope_closer']; ++$i) {
             // Skip closures and anonymous classes.
             if ($tokens[$i]['code'] === T_CLOSURE
+                || $tokens[$i]['code'] === T_FN
                 || $tokens[$i]['code'] === T_ANON_CLASS
             ) {
                 $i = $tokens[$i]['scope_closer'];

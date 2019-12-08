@@ -97,6 +97,7 @@ class DisallowFqnUnitTest extends AbstractTestCase
             140 => 1,
             141 => 1,
             143 => 1,
+            155 => 2,
         ];
     }
 

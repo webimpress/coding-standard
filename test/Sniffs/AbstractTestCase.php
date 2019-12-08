@@ -49,7 +49,7 @@ abstract class AbstractTestCase extends TestCase
      */
     public $testsDir = __DIR__ . '/../../test/Sniffs/';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         // Initialize tokens constants
         new Tokens();

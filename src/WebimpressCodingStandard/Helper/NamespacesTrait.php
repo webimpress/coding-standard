@@ -157,7 +157,7 @@ trait NamespacesTrait
         $allConstants = get_defined_constants(true);
 
         $arr = [];
-        array_walk_recursive($allConstants, function ($v, $k) use (&$arr) {
+        array_walk_recursive($allConstants, static function ($v, $k) use (&$arr) {
             if (strtolower($k) !== 'user') {
                 $arr[$k] = $v;
             }

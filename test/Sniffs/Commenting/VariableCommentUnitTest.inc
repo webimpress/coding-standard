@@ -71,3 +71,78 @@ new class () {
         $localVariable = "Here is {$variable} in string.";
     }
 };
+
+class PropertiesWithTypes extends ParentClassName implements Interface1, Interface2
+{
+    public int $docBlockNotRequired;
+
+    /**
+     * @var null|DateTime Additional description
+     */
+    public ?DateTime $withDescription;
+
+    /**
+     * @var DateTime Additional description
+     */
+    public ?DateTime $incomplete;
+
+    /** @var null|DateTime */
+    public ?DateTime $redundant;
+
+    /** @var string */
+    protected int $invalid;
+
+    /** @var int[] */
+    protected array $spec;
+
+    protected \PropertiesWithTypes $class;
+
+    protected ParentClassName $parent;
+
+    /** @var PropertiesWithTypes */
+    protected $className;
+
+    /** @var ParentClassName */
+    protected $parentName;
+
+    /** @var null|array|DateTime[] */
+    public array $dates;
+
+    /** @var array|DateTime */
+    public array $date;
+
+    /** @var iterable|int|MyObject */
+    public iterable $iterator;
+
+    /** @var Generator|string|object|MyClass */
+    public Generator $generator;
+
+    /** @var Traversable|int|parent|self|static */
+    public Traversable $traversable;
+
+    /** @var object|DateTime[] */
+    public object $o1;
+
+    /** @var object|int|DateTime */
+    public object $o2;
+
+    /** @var array|Something[]*/
+    public array $noSpaceAfterTypeVar;
+
+    /** @var */
+    public int $int1;
+
+    /**@var*/
+    public int $int2;
+
+    /**
+     * @var array|int[]
+     */
+    public array $arr;
+
+    /**
+     * @var
+object
+     */
+    public object $o;
+}

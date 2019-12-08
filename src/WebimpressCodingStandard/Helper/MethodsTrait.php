@@ -32,6 +32,7 @@ use const T_DOC_COMMENT_CLOSE_TAG;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
 use const T_INTERFACE;
+use const T_VARIABLE;
 use const T_WHITESPACE;
 
 /**
@@ -121,7 +122,9 @@ trait MethodsTrait
 
         $tokens = $phpcsFile->getTokens();
 
-        if ($tokens[$stackPtr]['code'] !== T_DOC_COMMENT_TAG) {
+        if ($tokens[$stackPtr]['code'] !== T_DOC_COMMENT_TAG
+            && $tokens[$stackPtr]['code'] !== T_VARIABLE
+        ) {
             $this->methodName = $phpcsFile->getDeclarationName($stackPtr);
             $this->isSpecialMethod = $this->methodName === '__construct' || $this->methodName === '__destruct';
         }
@@ -149,11 +152,11 @@ trait MethodsTrait
         $b = strtolower(str_replace('\\', ':', $b));
 
         if ($a === 'null' || strpos($a, 'null[') === 0) {
-            return -1;
+            return $this->nullPosition === 'last' ? 1 : -1;
         }
 
         if ($b === 'null' || strpos($b, 'null[') === 0) {
-            return 1;
+            return $this->nullPosition === 'last' ? -1 : 1;
         }
 
         if ($a === 'true' || $a === 'false') {
@@ -263,13 +266,13 @@ trait MethodsTrait
             return false;
         }
 
-        $fqcnTypeHint = strtolower($this->getFQCN($lowerTypeHint));
+        $fqcnTypeHint = strtolower($this->getFqcn($lowerTypeHint));
         foreach ($types as $key => $type) {
             if ($type === 'null') {
                 continue;
             }
 
-            $types[$key] = strtolower($this->getFQCN($type));
+            $types[$key] = strtolower($this->getFqcn($type));
         }
         $fqcnTypes = implode('|', $types);
 
@@ -279,7 +282,7 @@ trait MethodsTrait
                     || $fqcnTypeHint . '|null' === $fqcnTypes));
     }
 
-    private function getFQCN(string $class) : string
+    private function getFqcn(string $class) : string
     {
         // It is a simple type
         if (in_array(strtolower($class), $this->simpleReturnTypes, true)) {
@@ -308,10 +311,10 @@ trait MethodsTrait
 
         $ns = strtolower($this->currentNamespace);
         $lowerClassName = strtolower($this->className);
-        $lowerFQCN = ($ns ? '\\' . $ns : '') . '\\' . $lowerClassName;
+        $lowerFqcn = ($ns ? '\\' . $ns : '') . '\\' . $lowerClassName;
         $lower = strtolower($name);
 
-        return $lower === $lowerFQCN
+        return $lower === $lowerFqcn
             || $lower === $lowerClassName;
     }
 
@@ -322,10 +325,10 @@ trait MethodsTrait
         }
 
         $lowerParentClassName = strtolower($this->parentClassName);
-        $lowerFQCN = strtolower($this->getFQCN($lowerParentClassName));
+        $lowerFqcn = strtolower($this->getFqcn($lowerParentClassName));
         $lower = strtolower($name);
 
-        return $lower === $lowerFQCN
+        return $lower === $lowerFqcn
             || $lower === $lowerParentClassName;
     }
 

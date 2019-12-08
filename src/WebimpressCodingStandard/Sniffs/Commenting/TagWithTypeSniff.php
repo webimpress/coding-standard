@@ -27,6 +27,7 @@ use function trim;
 use function ucfirst;
 use function usort;
 
+use const T_DOC_COMMENT_CLOSE_TAG;
 use const T_DOC_COMMENT_OPEN_TAG;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
@@ -44,6 +45,11 @@ class TagWithTypeSniff implements Sniff
         '@return',
         '@var',
     ];
+
+    /**
+     * @var string Allowed values: "first", "last"
+     */
+    public $nullPosition = 'first';
 
     /**
      * @var null|string
@@ -326,7 +332,7 @@ class TagWithTypeSniff implements Sniff
                 && ($lower === 'mixed' || strpos($lower, 'mixed[') === 0)
             ) {
                 if ($count > 2
-                    || ! array_filter($this->types, function ($type) {
+                    || ! array_filter($this->types, static function ($type) {
                         return strtolower($type) === 'null';
                     })
                 ) {
@@ -427,7 +433,7 @@ class TagWithTypeSniff implements Sniff
                 $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'BoolAndTrue');
 
                 if ($fix) {
-                    $types = array_filter($this->types, function ($v) {
+                    $types = array_filter($this->types, static function ($v) {
                         return strtolower($v) !== 'true';
                     });
                     $content = trim(implode('|', $types) . ' ' . $this->description);
@@ -442,7 +448,7 @@ class TagWithTypeSniff implements Sniff
                 $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'BoolAndFalse');
 
                 if ($fix) {
-                    $types = array_filter($this->types, function ($v) {
+                    $types = array_filter($this->types, static function ($v) {
                         return strtolower($v) !== 'false';
                     });
                     $content = trim(implode('|', $types) . ' ' . $this->description);
@@ -456,7 +462,7 @@ class TagWithTypeSniff implements Sniff
             $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'TrueAndFalse');
 
             if ($fix) {
-                $types = array_filter($this->types, function ($v) {
+                $types = array_filter($this->types, static function ($v) {
                     return ! in_array(strtolower($v), ['true', 'false'], true);
                 });
                 $types[] = 'bool';
@@ -481,7 +487,8 @@ class TagWithTypeSniff implements Sniff
             $fix = $phpcsFile->addFixableError($error, $tagPtr + 2, 'InvalidOrder', $data);
 
             if ($fix) {
-                $content = trim($content . ' ' . $this->description);
+                $content = trim($content . ' ' . $this->description)
+                    . ($phpcsFile->getTokens()[$tagPtr + 3]['code'] === T_DOC_COMMENT_CLOSE_TAG ? ' ' : '');
                 $phpcsFile->fixer->replaceToken($tagPtr + 2, $content);
             }
         }

@@ -12,6 +12,7 @@ class FormatUnitTest extends AbstractTestCase
     {
         return [
             2 => 2,
+            6 => 1,
             14 => 2,
             16 => 2,
             19 => 1,
@@ -34,6 +35,18 @@ class FormatUnitTest extends AbstractTestCase
             74 => 1,
             75 => 1,
             76 => 1,
+            95 => 1,
+            105 => 1,
+            111 => 1,
+            120 => 1,
+            123 => 1,
+            128 => 1,
+            135 => 2,
+            138 => 1,
+            140 => 1,
+            142 => 1,
+            144 => 1,
+            146 => 1,
         ];
     }
 

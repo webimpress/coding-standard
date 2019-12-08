@@ -96,4 +96,9 @@ class MyClass
      * @param \Bar[]\Foo[] $param
      */
     abstract public function invalidTypeFormatIsNotChanged($param);
+
+    public function fnClosure()
+    {
+        $fn = fn(datetime $d) : datetime => $d;
+    }
 }

@@ -6,8 +6,8 @@ namespace WebimpressCodingStandard\Sniffs\Arrays;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractArraySniff;
-use PHP_CodeSniffer\Util\Common;
 use PHP_CodeSniffer\Util\Tokens;
+use WebimpressCodingStandard\Helper\ArrayTrait;
 
 use function abs;
 use function str_repeat;
@@ -24,6 +24,8 @@ use const T_WHITESPACE;
  */
 class DoubleArrowSniff extends AbstractArraySniff
 {
+    use ArrayTrait;
+
     /**
      * The maximum amount of padding before the alignment is ignored.
      *
@@ -34,6 +36,14 @@ class DoubleArrowSniff extends AbstractArraySniff
      * @var int
      */
     public $maxPadding = 1;
+
+    /**
+     * Whether array arrows which are in new lines should be ignored when
+     * aligning array arrows (when $maxPadding property is > 1).
+     *
+     * @var bool
+     */
+    public $ignoreNewLineArrayArrow = true;
 
     /**
      * Processes a single-line array definition.
@@ -70,6 +80,7 @@ class DoubleArrowSniff extends AbstractArraySniff
      */
     protected function processMultiLineArray($phpcsFile, $stackPtr, $arrayStart, $arrayEnd, $indices)
     {
+        $indices = $this->getIndices($phpcsFile, $arrayStart, $arrayEnd);
         $tokens = $phpcsFile->getTokens();
 
         $spaces = $this->calculateExpectedSpaces($phpcsFile, $indices);
@@ -104,6 +115,8 @@ class DoubleArrowSniff extends AbstractArraySniff
             $index = $tokens[$data['index_end']];
             if ($index['line'] === $arrow['line']) {
                 $this->checkSpace($phpcsFile, $data, $spaces[$k] ?? 1);
+            } elseif (! $this->ignoreNewLineArrayArrow && $index['line'] < $arrow['line']) {
+                $this->checkSpace($phpcsFile, $data, $spaces[$k] ?? 0);
             }
         }
     }
@@ -116,6 +129,8 @@ class DoubleArrowSniff extends AbstractArraySniff
 
         $tokens = $phpcsFile->getTokens();
 
+        $newLineArrow = [];
+
         $chars = [];
         foreach ($indices as $k => $data) {
             if (! isset($data['arrow'])) {
@@ -126,10 +141,14 @@ class DoubleArrowSniff extends AbstractArraySniff
             $index = $tokens[$data['index_end']];
 
             if ($arrow['line'] !== $index['line']) {
+                if (! $this->ignoreNewLineArrayArrow) {
+                    $newLineArrow[$k] = true;
+                    $chars[$k] = $index['column'] - 1;
+                }
                 continue;
             }
 
-            $chars[$k] = $index['column'] + $index['length'] - 1;
+            $chars[$k] = $index['column'] + $index['length'];
         }
 
         $res = [];
@@ -188,7 +207,7 @@ class DoubleArrowSniff extends AbstractArraySniff
                 }
             }
 
-            $spaces[$k] = $max - $length + 1;
+            $spaces[$k] = isset($newLineArrow[$k]) ? $max : $max - $length + 1;
         }
 
         return $spaces;
@@ -200,16 +219,32 @@ class DoubleArrowSniff extends AbstractArraySniff
 
         $space = $tokens[$element['arrow'] - 1];
         $expected = str_repeat(' ', $expectedSpaces);
-        if ($space['code'] === T_WHITESPACE && $space['content'] !== $expected) {
-            $error = 'Expected "%s" before "=>"; "%s" found';
+        if ($space['code'] === T_WHITESPACE
+            && $space['line'] === $tokens[$element['arrow']]['line']
+            && $space['content'] !== $expected
+        ) {
+            $error = 'Expected %s before double arrow; %d found';
             $data = [
-                Common::prepareForOutput($expected),
-                Common::prepareForOutput($space['content']),
+                $expectedSpaces === 1 ? '1 space' : $expectedSpaces . ' spaces',
+                $space['length'],
             ];
             $fix = $phpcsFile->addFixableError($error, $element['arrow'], 'SpacesBefore', $data);
 
             if ($fix) {
                 $phpcsFile->fixer->replaceToken($element['arrow'] - 1, $expected);
+            }
+        } elseif ($expected !== ''
+            && ($space['code'] !== T_WHITESPACE
+                || $space['line'] !== $tokens[$element['arrow']]['line'])
+        ) {
+            $error = 'Expected %s before double arrow; 0 found';
+            $data = [
+                $expectedSpaces === 1 ? '1 space' : $expectedSpaces . ' spaces',
+            ];
+            $fix = $phpcsFile->addFixableError($error, $element['arrow'], 'SpacesBefore', $data);
+
+            if ($fix) {
+                $phpcsFile->fixer->addContentBefore($element['arrow'], $expected);
             }
         }
     }

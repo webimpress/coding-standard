@@ -182,6 +182,7 @@ class TagWithTypeUnitTest extends AbstractTestCase
                     299 => 1,
                     304 => 1,
                     309 => 1,
+                    319 => 1,
                 ];
         }
 

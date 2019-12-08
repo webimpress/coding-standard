@@ -73,7 +73,7 @@ class FunctionDisallowedTagSniff implements Sniff
         $commentStart = $tokens[$commentEnd]['comment_opener'];
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
             $content = strtolower($tokens[$tag]['content']);
-            $result = array_filter($this->disallowedTags, function ($key) use ($content) {
+            $result = array_filter($this->disallowedTags, static function ($key) use ($content) {
                 return strtolower($key) === $content;
             }, ARRAY_FILTER_USE_KEY);
 

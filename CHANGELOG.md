@@ -2,6 +2,106 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.1.0 - TBD
+
+### Added
+
+- [#35](https://github.com/webimpress/coding-standard/pull/35) adds `PHP\StaticCallback` sniff which detects closures and check if these can be marked as static
+
+- [#36](https://github.com/webimpress/coding-standard/pull/36) adds `PHP\DisallowCurlyOffsetAccessBrace` sniff which detects array and string offset access using curly brackets.
+  This functionality is deprecated as of PHP 7.4 so sniff can be useful when providing compatibility with PHP 7.4.
+
+- [#38](https://github.com/webimpress/coding-standard/pull/38) adds `ControlStructures\RedundantCase` sniff which detects redundant cases within a switch control structure
+
+- [#41](https://github.com/webimpress/coding-standard/pull/41) adds `ControlStructures\DefaultAsLast` sniff which requires `default` case to be last case in a switch control structure
+
+- [#39](https://github.com/webimpress/coding-standard/pull/39) adds `Arrays\DuplicateKey` sniff which detects duplicated keys in arrays
+
+- [#42](https://github.com/webimpress/coding-standard/pull/42) adds requiring camelCase names for class members and variables used in strings - extended sniff `NamingConventions\ValidVariableName`.
+  Disallowed are two capital letters next to each other (strict mode).
+
+- [#60](https://github.com/webimpress/coding-standard/pull/60) extends `Classes\TraitUsage` sniff to check if traits declarations are on the top of the class.
+  Traits must be specified before constants, properties and methods.
+
+- [#45](https://github.com/webimpress/coding-standard/pull/45) adds `Classes\ConstBeforeProperty` sniff to require constant definitions in classes and interfaces before properties and methods
+
+- [#46](https://github.com/webimpress/coding-standard/pull/46) adds `Classes\PropertyBeforeMethod` sniff to require property definitions in classes before methods
+
+- [#47](https://github.com/webimpress/coding-standard/pull/47) adds `Commenting\TagName` sniff which checks if PHPDoc tags have additional characters at the end of the name.
+  By default `:` and `;` are disallowed and removed by fixer, but the list of disallowed characters can be configured by option `disallowedEndChars`
+
+- [#48](https://github.com/webimpress/coding-standard/pull/48) adds configuration option `nullPosition` to `Commenting\TagWithType` sniff. Default value is `first` to keep backward compatibility.
+  The other allowed value is `last` so then `null` values in type list is at the last position.
+
+- [#49](https://github.com/webimpress/coding-standard/pull/49) adds `Commenting\DisallowEmptyComment` sniff to detect empty comments and multiple empty lines in comments
+
+- [#50](https://github.com/webimpress/coding-standard/pull/50) adds check for open and close of doc block comment in `Commenting\DocComment`.
+  Only short version is allowed: `/**` and `*/`. Additional asterisk are disallowed.
+
+- [#51](https://github.com/webimpress/coding-standard/pull/51) adds check for blank lines and comments before arrow in arrays in `Array\Format` sniff.
+  Arrow must be after the index value, can be in new line, but any additional lines or comments are disallowed. 
+
+- [#54](https://github.com/webimpress/coding-standard/pull/54) adds `Namespaces\UniqueImport` sniff to detect if class/function/constant is imported only once.
+  Sniff checks also if the name is used only once. The same name can be used for class/function/constant, and constant names are case sensitive.
+
+- [#37](https://github.com/webimpress/coding-standard/pull/37) adds additional sniffs to `WebimpressCodingStandard` ruleset:
+  - `Generic.ControlStructures.DisallowYodaConditions`,
+  - `Squiz.Operators.IncrementDecrementUsage`,
+  - `Squiz.PHP.DisallowMultipleAssignments` (with `Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure` exclusion).
+
+- [#59](https://github.com/webimpress/coding-standard/pull/59) extends `Commenting\DocComment` sniff to check if every line of DocBlock comment starts with `*`
+
+- [#53](https://github.com/webimpress/coding-standard/pull/53) adds support for use groups in `Namespaces\UnusedUseStatement` sniff
+
+- [#58](https://github.com/webimpress/coding-standard/pull/58) adds property type declaration (PHP 7.4+). The following sniffs are affected:
+  - `Commenting\PropertyAnnotation` - ensure that type is skipped when detecting the comment before property,
+  - `Commenting\VariableComment` - add multiple checks to ensure type declaration is consistent with type provided in PHPDoc (`@var` tag). In case type declaration is provided and PHPDoc does not contain any additional information, `@var` tag can be omitted.                                     
+
+- [#62](https://github.com/webimpress/coding-standard/pull/62) adds support for `Iterator` type in `Functions\Param` and `Functions\ReturnType` sniffs
+
+- [#62](https://github.com/webimpress/coding-standard/pull/62) adds check for return type of function with `yield`. Generators may only declare a return type of `Generator`, `Iterator`, `Traversable` or `iterable`.
+
+- [#63](https://github.com/webimpress/coding-standard/pull/63) adds ability to align array arrows when in new line. To use it, there is an example configuration:
+  ```
+  // configuration of double arrow alignment
+  WebimpressCodingStandard.Arrays.DoubleArrow.maxPadding = 50
+  WebimpressCodingStandard.Arrays.DoubleArrow.ignoreNewLineArrayArrow = false
+
+  // ignore indent or double arrow when at the beggining of the line
+  WebimpressCodingStandard.WhiteSpace.ScopeIndent.ignoreNewLineArrayArrow = true
+
+  // ignore spacing before double arrow (so we can have more than one space)
+  WebimpressCodingStandard.WhiteSpace.OperatorAndKeywordSpacing.ignoreSpacingBeforeAssignments = true
+  ```
+
+- [#67](https://github.com/webimpress/coding-standard/pull/67) adds support for PHP 7.4 arrow functions.
+
+### Changed
+
+- [#42](https://github.com/webimpress/coding-standard/pull/42) changes `NamingConventions\ValidVariableName` to require variable names be in strict camelCase. It means two capital letters next to each other are not allowed.
+
+- [#44](https://github.com/webimpress/coding-standard/pull/44) changes `PSR1.Methods.CamelCapsMethodName` with `Generic.NamingConventions.CamelCapsFunctionName` so from now method names must be in strict camelCas. It means two capital letters next to each other are not allowed.
+
+- [#37](https://github.com/webimpress/coding-standard/pull/37) updates the `squizlabs/php_codesniffer` dependency to `^3.5.2`
+
+- [#61](https://github.com/webimpress/coding-standard/pull/61) replaces `Squiz.WhiteSpace.OperatorSpacing` with `WebimpressCodingStandard.WhiteSpace.OperatorAndKeywordSpacing` sniff.
+  This sniff still extends `Squiz.WhiteSpace.OperatorSpacing` but check additional tokens: `as` and `insteadof` and Logical Operators.
+  It also disallows mor then one empty line before operators, and for `as`, `insteadof`, and `instanceof` requires single space before and after.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [#42](https://github.com/webimpress/coding-standard/pull/42) excludes `PSR2.Classes.PropertyDeclaration.Underscore` check, as it is now covered by `NamingConventions\ValidVariableName` sniff
+
+### Fixed
+
+- [#51](https://github.com/webimpress/coding-standard/pull/51) fixes multiple cases when empty line before comment in array was not allowed
+
+- [#53](https://github.com/webimpress/coding-standard/pull/53) reworks implementation of `Namespaces\UnusedUseStatement` sniff which solves numerous issues with detecting if class/function/constant is used within the file 
+
 ## 1.0.6 - 2019-11-13
 
 ### Added

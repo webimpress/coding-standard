@@ -310,3 +310,11 @@ class VarTag extends VarTagParent {
      */
     public $moreThanOneSpace;
 }
+
+// @phpcs:set WebimpressCodingStandard.Commenting.TagWithType nullPosition last
+
+/** @var string|null $var */
+$var = 'abc';
+
+/** @var int|null $bar */
+$bar = $var ? 12 : null;

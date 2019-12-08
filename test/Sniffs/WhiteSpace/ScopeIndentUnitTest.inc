@@ -702,3 +702,17 @@ if ($a
     )
 ) {
 }
+
+$a = [
+    $b
+        ? fn (
+            int $c
+        ) => $c
+        : fn (
+            int $d
+        ) => $d,
+];
+
+$fn1 = fn (int $a) : int => $a;
+
+$fn2 = fn (int $b) : int => $b;

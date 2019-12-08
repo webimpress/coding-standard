@@ -1,7 +1,7 @@
 <?php
 // @phpcs:set WebimpressCodingStandard.Arrays.DoubleArrow maxPadding 30
 
-$s = ['a' => 'b', 'c'=>'d'];
+$s = ['a' => 'b', 'c' =>'d'];
 $m = [
     'a'
         => 'b',

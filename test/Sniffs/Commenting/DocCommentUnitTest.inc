@@ -316,4 +316,26 @@ class Foo
     public function allowSpaceBetweenTwoPhpDocBlock()
     {
     }
+
+    /***
+     * @return void
+     **/
+    public function wrongAdditionalStarsWithOpenAndCloseTags()
+    {
+    }
 }
+
+/**
+hey
+hello
+ */
+
+/**
+    hi
+    hello
+ */
+
+/**
+ @var int $param
+ */
+$param = 1;

@@ -27,6 +27,19 @@
         <!-- Replaced by WebimpressCodingStandard.WhiteSpace.CommaSpacing -->
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeComma"/>
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg"/>
+        <!-- Replaced by WebimpressCodingStandard.Formatting.Reference.UnexpectedSpace -->
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterReference"/>
+        <!-- Replaced by WebimpressCodingStandard.Formatting.NoSpaceAfterSplat.SpaceFound -->
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterVariadic"/>
+        <!-- Replaced by WebimpressCodingStandard.NamingConventions.ValidVariableName -->
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+        <!-- Replaced by Generic.NamingConventions.CamelCapsFunctionName -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+    </rule>
+
+    <!-- Only one space after type in property declaration - PHP 7.4+ -->
+    <rule ref="PSR2.Classes.PropertyDeclaration.SpacingAfterType">
+        <severity>5</severity>
     </rule>
 
     <!-- Generic Rules -->
@@ -36,6 +49,7 @@
     <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
     <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
     <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.ControlStructures.DisallowYodaConditions"/>
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
         <properties>
             <property name="maxPadding" value="1"/>
@@ -45,6 +59,7 @@
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <rule ref="Generic.NamingConventions.ConstructorName"/>
+    <rule ref="Generic.NamingConventions.CamelCapsFunctionName"/>
     <rule ref="Generic.PHP.DiscourageGoto"/>
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
@@ -90,7 +105,11 @@
     <!-- Squiz Rules -->
     <rule ref="Squiz.Classes.ClassFileName"/>
     <rule ref="Squiz.Classes.SelfMemberReference"/>
+    <rule ref="Squiz.Operators.IncrementDecrementUsage"/>
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+    <rule ref="Squiz.PHP.DisallowMultipleAssignments">
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure"/>
+    </rule>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
     <rule ref="Squiz.PHP.NonExecutableCode"/>
     <rule ref="Squiz.Scope.StaticThisUsage"/>
@@ -107,11 +126,6 @@
     <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
-        <properties>
-            <property name="ignoreNewlines" value="true"/>
-        </properties>
-    </rule>
-    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
         <properties>
             <property name="ignoreNewlines" value="true"/>
         </properties>

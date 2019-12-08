@@ -1,0 +1,33 @@
+<?php
+// @phpcs:set WebimpressCodingStandard.Arrays.DoubleArrow maxPadding 30
+// @phpcs:set WebimpressCodingStandard.Arrays.DoubleArrow ignoreNewLineArrayArrow false
+
+$m = [
+    'foo' => 'bar',
+    'very-long-key'
+    => 'value',
+    'foo-bar' => 'baz',
+];
+
+$x = [
+    '1' => 1,
+    '1_____' => 1,
+    '1__' => 1,
+    '2_____________________________________________________' => 2,
+    '3' => 3,
+    '3____' => 3,
+    '3_' => 3,
+    '3_______' => 3,
+    '3____________________' => 3,
+    '3___'
+    => 'value in new line does not break aligning group',
+    '3__' => 3,
+    '3_____' => 3,
+    'value without index breaks aligning group',
+    '4___' => 4,
+    '4' => 4,
+
+    '5_'   => 'empty line breaks alignment group',
+    // comment
+    '6_____' => 'comment breaks alignment group',
+];

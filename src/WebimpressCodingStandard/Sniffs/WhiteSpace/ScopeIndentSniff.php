@@ -39,10 +39,12 @@ use const T_COMMENT;
 use const T_CONSTANT_ENCAPSED_STRING;
 use const T_CONTINUE;
 use const T_DOC_COMMENT_OPEN_TAG;
+use const T_DOUBLE_ARROW;
 use const T_DOUBLE_QUOTED_STRING;
 use const T_ECHO;
 use const T_ELSEIF;
 use const T_EXIT;
+use const T_FN;
 use const T_FOR;
 use const T_FOREACH;
 use const T_FUNCTION;
@@ -86,6 +88,15 @@ class ScopeIndentSniff implements Sniff
      * @var bool
      */
     public $alignObjectOperators = true;
+
+    /**
+     * Ignore alignment of array arrows which are at the beginning of new line.
+     * If set to true, other sniff should check alignment of these arrows
+     * - for example WebimpressCodingStandard.Arrays.DoubleArrow
+     *
+     * @var bool
+     */
+    public $ignoreNewLineArrayArrow = false;
 
     /**
      * @var int[]
@@ -188,6 +199,7 @@ class ScopeIndentSniff implements Sniff
                 T_CLOSE_PARENTHESIS => T_CLOSE_PARENTHESIS,
                 T_USE => T_USE,
                 T_CLOSURE => T_CLOSURE,
+                T_FN => T_FN,
                 T_ARRAY => T_ARRAY,
                 T_ANON_CLASS => T_ANON_CLASS,
             ];
@@ -560,7 +572,7 @@ class ScopeIndentSniff implements Sniff
                 if ($tokens[$prev]['line'] === $tokens[$i]['line']
                     && ! ($fp = $this->findPrevious($phpcsFile, $i, [T_OBJECT_OPERATOR]))
                 ) {
-                    $endOfStatement = min($phpcsFile->findEndOfStatement($i), $this->findNext($phpcsFile, $i));
+                    $endOfStatement = min($this->findEndOfStatement($phpcsFile, $i), $this->findNext($phpcsFile, $i));
                     $newLine = $this->hasContainNewLine($phpcsFile, $i, $endOfStatement);
 
                     if ($newLine) {
@@ -606,7 +618,7 @@ class ScopeIndentSniff implements Sniff
                 ],
                 true
             )) {
-                $endOfStatement = $phpcsFile->findEndOfStatement($i);
+                $endOfStatement = $this->findEndOfStatement($phpcsFile, $i);
                 $newLine = $this->hasContainNewLine($phpcsFile, $i, $endOfStatement);
 
                 if ($newLine) {
@@ -628,7 +640,7 @@ class ScopeIndentSniff implements Sniff
                     && isset($tokens[$next]['scope_closer'])
                     && $tokens[$next]['scope_closer'] === $next
                 ) {
-                    $endOfStatement = $phpcsFile->findEndOfStatement($next);
+                    $endOfStatement = $this->findEndOfStatement($phpcsFile, $next);
                     $this->extras($endOfStatement, $this->indent);
 
                     $extraIndent += $this->indent;
@@ -740,6 +752,8 @@ class ScopeIndentSniff implements Sniff
                             $expectedIndent += $this->indent;
                         }
                     }
+                } elseif ($this->ignoreNewLineArrayArrow && $tokens[$next]['code'] === T_DOUBLE_ARROW) {
+                    continue;
                 }
 
                 $expectedIndent += $extraIndent;
@@ -930,6 +944,70 @@ class ScopeIndentSniff implements Sniff
         }
 
         return null;
+    }
+
+    /**
+     * Overrides File::findEndOfStatement as temporary solution until
+     * https://github.com/squizlabs/PHP_CodeSniffer/issues/2748
+     * is fixed.
+     */
+    private function findEndOfStatement(File $phpcsFile, int $ptr) : int
+    {
+        $closingBracket = [
+            T_CLOSE_PARENTHESIS,
+            T_CLOSE_SQUARE_BRACKET,
+            T_CLOSE_CURLY_BRACKET,
+            T_CLOSE_SHORT_ARRAY,
+        ];
+
+        $tokens = $phpcsFile->getTokens();
+        $lastToken = $phpcsFile->numTokens;
+
+        if ($tokens[$ptr]['code'] === T_DOUBLE_ARROW && $ptr < $lastToken) {
+            ++$ptr;
+        }
+
+        while ($ptr < $lastToken) {
+            if ($tokens[$ptr]['code'] === T_OPEN_PARENTHESIS) {
+                $ptr = $tokens[$ptr]['parenthesis_closer'] + 1;
+                continue;
+            }
+
+            if ($tokens[$ptr]['code'] === T_OPEN_CURLY_BRACKET
+                || $tokens[$ptr]['code'] === T_OPEN_SQUARE_BRACKET
+                || $tokens[$ptr]['code'] === T_OPEN_SHORT_ARRAY
+            ) {
+                $ptr = $tokens[$ptr]['bracket_closer'] + 1;
+                continue;
+            }
+
+            if (isset($tokens[$ptr]['scope_closer']) && $ptr < $tokens[$ptr]['scope_closer']) {
+                $ptr = $tokens[$ptr]['scope_closer'];
+                if (in_array($tokens[$ptr]['code'], $closingBracket, true)) {
+                    ++$ptr;
+                }
+            } elseif (isset($tokens[$ptr]['parenthesis_closer']) && $ptr < $tokens[$ptr]['parenthesis_closer']) {
+                $ptr = $tokens[$ptr]['parenthesis_closer'];
+                if (in_array($tokens[$ptr]['code'], $closingBracket, true)) {
+                    ++$ptr;
+                }
+            }
+
+            if ($tokens[$ptr]['code'] === T_COMMA
+                || $tokens[$ptr]['code'] === T_SEMICOLON
+                || $tokens[$ptr]['code'] === T_DOUBLE_ARROW
+            ) {
+                return $ptr;
+            }
+
+            if (in_array($tokens[$ptr]['code'], $closingBracket, true)) {
+                return $phpcsFile->findPrevious(Tokens::$emptyTokens, $ptr - 1, null, true);
+            }
+
+            ++$ptr;
+        }
+
+        return $lastToken;
     }
 
     /**

@@ -3,7 +3,6 @@ $a1 = ['foo', 'bar'];
 $a2 = [
    'foo',
  'bar',
-
   function() {
 
   },
@@ -99,4 +98,52 @@ $a = [
      * Comment
      */
     // 'key' => 'val',
+];
+
+$a = [
+    'a',
+
+    // b
+    'c',
+];
+
+$a = [
+    'a',
+
+    /*
+     multiline comment
+     */
+    'b',
+];
+
+$x = [
+    // comment
+    'a',
+'b',
+    'd',
+
+
+    // comment 1
+    'i' => 'd',
+    //comment 2
+    //comment 3
+    'j'
+    =>'r',
+    'r'
+    . 'x ',
+    // comment 4
+    'x1'
+    => 'y1',
+];
+
+$a = [
+    // COMMENT
+];
+$a = [/**/];
+
+$t = [
+    $a ?? $b        =>   $c ?? $d,
+    $e ? $f : $g    =>   $h ? $i : $j,
+    static fn ($a)  =>   [$a, $a],
+    ($k + $l)       =>   $m
 ];

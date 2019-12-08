@@ -13,7 +13,7 @@ class DoubleArrowUnitTest extends AbstractTestCase
         switch ($testFile) {
             case 'DoubleArrowUnitTest.1.inc':
                 return [
-                    4 => 1,
+                    4 => 2,
                     6 => 1,
                     10 => 1,
                     14 => 1,
@@ -41,12 +41,31 @@ class DoubleArrowUnitTest extends AbstractTestCase
                     59 => 1,
                     61 => 1,
                 ];
+            case 'DoubleArrowUnitTest.2.inc':
+                return [
+                    6 => 1,
+                    8 => 1,
+                    13 => 1,
+                    15 => 1,
+                    17 => 1,
+                    18 => 1,
+                    19 => 1,
+                    20 => 1,
+                    23 => 1,
+                    24 => 1,
+                    25 => 1,
+                    28 => 1,
+                    30 => 1,
+                ];
         }
 
         return [
-            3 => 1,
-            5 => 1,
-            9 => 1,
+            5 => 2,
+            7 => 1,
+            11 => 1,
+            15 => 1,
+            16 => 1,
+            18 => 1,
         ];
     }
 

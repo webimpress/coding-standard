@@ -2,6 +2,8 @@
 
 namespace MyNamespace\Test\Functions;
 
+use Iterator as IteratorAlias;
+
 class FunctionCommentReturn
 {
     /**
@@ -181,5 +183,55 @@ class FunctionCommentReturn
     public function test() : array
     {
         return [];
+    }
+
+    public function generator1() : iterable
+    {
+        yield 1;
+        yield 1.2;
+        yield 'string';
+        yield [];
+        yield true;
+        yield null;
+    }
+
+    public function generator2() : \Generator
+    {
+        yield 1;
+        yield 1.2;
+        yield 'string';
+        yield [];
+        yield true;
+        yield null;
+    }
+
+    public function generator3() : \Traversable
+    {
+        yield 1;
+        yield 1.2;
+        yield 'string';
+        yield [];
+        yield true;
+        yield null;
+    }
+
+    public function generator4() : IteratorAlias
+    {
+        yield 1;
+        yield 1.2;
+        yield 'string';
+        yield [];
+        yield true;
+        yield null;
+    }
+
+    public function generator5() : MyCustomGenerator
+    {
+        yield 1;
+        yield 1.2;
+        yield 'string';
+        yield [];
+        yield true;
+        yield null;
     }
 }

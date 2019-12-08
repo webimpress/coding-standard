@@ -27,10 +27,23 @@ class PropertyCommentWithoutAnnotations
     var $var;
 
     /**
+     * @var null|DateTime
+     * @ORM\WithType
+     * @Config(require="PHP 7.4")
+     */
+    private ?\DateTime $typed;
+
+    /**
      * @var bool
      * @ORM\Column(@ORM\Value({"var", "bar", "baz"}))
      */
     private $baz;
+
+    /**
+     * @ORM\CallbackFunction
+     * @Config(require="PHP 7.4")
+     */
+    private callable $callback;
 
     /**
      * @var null|string

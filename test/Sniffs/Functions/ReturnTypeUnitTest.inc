@@ -358,4 +358,12 @@ abstract class FunctionCommentReturn
      * @return parent
      */
     abstract public function parentCanBeUsedAsObjectTypeSpecification() : object;
+
+    /**
+     * @return int
+     */
+    public function fnClosure()
+    {
+        $fn = fn () : int => yield $this;
+    }
 }

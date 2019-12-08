@@ -1,0 +1,42 @@
+<?php
+
+class ConstBeforePropertyClass
+{
+    use MyTrait;
+    use MyOtherTrait {
+        func1 as func2;
+    }
+
+    /** constant comment */
+    const CONST_1 = 'const';
+
+    /** property comment **/
+    var $property = 'val';
+}
+
+interface ConstBeforePropertyInterface
+{
+
+    /** constant comment */
+    const CONST_2 = 'const';
+    /** method comment */
+    public function method();
+}
+
+$a = new class() {
+    const CONST_3 = 'const';
+    static $prop;
+};
+
+$b = new class() {
+
+    /** const comment */
+    public const CONST_4 = 'const';
+    /** property comment */
+    public static $prop;
+
+    /** method comment */
+    public function method()
+    {
+    }
+};

@@ -16,4 +16,6 @@ function test(int$var,$bar,bool...$bools){}
 
 function variableArgs(int   ...$ints) {}
 
+static fn (?string  &$a) => $a;
+
 function broken;

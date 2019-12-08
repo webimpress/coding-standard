@@ -27,3 +27,5 @@ $a = $b
 
 $a = $b // comment
     && $c;
+
+fn ($a) => $a;

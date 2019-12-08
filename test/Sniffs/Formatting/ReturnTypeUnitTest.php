@@ -59,6 +59,7 @@ class ReturnTypeUnitTest extends AbstractTestCase
             91 => 1,
             93 => 1,
             95 => 1,
+            100 => 1,
         ];
     }
 

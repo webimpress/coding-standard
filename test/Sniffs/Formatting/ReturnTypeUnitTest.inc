@@ -96,3 +96,5 @@ class NonFixable
 
     public function e() {}
 }
+
+static fn (string $a):int => $a;

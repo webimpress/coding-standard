@@ -73,4 +73,17 @@ class StaticClosure
             }) {};
         };
     }
+
+    public function fnClosure()
+    {
+        $fn1 = static fn () => 1;
+        $fn2 = fn () => $this->bar();
+        (static fn ($a) => $a)($this);
+        fn () => new class ($this) {};
+        static fn () => new class () {
+            public function __construct() {
+                $this->id = 1;
+            }
+        };
+    }
 }

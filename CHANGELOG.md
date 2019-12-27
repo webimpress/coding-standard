@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#70](https://github.com/webimpress/coding-standard/pull/70) fixes `Namespaces\AlphabeticallySortedUses` sniff to not remove additional content between use statements.
 
 ## 1.1.0 - 2019-12-08
 

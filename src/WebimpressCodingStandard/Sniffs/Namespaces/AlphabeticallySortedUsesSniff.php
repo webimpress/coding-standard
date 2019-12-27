@@ -8,7 +8,6 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use WebimpressCodingStandard\CodingStandard;
 
-use function end;
 use function implode;
 use function reset;
 use function str_replace;
@@ -24,6 +23,7 @@ use const T_OPEN_TAG;
 use const T_SEMICOLON;
 use const T_STRING;
 use const T_USE;
+use const T_WHITESPACE;
 
 class AlphabeticallySortedUsesSniff implements Sniff
 {
@@ -235,13 +235,28 @@ class AlphabeticallySortedUsesSniff implements Sniff
      */
     private function fixAlphabeticalOrder(File $phpcsFile, array $uses) : void
     {
+        $tokens = $phpcsFile->getTokens();
         $first = reset($uses);
-        $last = end($uses);
-        $lastScopeCloser = $last['ptrEnd'];
 
         $phpcsFile->fixer->beginChangeset();
-        for ($i = $first['ptrUse']; $i <= $lastScopeCloser; ++$i) {
-            $phpcsFile->fixer->replaceToken($i, '');
+        foreach ($uses as $use) {
+            $i = $use['ptrUse'] - 1;
+            while ($tokens[$i]['code'] === T_WHITESPACE
+                && strpos($tokens[$i]['content'], $phpcsFile->eolChar) === false
+                && $i >= $first['ptrUse']
+            ) {
+                $phpcsFile->fixer->replaceToken($i, '');
+                --$i;
+            }
+            for ($i = $use['ptrUse']; $i <= $use['ptrEnd']; ++$i) {
+                $phpcsFile->fixer->replaceToken($i, '');
+            }
+            while ($tokens[$i]['code'] === T_WHITESPACE
+                && strpos($tokens[$i]['content'], $phpcsFile->eolChar) !== false
+            ) {
+                $phpcsFile->fixer->replaceToken($i, '');
+                ++$i;
+            }
         }
 
         uasort($uses, function (array $a, array $b) {
@@ -259,7 +274,10 @@ class AlphabeticallySortedUsesSniff implements Sniff
             }
         }
 
-        $phpcsFile->fixer->addContent($first['ptrUse'], implode($phpcsFile->eolChar, $content));
+        $phpcsFile->fixer->addContent(
+            $first['ptrUse'],
+            implode($phpcsFile->eolChar, $content) . $phpcsFile->eolChar . $phpcsFile->eolChar
+        );
         $phpcsFile->fixer->endChangeset();
     }
 }

@@ -29,6 +29,7 @@ class AlphabeticallySortedUsesUnitTest extends AbstractTestCase
             32 => 1,
             33 => 1,
             37 => 2,
+            52 => 1,
         ];
     }
 

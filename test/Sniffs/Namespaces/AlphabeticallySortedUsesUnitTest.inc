@@ -43,3 +43,11 @@ namespace D {
     use Psr_Underscore;
     use PsrLetter;
 }
+
+namespace E {
+    use Foo;
+
+    class Bar {}
+
+    use Baz;
+}

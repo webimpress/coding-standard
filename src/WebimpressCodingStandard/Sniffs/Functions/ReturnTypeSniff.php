@@ -927,21 +927,21 @@ class ReturnTypeSniff implements Sniff
 
             case T_BOOL_CAST:
             case T_BOOLEAN_NOT:
-                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean'])) {
+                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean', 'mixed'])) {
                     $error = 'Function return type is not bool, but function returns boolean value here';
                     $phpcsFile->addError($error, $ptr, 'ReturnBool');
                 }
                 return 'bool';
 
             case T_FALSE:
-                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean', 'false'])) {
+                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean', 'false', 'mixed'])) {
                     $error = 'Function return type is not bool, but function returns boolean false here';
                     $phpcsFile->addError($error, $ptr, 'ReturnFalse');
                 }
                 return 'false';
 
             case T_TRUE:
-                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean', 'true'])) {
+                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean', 'true', 'mixed'])) {
                     $error = 'Function return type is not bool, but function returns boolean true here';
                     $phpcsFile->addError($error, $ptr, 'ReturnTrue');
                 }
@@ -955,7 +955,7 @@ class ReturnTypeSniff implements Sniff
                 }
                 // no break
             case T_INT_CAST:
-                if (! $this->hasCorrectType(['int', '?int'], ['int', 'integer'])) {
+                if (! $this->hasCorrectType(['int', '?int'], ['int', 'integer', 'mixed'])) {
                     $error = 'Function return type is not int, but function return int here';
                     $phpcsFile->addError($error, $ptr, 'ReturnInt');
                 }
@@ -964,7 +964,7 @@ class ReturnTypeSniff implements Sniff
             // float value or float cast
             case T_DNUMBER:
             case T_DOUBLE_CAST:
-                if (! $this->hasCorrectType(['float', '?float'], ['double', 'float', 'real'])) {
+                if (! $this->hasCorrectType(['float', '?float'], ['double', 'float', 'real', 'mixed'])) {
                     $error = 'Function return type is not float, but function returns float here';
                     $phpcsFile->addError($error, $ptr, 'ReturnFloat');
                 }

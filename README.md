@@ -1,6 +1,6 @@
 # Webimpress Coding Standard
 
-[![Build Status](https://travis-ci.org/webimpress/coding-standard.svg?branch=master)](https://travis-ci.org/webimpress/coding-standard)
+[![Build Status](https://travis-ci.com/webimpress/coding-standard.svg?branch=master)](https://travis-ci.com/webimpress/coding-standard)
 [![Coverage Status](https://coveralls.io/repos/github/webimpress/coding-standard/badge.svg?branch=master)](https://coveralls.io/github/webimpress/coding-standard?branch=master)
 
 ## Installation

@@ -11,6 +11,9 @@ class NoNullValues
 
     public $v5/* comment */;
 
+    public ?\DateTime $d1 = null;
+    public \DateTime $d2;
+
     /**
      * @param mixed $x
      */

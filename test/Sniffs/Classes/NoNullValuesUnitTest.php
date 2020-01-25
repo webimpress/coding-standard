@@ -16,7 +16,8 @@ class NoNullValuesUnitTest extends AbstractTestCase
             9 => 1,
             11 => 1,
             13 => 1,
-            23 => 1,
+            16 => 1,
+            26 => 1,
         ];
     }
 

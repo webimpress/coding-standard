@@ -594,7 +594,7 @@ class DisallowFqnSniff implements Sniff
     }
 
     /**
-     * @param array<string, string> $references
+     * @phpstan-param array<string, string> $references
      */
     private function importReferences(File $phpcsFile, int $namespacePtr, array $references) : void
     {

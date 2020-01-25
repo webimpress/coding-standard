@@ -96,7 +96,7 @@ class ReturnTypeSniff implements Sniff
     use MethodsTrait;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     private $returnDoc;
 

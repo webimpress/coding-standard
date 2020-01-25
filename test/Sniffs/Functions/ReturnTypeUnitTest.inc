@@ -366,4 +366,35 @@ abstract class FunctionCommentReturn
     {
         $fn = fn () : int => yield $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function mixed($a) {
+        if ($a === 1) {
+            return 1;
+        }
+
+        if ($a > 2) {
+            return (float) $a;
+        }
+
+        if ($a > 1) {
+            return (int) $a;
+        }
+
+        if ($a > 0) {
+            return (bool) $a;
+        }
+
+        if ($a === 0) {
+            return false;
+        }
+
+        if ($a === -1) {
+            return true;
+        }
+
+        return $a;
+    }
 }

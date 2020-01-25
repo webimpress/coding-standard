@@ -229,7 +229,7 @@ class TagWithTypeSniff implements Sniff
         $nested = 0;
         $commentStart = $phpcsFile->findPrevious(T_DOC_COMMENT_OPEN_TAG, $tagPtr - 1);
         $i = $tagPtr;
-        while ($i = $phpcsFile->findPrevious(T_DOC_COMMENT_STRING, $i - 1, $commentStart)) {
+        while ($i = $phpcsFile->findPrevious(T_DOC_COMMENT_STRING, $i, $commentStart)) {
             if (strpos($tokens[$i]['content'], '}') === 0) {
                 --$nested;
             }
@@ -238,7 +238,7 @@ class TagWithTypeSniff implements Sniff
                 ++$nested;
             }
 
-            $i = $phpcsFile->findPrevious([T_DOC_COMMENT_TAG, T_DOC_COMMENT_OPEN_TAG], $i - 1);
+            $i = $phpcsFile->findPrevious([T_DOC_COMMENT_STRING, T_DOC_COMMENT_TAG, T_DOC_COMMENT_OPEN_TAG], $i - 1);
         }
 
         $condition = end($tokens[$tagPtr]['conditions']);

@@ -48,6 +48,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#75](https://github.com/webimpress/coding-standard/pull/75) allows `null` value for properties with nullable type declaration (PHP 7.4+). 
 
+- [#76](https://github.com/webimpress/coding-standard/pull/76) fixes recognising annotations in property PHPDocs: `Commenting\TagWithType` sniff. 
+
 ## 1.1.1 - 2019-12-27
 
 ### Added

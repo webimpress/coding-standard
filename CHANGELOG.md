@@ -50,6 +50,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#76](https://github.com/webimpress/coding-standard/pull/76) fixes recognising annotations in property PHPDocs: `Commenting\TagWithType` sniff. 
 
+- [#78](https://github.com/webimpress/coding-standard/pull/78) fixes false-positive for mixed type in PHPDoc return tag: `Functions\ReturnType` sniff. 
+
 ## 1.1.1 - 2019-12-27
 
 ### Added

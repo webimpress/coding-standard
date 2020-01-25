@@ -13,6 +13,23 @@ class TagWithType
     public $className;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\OAuth2\Domain\Scope", inversedBy="users")
+     * @ORM\JoinTable(
+     *  name="user_scopes",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="scope_id", referencedColumnName="id")
+     *  }
+     * )
+     * @ORM\OrderBy({"urn" = "ASC"})
+     *
+     * @var Collection|Scope[]
+     */
+    protected $scopes;
+
+    /**
      * @param \Param_Type $param
      * @return \Return_Type
      * @throws \Exception_Name

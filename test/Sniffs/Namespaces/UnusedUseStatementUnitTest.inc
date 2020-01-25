@@ -62,6 +62,7 @@ use FooBar\{Used33};
 use FooBar\{Used34,}; // PHP 7.2+
 use FooBar\{Unused23};
 use EmptyGroup\{};
+use UsedTrait;
 
 /**
  * @method Used23 myMethod(Used24 $param1, Used25 $param2)
@@ -77,7 +78,7 @@ class Foo
 {
     use Traits\MyTrait;
     use Traits\Used1;
-    use Used17;
+    use Used17, UsedTrait;
 
     private $unused2;
 

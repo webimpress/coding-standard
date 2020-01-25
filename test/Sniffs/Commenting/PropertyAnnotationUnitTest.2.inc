@@ -35,8 +35,8 @@ class PropertyCommentWithSpecifiedAnnotations
     private ?\DateTime $typed;
 
     /**
-     * @ORM\CallbackFunction
+     * @ORM\IntType
      * @Config(require="PHP 7.4")
      */
-    private callable $callback;
+    private int $int;
 }

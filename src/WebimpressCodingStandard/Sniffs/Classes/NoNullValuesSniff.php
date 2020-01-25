@@ -30,8 +30,20 @@ class NoNullValuesSniff extends AbstractVariableSniff
 
         $value = $phpcsFile->findNext(Tokens::$emptyTokens, $next + 1, null, true);
         if ($tokens[$value]['code'] === T_NULL) {
-            $error = 'Default null value for the property is redundant';
-            $fix = $phpcsFile->addFixableError($error, $value, 'NullValue');
+            $props = $phpcsFile->getMemberProperties($stackPtr);
+            if ($props['type'] !== '' && $props['nullable_type'] === true) {
+                return;
+            }
+
+            $error = $props['type'] !== '' && $props['nullable_type'] === false
+                ? 'Default null value for not-nullable property is invalid'
+                : 'Default null value for the property is redundant';
+
+            $code = $props['type'] !== '' && $props['nullable_type'] === false
+                ? 'Invalid'
+                : 'NullValue';
+
+            $fix = $phpcsFile->addFixableError($error, $value, $code);
 
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();

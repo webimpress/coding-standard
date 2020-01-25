@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#74](https://github.com/webimpress/coding-standard/pull/74) fixes false-positive in `Namespaces\UnusedUseStatement` for multiple trait usages.
 
 ## 1.1.1 - 2019-12-27
 

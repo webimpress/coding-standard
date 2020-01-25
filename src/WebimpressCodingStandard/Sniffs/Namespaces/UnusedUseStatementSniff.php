@@ -417,15 +417,6 @@ class UnusedUseStatementSniff implements Sniff
             return 'class';
         }
 
-        // Trait usage
-        if ($beforeCode === T_USE) {
-            if (CodingStandard::isTraitUse($phpcsFile, $beforePtr)) {
-                return 'class';
-            }
-
-            return null;
-        }
-
         if ($beforeCode === T_COMMA) {
             $prev = $phpcsFile->findPrevious(
                 Tokens::$emptyTokens + [
@@ -441,6 +432,23 @@ class UnusedUseStatementSniff implements Sniff
             if ($tokens[$prev]['code'] === T_IMPLEMENTS || $tokens[$prev]['code'] === T_EXTENDS) {
                 return 'class';
             }
+
+            if ($tokens[$prev]['code'] === T_INSTEADOF) {
+                return null;
+            }
+
+            if ($tokens[$prev]['code'] === T_USE) {
+                $beforeCode = T_USE;
+            }
+        }
+
+        // Trait usage
+        if ($beforeCode === T_USE) {
+            if (CodingStandard::isTraitUse($phpcsFile, $beforePtr)) {
+                return 'class';
+            }
+
+            return null;
         }
 
         $afterPtr = $phpcsFile->findNext(Tokens::$emptyTokens, $ptr + 1, null, true);

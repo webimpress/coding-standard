@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#86](https://github.com/webimpress/coding-standard/pull/86) fixes false-positive in `PHP\DisallowFqn` for FQN in PHPDocs.
 
 ## 1.1.2 - 2020-01-25
 

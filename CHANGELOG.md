@@ -32,7 +32,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+- [#87](https://github.com/webimpress/coding-standard/pull/87) bumps squizlab/php_codesniffer dependency to version ^3.5.4 which contains fix for correct detecting indices in arrays.
 
 ### Deprecated
 

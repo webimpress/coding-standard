@@ -3,6 +3,8 @@
 namespace MyNamespace \ Hello;
 
 use \ArrayObject as AO;
+use Foo\BarBaz;
+use stdClass;
 
 use function Foo\Bar\fooBar;
 
@@ -153,5 +155,21 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
     public function fnClosure()
     {
         return fn (\InFnClosure\Param1 &$param1) : \InFnClosure\ReturnType1 => $param1;
+    }
+
+    /**
+     * @return \Foo\BarBaz\MyInterface
+     */
+    public function method1(object $a)
+    {
+        return $a;
+    }
+
+    /**
+     * @param \stdClass $obj
+     */
+    public function method2($obj)
+    {
+        return $obj;
     }
 }

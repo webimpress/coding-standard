@@ -7,7 +7,6 @@ namespace WebimpressCodingStandard\Sniffs\Arrays;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractArraySniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\ArrayTrait;
 
 use function ltrim;
 use function str_repeat;
@@ -43,8 +42,6 @@ use const T_WHITESPACE;
  */
 class FormatSniff extends AbstractArraySniff
 {
-    use ArrayTrait;
-
     /**
      * Processes a single-line array definition.
      *
@@ -96,7 +93,6 @@ class FormatSniff extends AbstractArraySniff
      */
     protected function processMultiLineArray($phpcsFile, $stackPtr, $arrayStart, $arrayEnd, $indices) : void
     {
-        $indices = $this->getIndices($phpcsFile, $arrayStart, $arrayEnd);
         $tokens = $phpcsFile->getTokens();
 
         $firstContent = $phpcsFile->findNext(T_WHITESPACE, $arrayStart + 1, null, true);

@@ -7,7 +7,6 @@ namespace WebimpressCodingStandard\Sniffs\Arrays;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractArraySniff;
 use PHP_CodeSniffer\Util\Tokens;
-use WebimpressCodingStandard\Helper\ArrayTrait;
 
 use function in_array;
 use function is_array;
@@ -23,8 +22,6 @@ use const T_VARIABLE;
 
 class DuplicateKeySniff extends AbstractArraySniff
 {
-    use ArrayTrait;
-
     private const ALLOWED_CHARS = '/(?<!\\\\)(?:\\\\{2})*\\\(?:[0-7nrftve]|x[A-Fa-f0-9])/';
 
     /**
@@ -48,7 +45,6 @@ class DuplicateKeySniff extends AbstractArraySniff
      */
     protected function processMultiLineArray($phpcsFile, $stackPtr, $arrayStart, $arrayEnd, $indices) : void
     {
-        $indices = $this->getIndices($phpcsFile, $arrayStart, $arrayEnd);
         $this->processArray($phpcsFile, $indices);
     }
 

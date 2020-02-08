@@ -139,7 +139,7 @@ All notable changes to this project will be documented in this file, in reverse 
   WebimpressCodingStandard.Arrays.DoubleArrow.maxPadding = 50
   WebimpressCodingStandard.Arrays.DoubleArrow.ignoreNewLineArrayArrow = false
 
-  // ignore indent or double arrow when at the beggining of the line
+  // ignore indent or double arrow when at the beginning of the line
   WebimpressCodingStandard.WhiteSpace.ScopeIndent.ignoreNewLineArrayArrow = true
 
   // ignore spacing before double arrow (so we can have more than one space)

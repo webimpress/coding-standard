@@ -30,6 +30,8 @@ use InFnClosure\Param1;
 use InFnClosure\ReturnType1;
 
 use \ArrayObject as AO;
+use Foo\BarBaz;
+use stdClass;
 
 use function Foo\Bar\fooBar;
 
@@ -180,5 +182,21 @@ class TheClass extends ParentClass      implements ArrayAccess, Countable
     public function fnClosure()
     {
         return fn (Param1 &$param1) : ReturnType1 => $param1;
+    }
+
+    /**
+     * @return BarBaz\MyInterface
+     */
+    public function method1(object $a)
+    {
+        return $a;
+    }
+
+    /**
+     * @param stdClass $obj
+     */
+    public function method2($obj)
+    {
+        return $obj;
     }
 }

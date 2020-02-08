@@ -247,27 +247,32 @@ class DisallowFqnSniff implements Sniff
             return $name;
         }
 
-        $name = str_replace(['[', ']'], '', ltrim($name, '\\'));
+        $clear = str_replace(['[', ']'], '', ltrim($name, '\\'));
 
-        if (stripos($name . '\\', $namespace . '\\') === 0) {
-            return substr($name, strlen($namespace) + 1) . $suffix;
+        if (stripos($clear . '\\', $namespace . '\\') === 0) {
+            return substr($clear, strlen($namespace) + 1) . $suffix;
         }
 
-        $alias = $this->getAliasFromName($name);
+        $alias = $this->getAliasFromName($clear);
         foreach ($this->imported['class'] ?? [] as $class) {
-            // If namespace or part of it is already imported
-            if (stripos($name . '\\', $class['fqn'] . '\\') === 0) {
+            if (strtolower($class['fqn']) === strtolower($clear)) {
                 return $class['name'] . $suffix;
+            }
+
+            // If namespace or part of it is already imported
+            if (stripos($clear, $class['fqn'] . '\\') === 0) {
+                $name = substr($clear, strlen($class['fqn']));
+                return $class['name'] . $name . $suffix;
             }
         }
 
         // We can't suggest anything in that case
-        if (! $this->isValidClassName($phpcsFile, $stackPtr, $alias, $name)) {
-            return '\\' . $name . $suffix;
+        if (! $this->isValidClassName($phpcsFile, $stackPtr, $alias, $clear)) {
+            return '\\' . $clear . $suffix;
         }
 
         // We need to import it
-        $toImport += $this->import('class', $name, $alias);
+        $toImport += $this->import('class', $clear, $alias);
 
         return $alias . $suffix;
     }

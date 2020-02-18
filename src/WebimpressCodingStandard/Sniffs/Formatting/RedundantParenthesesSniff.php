@@ -152,7 +152,11 @@ class RedundantParenthesesSniff implements Sniff
         if (! in_array($tokens[$prev]['code'], Tokens::$castTokens, true)) {
             $instanceOf = $phpcsFile->findNext(T_INSTANCEOF, $stackPtr + 1, $closePtr);
             if ($instanceOf !== false) {
-                $op = $phpcsFile->findNext(Tokens::$booleanOperators, $stackPtr + 1, $closePtr);
+                $op = $phpcsFile->findNext(
+                    Tokens::$booleanOperators + [T_INLINE_ELSE => T_INLINE_ELSE],
+                    $stackPtr + 1,
+                    $closePtr
+                );
                 if ($op === false) {
                     $this->error($phpcsFile, $stackPtr, $closePtr, 'SingleInstanceOf');
                     return;

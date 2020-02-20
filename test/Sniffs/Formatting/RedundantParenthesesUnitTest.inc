@@ -192,4 +192,11 @@ class RedundantParentheses
         if (! (new Invoke())()) {}
         if (! (new Invoke())->method()) {}
     }
+
+    public function nestedTernary()
+    {
+        return $a->foo()
+            ? $a->bar()
+            : ($a->baz() instanceof \DateTime ? 1 : 2);
+    }
 }

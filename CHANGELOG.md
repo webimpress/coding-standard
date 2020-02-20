@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#90](https://github.com/webimpress/coding-standard/pull/90) fixes false-positive in `Formatting\RedundantParentheses` sniff when using nested ternary with `instanceof` condition.
 
 ## 1.1.3 - 2020-02-09
 

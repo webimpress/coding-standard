@@ -28,6 +28,7 @@ use MyTrait;
 use B;
 use InFnClosure\Param1;
 use InFnClosure\ReturnType1;
+use MyNamespace\Foo1\Bar1;
 
 use \ArrayObject as AO;
 use Foo\BarBaz;
@@ -198,5 +199,12 @@ class TheClass extends ParentClass      implements ArrayAccess, Countable
     public function method2($obj)
     {
         return $obj;
+    }
+
+    public function method2()
+    {
+        new Bar1();
+        new Bar1\Bar2();
+        new BarBaz\Bar3();
     }
 }

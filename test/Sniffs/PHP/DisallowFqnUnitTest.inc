@@ -172,4 +172,11 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
     {
         return $obj;
     }
+
+    public function method2()
+    {
+        new \MyNamespace\Foo1\Bar1();
+        new \MyNamespace\Foo1\Bar1\Bar2();
+        new \Foo\BarBaz\Bar3();
+    }
 }

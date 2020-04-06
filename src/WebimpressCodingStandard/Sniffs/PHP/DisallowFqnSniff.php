@@ -426,8 +426,11 @@ class DisallowFqnSniff implements Sniff
 
                 $fix = $phpcsFile->addFixableError($error, $stackPtr, 'NamespaceImported', $data);
                 if ($fix) {
+                    $additional = substr($name, strlen($class['fqn']) + 1);
+                    $expected = $class['name'] . ($additional ? '\\' . $additional : '');
+
                     $phpcsFile->fixer->beginChangeset();
-                    $this->fixError($phpcsFile, $stackPtr, $class['name']);
+                    $this->fixError($phpcsFile, $stackPtr, $expected);
                     $phpcsFile->fixer->endChangeset();
                 }
 

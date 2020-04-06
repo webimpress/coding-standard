@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#93](https://github.com/webimpress/coding-standard/pull/93) fixes importing FQCN when namespace is in use in `PHP\DisallowFqn`.
 
 ## 1.1.4 - 2020-02-20
 

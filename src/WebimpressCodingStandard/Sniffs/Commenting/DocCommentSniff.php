@@ -924,7 +924,7 @@ class DocCommentSniff implements Sniff
                 $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $tag, $commentEnd);
                 if (! $string || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
                     $error = 'Content missing for %s tag in PHPDoc comment';
-                    $data = $tokens[$tag]['content'];
+                    $data = [$tokens[$tag]['content']];
                     $phpcsFile->addError($error, $tag, 'EmptyTagContent', $data);
                 }
             }

@@ -21,6 +21,11 @@ matrix:
         - LEGACY_DEPS="phpunit/phpunit"
         - CS_CHECK=true
         - TEST_COVERAGE=true
+        - XMLLINT=true
+      addons:
+        apt:
+          packages:
+            - libxml2-utils
     - php: 7.1
       env:
         - DEPS=latest
@@ -68,6 +73,7 @@ install:
 script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
   - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
+  - if [[ $XMLLINT == 'true' ]]; then test/xmllint.sh ; fi
 
 after_script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry php vendor/bin/php-coveralls -v ; fi

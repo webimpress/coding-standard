@@ -62,6 +62,7 @@ class ImportInternalConstantUnitTest extends AbstractTestCase
             8 => 2,
             21 => 1,
             26 => 1,
+            32 => 1,
         ];
     }
 

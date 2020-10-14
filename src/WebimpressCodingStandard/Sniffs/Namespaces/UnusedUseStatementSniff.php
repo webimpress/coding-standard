@@ -20,6 +20,7 @@ use function trim;
 
 use const T_AS;
 use const T_BITWISE_OR;
+use const T_CATCH;
 use const T_CLOSE_PARENTHESIS;
 use const T_CLOSE_USE_GROUP;
 use const T_COLON;
@@ -484,18 +485,19 @@ class UnusedUseStatementSniff implements Sniff
         }
 
         if ($afterCode === T_BITWISE_OR) {
-            $next = $phpcsFile->findNext(
+            $prev = $phpcsFile->findPrevious(
                 Tokens::$emptyTokens + [
                     T_BITWISE_OR => T_BITWISE_OR,
                     T_STRING => T_STRING,
                     T_NS_SEPARATOR => T_NS_SEPARATOR,
+                    T_OPEN_PARENTHESIS => T_OPEN_PARENTHESIS,
                 ],
                 $afterPtr,
                 null,
                 true
             );
 
-            if ($tokens[$next]['code'] === T_VARIABLE) {
+            if ($tokens[$prev]['code'] === T_CATCH) {
                 return 'class';
             }
         }

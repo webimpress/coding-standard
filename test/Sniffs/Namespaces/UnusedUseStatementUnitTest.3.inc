@@ -103,6 +103,7 @@ namespace Fifth {
     use function file_get_contents;
     use function file_put_contents;
 
+    use const JSON_PRETTY_PRINT;
     use const MyNamespace\CONST_1;
     use const MyNamespace\CONST_2;
 
@@ -134,4 +135,6 @@ namespace Fifth {
             static function () use ($a) : MyType3 {};
         }
     }
+
+    $jsonFlags = JSON_PRETTY_PRINT | $jsonFlags;
 }

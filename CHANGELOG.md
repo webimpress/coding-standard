@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.1.6 - TBD
+## 1.1.6 - 2020-10-14
 
 ### Added
 
@@ -44,7 +44,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#121](https://github.com/webimpress/coding-standard/pull/121) fixes false-positive on importing class constant with global constant names - `PHP\ImportInternalConstant`.
+
+- [#122](https://github.com/webimpress/coding-standard/pull/122) fixes false-positive on unused use statement for constant used with bitwise operators - `Namespaces\UnusedUseStatement`.
 
 ## 1.1.5 - 2020-04-06
 

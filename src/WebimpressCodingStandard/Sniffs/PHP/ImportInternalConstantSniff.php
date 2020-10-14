@@ -14,6 +14,7 @@ use function sort;
 use function sprintf;
 use function strtoupper;
 
+use const T_CONST;
 use const T_DOUBLE_COLON;
 use const T_FUNCTION;
 use const T_NAMESPACE;
@@ -145,6 +146,7 @@ class ImportInternalConstantSniff implements Sniff
             || $tokens[$prev]['code'] === T_STRING
             || $tokens[$prev]['code'] === T_DOUBLE_COLON
             || $tokens[$prev]['code'] === T_OBJECT_OPERATOR
+            || $tokens[$prev]['code'] === T_CONST
         ) {
             return null;
         }

@@ -24,3 +24,10 @@ define('MY_CONST', 'value');
 $myConst = MY_CONST;
 
 $c = \T_VAR;
+
+class A
+{
+    const TRUE = true;
+
+    const SORT_ASC = SORT_ASC;
+}

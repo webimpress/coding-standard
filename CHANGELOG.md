@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#121](https://github.com/webimpress/coding-standard/pull/121) fixes false-positive on importing class constant with global constant names - `PHP\ImportInternalConstant`.
 
 ## 1.1.5 - 2020-04-06
 

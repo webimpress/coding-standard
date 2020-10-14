@@ -6,6 +6,7 @@ use const E_ALL;
 use const E_NOTICE;
 use const E_WARNING;
 use const SEEK_END;
+use const SORT_ASC;
 use const T_VAR;
 use const T_WHITESPACE;
 
@@ -31,3 +32,10 @@ define('MY_CONST', 'value');
 $myConst = MY_CONST;
 
 $c = T_VAR;
+
+class A
+{
+    const TRUE = true;
+
+    const SORT_ASC = SORT_ASC;
+}

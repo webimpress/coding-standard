@@ -12,7 +12,7 @@ class Foo
     use \AnotherTrait    {
         \AnotherTrait::method as methodAlias;
     }
-    use\Foo\ ATrait;
+    use \Foo\ ATrait;
     use \BarTrait    ;
     use XTrait  , YTrait
         ;

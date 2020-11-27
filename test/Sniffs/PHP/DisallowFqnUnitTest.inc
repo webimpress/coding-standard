@@ -111,7 +111,7 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
     {
         return new class () extends \DateTime implements \Countable
         {
-            use\MyTrait {
+            use \MyTrait {
                 A::big insteadof\B;
             }
 

@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#111](https://github.com/webimpress/coding-standard/pull/111) adds support for PHP 8.0.
 
 ### Changed
 

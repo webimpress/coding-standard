@@ -112,37 +112,37 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
         return new class () extends \DateTime implements \Countable
         {
             use \MyTrait {
-                A::big insteadof\B;
+                A::big insteadof \B;
             }
 
             public function checkInstance($a) : bool
             {
-                return $a instanceof\Exception;
+                return $a instanceof \Exception;
             }
 
             public function conditions(string $a) : ?string
             {
                 switch ($a) {
-                    case\DateTime::class:
+                    case \DateTime::class:
                         return\DateTime::class;
-                    case\Countable::class:
+                    case \Countable::class:
                         print\Countable::class;
                         echo\Countable::class;
                         return null;
                     case 'require':
-                        require\DateTime::class.'.php';
-                        require_once\DateTime::class.'.php';
-                        include\DateTime::class.'.php';
-                        include_once\DateTime::class.'.php';
+                        require \DateTime::class.'.php';
+                        require_once \DateTime::class.'.php';
+                        include \DateTime::class.'.php';
+                        include_once \DateTime::class.'.php';
                     case 'new':
-                        new\DateTime();
+                        new \DateTime();
                 }
 
-                if ($a and\DateTime::class) {
-                } elseif ($a or\DateTime::class) {
-                } elseif ($a xor\DateTime::class) {}
+                if ($a and \DateTime::class) {
+                } elseif ($a or \DateTime::class) {
+                } elseif ($a xor \DateTime::class) {}
 
-                throw\RuntimeException::something();
+                throw \RuntimeException::something();
             }
         };
     }

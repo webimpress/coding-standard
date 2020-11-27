@@ -124,10 +124,10 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
             {
                 switch ($a) {
                     case \DateTime::class:
-                        return\DateTime::class;
+                        return \DateTime::class;
                     case \Countable::class:
-                        print\Countable::class;
-                        echo\Countable::class;
+                        print \Countable::class;
+                        echo \Countable::class;
                         return null;
                     case 'require':
                         require \DateTime::class.'.php';

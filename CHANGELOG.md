@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#134](https://github.com/webimpress/coding-standard/pull/134) removes support for PHP 7.1 and 7.2.
 
 ### Fixed
 

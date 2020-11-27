@@ -109,7 +109,7 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
 
     public function missingSpace()
     {
-        return new class () extends\DateTime implements\Countable
+        return new class () extends \DateTime implements \Countable
         {
             use\MyTrait {
                 A::big insteadof\B;

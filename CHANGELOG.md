@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#132](https://github.com/webimpress/coding-standard/pull/132) fixes invalid placement of comments when PHP closing tag is after the comment - `Commenting\Placement`.
 
 ## 1.1.6 - 2020-10-14
 

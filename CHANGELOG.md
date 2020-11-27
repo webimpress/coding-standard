@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#133](https://github.com/webimpress/coding-standard/pull/133) fixes crashing when parent class does not exist in `NamingConventions\Exception` sniff.
 
 ## 1.1.7 - 2020-11-27
 

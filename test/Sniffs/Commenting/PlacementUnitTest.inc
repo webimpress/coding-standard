@@ -13,3 +13,8 @@ $foo = 'bar';
 
 // comment1
 // comment2
+
+?>
+
+<?php // single line ?>
+<?php   /* comment */ ?>

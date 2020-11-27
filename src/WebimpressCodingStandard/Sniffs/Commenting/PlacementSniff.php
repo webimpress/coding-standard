@@ -9,8 +9,11 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
 use function implode;
+use function substr;
 
+use const T_CLOSE_TAG;
 use const T_COMMENT;
+use const T_OPEN_TAG;
 use const T_WHITESPACE;
 
 class PlacementSniff implements Sniff
@@ -34,6 +37,8 @@ class PlacementSniff implements Sniff
             && $tokens[$stackPtr - 1]['code'] !== T_WHITESPACE
             && ($tokens[$stackPtr - 1]['code'] !== T_COMMENT
                 || $tokens[$stackPtr - 1]['line'] === $tokens[$stackPtr]['line'])
+            && ($tokens[$stackPtr - 1]['code'] !== T_OPEN_TAG
+                || substr($tokens[$stackPtr - 1]['content'], -1) !== ' ')
         ) {
             $error = 'Expected at least one space before comment';
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'MissingSpaceBefore');
@@ -44,7 +49,7 @@ class PlacementSniff implements Sniff
         }
 
         $lastInLine = $stackPtr;
-        while ($next = $phpcsFile->findNext(Tokens::$emptyTokens, $lastInLine + 1, null, true)) {
+        while ($next = $phpcsFile->findNext(Tokens::$emptyTokens + [T_CLOSE_TAG], $lastInLine + 1, null, true)) {
             if ($tokens[$next]['line'] === $tokens[$stackPtr]['line']) {
                 $lastInLine = $next;
                 continue;

@@ -14,7 +14,7 @@ class TraitUsageUnitTest extends AbstractTestCase
             9 => 1,
             11 => 1,
             12 => 1,
-            15 => 2,
+            15 => 1,
             17 => 1,
             20 => 2,
             22 => 1,

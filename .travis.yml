@@ -12,34 +12,14 @@ env:
 matrix:
   fast_finish: true
   include:
-    - php: 7.1
+    - php: 7.3
       env:
         - DEPS=lowest
-    - php: 7.1
+    - php: 7.3
       env:
         - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit"
         - CS_CHECK=true
         - TEST_COVERAGE=true
-    - php: 7.1
-      env:
-        - DEPS=latest
-    - php: 7.2
-      env:
-        - DEPS=lowest
-    - php: 7.2
-      env:
-        - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit"
-    - php: 7.2
-      env:
-        - DEPS=latest
-    - php: 7.3
-      env:
-        - DEPS=lowest
-    - php: 7.3
-      env:
-        - DEPS=locked
     - php: 7.3
       env:
         - DEPS=latest
@@ -55,11 +35,11 @@ matrix:
     - php: nightly
       env:
         - DEPS=lowest
-        - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs"
+        - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs=php"
     - php: nightly
       env:
         - DEPS=latest
-        - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs"
+        - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs=php"
 
 before_install:
   - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || true ; fi
@@ -67,7 +47,6 @@ before_install:
 install:
   - composer validate --strict
   - travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
-  - if [[ $LEGACY_DEPS != '' ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $LEGACY_DEPS ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update $COMPOSER_ARGS --prefer-lowest --prefer-stable ; fi
   - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi

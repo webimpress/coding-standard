@@ -9,11 +9,11 @@
             <directory>./test</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
+    <coverage>
+        <include>
             <directory>./src</directory>
-        </whitelist>
-    </filter>
+        </include>
+    </coverage>
     <php>
         <const name="PHP_CODESNIFFER_CBF" value="0"/>
         <const name="PHP_CODESNIFFER_VERBOSITY" value="0"/>

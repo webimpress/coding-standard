@@ -14,7 +14,7 @@ use \AnotherTrait    {
         \AnotherTrait::method as methodAlias;
     }
 use \BarTrait    ;
-use\Foo\ ATrait;
+use \Foo\ ATrait;
 use BazTrait,
         \MyTrait;
 use Hello { sayHello as private myPrivateHello; }

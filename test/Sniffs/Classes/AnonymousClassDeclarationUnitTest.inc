@@ -37,7 +37,7 @@ $instance = new class(
 };
 
 $instance = new class(
-    new class($p1,$p2)implements\Countable {
+    new class($p1,$p2)implements \Countable {
     },
     array(),
     [],
@@ -85,14 +85,14 @@ $instance = new class implements
 {
 };
 
-$instance = new class extends\Foo implements Bar,Baz {
+$instance = new class extends \Foo implements Bar,Baz {
 };
 
 $instance = new class extends
 Foo {
 };
 
-$instance = new class extends\Foo implements \Bar\Boo
+$instance = new class extends \Foo implements \Bar\Boo
     ,Baz {
 };
 

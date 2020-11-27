@@ -52,7 +52,12 @@ class ExceptionSniff implements Sniff
 
         $fqn = $this->getNamespace($phpcsFile, $stackPtr) . '\\' . $string;
 
-        if (! class_exists($fqn)) {
+        try {
+            if (! class_exists($fqn)) {
+                return;
+            }
+        } catch (Throwable $e) {
+            // Unable to load class for some reason - non existing parent class?
             return;
         }
 

@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.2.0 - TBD
+
+### Added
+
+- [#111](https://github.com/webimpress/coding-standard/pull/111) adds support for PHP 8.0.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [#134](https://github.com/webimpress/coding-standard/pull/134) removes support for PHP 7.1 and 7.2.
+
+### Fixed
+
+- [#133](https://github.com/webimpress/coding-standard/pull/133) fixes crashing when parent class does not exist in `NamingConventions\Exception` sniff.
+
 ## 1.1.7 - 2020-11-27
 
 ### Added

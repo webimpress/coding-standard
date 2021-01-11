@@ -62,3 +62,9 @@ $x = [
     // comment
     '8_____' => 'comment breaks alignment group',
 ];
+
+$charMap = [
+    'a' => 'A', 'b' => 'B',
+    // Comment
+    'c' => 'C', 'd' => 'D',
+];

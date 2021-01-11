@@ -161,29 +161,29 @@ class DoubleArrowSniff extends AbstractArraySniff
                 $res[$i] = $current;
                 $min = $length;
                 $current = $length;
-            }
+            } else {
+                if ($k > 0) {
+                    $valueEnd = $phpcsFile->findPrevious(
+                        Tokens::$emptyTokens,
+                        $indices[$k]['index_start'] - 1,
+                        null,
+                        true
+                    );
 
-            if ($k > 0) {
-                $valueEnd = $phpcsFile->findPrevious(
-                    Tokens::$emptyTokens,
-                    $indices[$k]['index_start'] - 1,
-                    null,
-                    true
-                );
+                    if ($valueEnd && $tokens[$valueEnd]['line'] !== $tokens[$indices[$k]['index_start']]['line'] - 1) {
+                        $res[$i] = $current;
+                        $min = $length;
+                        $current = $length;
+                    }
+                }
 
-                if ($valueEnd && $tokens[$valueEnd]['line'] < $tokens[$indices[$k]['index_start']]['line'] - 1) {
-                    $res[$i] = $current;
+                if ($length < $min) {
                     $min = $length;
+                }
+
+                if ($length > $current) {
                     $current = $length;
                 }
-            }
-
-            if ($length < $min) {
-                $min = $length;
-            }
-
-            if ($length > $current) {
-                $current = $length;
             }
 
             if (! isset($chars[$k + 1])) {

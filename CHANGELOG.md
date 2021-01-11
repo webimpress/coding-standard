@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#139](https://github.com/webimpress/coding-standard/pull/139) fixes calculating spaces before double arrow in arrays - `Arrays\DoubleArrow` sniff.
 
 ## 1.2.0 - 2020-11-27
 

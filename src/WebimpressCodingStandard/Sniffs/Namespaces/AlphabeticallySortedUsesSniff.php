@@ -147,7 +147,7 @@ class AlphabeticallySortedUsesSniff implements Sniff
     }
 
     /**
-     * @return string[][]
+     * @phpstan-return array<int, array{ptrUse:int, name:string, ptrEnd:int, string:string, type:string}>
      */
     private function getUseStatements(File $phpcsFile, int $scopePtr) : array
     {
@@ -231,7 +231,7 @@ class AlphabeticallySortedUsesSniff implements Sniff
     }
 
     /**
-     * @param string[][] $uses
+     * @phpstan-param array<int, array{ptrUse:int, name:string, ptrEnd:int, string:string, type:string}> $uses
      */
     private function fixAlphabeticalOrder(File $phpcsFile, array $uses) : void
     {

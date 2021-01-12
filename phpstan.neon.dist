@@ -1,0 +1,18 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+parameters:
+    level: 2
+#    TODO Reach level MAX!
+#    level: 4
+#    level: max
+    inferPrivatePropertyTypeFromConstructor: true
+    paths:
+        - src/
+#        TODO Test tests!
+#        - test/
+    autoload_files:
+        - vendor/squizlabs/php_codesniffer/autoload.php
+    ignoreErrors:
+        # TODO These are way too easy to fix!
+        - '#^Access to an undefined property WebimpressCodingStandard\\\S+\.$#'
+        - '#^Variable \$\S+ might not be defined\.$#'

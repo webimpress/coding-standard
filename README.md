@@ -8,7 +8,7 @@
 1. Install the module via composer by running:
 
    ```bash
-   $ composer require --dev webimpress/coding-standard
+   $ composer require --dev webimpress/coding-standard dealerdirect/phpcodesniffer-composer-installer
    ```
 
 2. Add composer scripts into your `composer.json`:
@@ -24,15 +24,16 @@
 
    ```xml
    <?xml version="1.0"?>
-   <ruleset name="Webimpress Coding Standard"
+   <ruleset name="MyCodingStandard"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="./vendor/squizlabs/php_codesniffer/phpcs.xsd">
-       <rule ref="./vendor/webimpress/coding-standard/ruleset.xml"/>
+
+       <rule ref="WebimpressCodingStandard"/>
 
        <!-- Paths to check -->
-       <file>config</file>
-       <file>src</file>
-       <file>test</file>
+       <file>config/</file>
+       <file>src/</file>
+       <file>test/</file>
    </ruleset>
    ```
 

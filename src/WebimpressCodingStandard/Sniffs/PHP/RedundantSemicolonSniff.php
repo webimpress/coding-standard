@@ -17,6 +17,7 @@ use const T_CLOSURE;
 use const T_COLON;
 use const T_FOR;
 use const T_GOTO_LABEL;
+use const T_MATCH;
 use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_TAG;
 use const T_SEMICOLON;
@@ -70,7 +71,7 @@ class RedundantSemicolonSniff implements Sniff
         }
 
         $scopeCondition = $tokens[$prev]['scope_condition'];
-        if (in_array($tokens[$scopeCondition]['code'], [T_ANON_CLASS, T_CLOSURE], true)) {
+        if (in_array($tokens[$scopeCondition]['code'], [T_ANON_CLASS, T_CLOSURE, T_MATCH], true)) {
             return;
         }
 

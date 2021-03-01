@@ -181,3 +181,8 @@ switch (true) {
         echo 'default';
         break;
 }
+
+match ($x) {
+    default => 3,
+    1 => 2,
+};

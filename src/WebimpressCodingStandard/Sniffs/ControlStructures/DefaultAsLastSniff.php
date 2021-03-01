@@ -31,6 +31,12 @@ class DefaultAsLastSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $default = $tokens[$stackPtr];
         $switchPtr = key(array_reverse($default['conditions'], true));
+
+        // skip in case of default statement in PHP 8 match expression
+        if ($switchPtr === null) {
+            return;
+        }
+
         $closer = $tokens[$switchPtr]['scope_closer'];
 
         $from = $stackPtr;

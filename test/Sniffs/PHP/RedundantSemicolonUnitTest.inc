@@ -35,3 +35,8 @@ switch (true) {
 }
 
 label:;
+
+match (true) {
+    1 => 2,
+    default => 0,
+};

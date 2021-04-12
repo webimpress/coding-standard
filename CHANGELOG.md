@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#143](https://github.com/webimpress/coding-standard/pull/143) fixes support for [PHP 8 `match`](https://www.php.net/match) expression.
 
 ## 1.2.1 - 2021-01-11
 

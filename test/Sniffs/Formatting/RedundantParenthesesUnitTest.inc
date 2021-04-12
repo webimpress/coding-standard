@@ -199,4 +199,12 @@ class RedundantParentheses
             ? $a->bar()
             : ($a->baz() instanceof \DateTime ? 1 : 2);
     }
+
+    public function php8match($x)
+    {
+        return match ($x) {
+            1 => 2,
+            default => 0,
+        };
+    }
 }

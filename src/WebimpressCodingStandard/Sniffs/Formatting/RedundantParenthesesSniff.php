@@ -38,6 +38,7 @@ use const T_INLINE_THEN;
 use const T_INSTANCEOF;
 use const T_ISSET;
 use const T_LIST;
+use const T_MATCH;
 use const T_OBJECT_OPERATOR;
 use const T_OPEN_PARENTHESIS;
 use const T_OPEN_TAG;
@@ -69,6 +70,7 @@ class RedundantParenthesesSniff implements Sniff
         T_ISSET,
         T_LIST,
         T_SELF,
+        T_MATCH,
         T_STATIC,
         T_STRING,
         T_UNSET,

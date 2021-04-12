@@ -18,3 +18,8 @@ switch (true) {
     case 4:
         break;
 }
+
+match ($x) {
+    default => 0,
+    1 => 2,
+};

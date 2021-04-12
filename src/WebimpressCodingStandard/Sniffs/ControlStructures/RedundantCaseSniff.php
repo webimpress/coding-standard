@@ -41,6 +41,14 @@ class RedundantCaseSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
+        $default = $tokens[$stackPtr];
+        $switchPtr = key(array_reverse($default['conditions'], true));
+
+        // in case of PHP 8 match expression
+        if ($switchPtr === null) {
+            return $stackPtr + 1;
+        }
+
         if ($tokens[$stackPtr]['code'] === T_CASE) {
             $next = $stackPtr;
 

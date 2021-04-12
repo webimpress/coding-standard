@@ -1,6 +1,7 @@
 # Webimpress Coding Standard
 
-[![Build Status](https://travis-ci.com/webimpress/coding-standard.svg?branch=master)](https://travis-ci.com/webimpress/coding-standard)
+[![Unit Tests](https://github.com/webimpress/coding-standard/actions/workflows/phpunit.yml/badge.svg)](https://github.com/webimpress/coding-standard/actions/workflows/phpunit.yml)
+[![Coding Standards](https://github.com/webimpress/coding-standard/actions/workflows/phpcs.yml/badge.svg)](https://github.com/webimpress/coding-standard/actions/workflows/phpcs.yml)
 [![Coverage Status](https://coveralls.io/repos/github/webimpress/coding-standard/badge.svg?branch=master)](https://coveralls.io/github/webimpress/coding-standard?branch=master)
 
 ## Installation

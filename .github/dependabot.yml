@@ -4,14 +4,4 @@ updates:
   directory: "/"
   schedule:
     interval: daily
-  open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: squizlabs/php_codesniffer
-    versions:
-    - 3.6.0
-  - dependency-name: phpunit/phpunit
-    versions:
-    - 9.5.1
-    - 9.5.2
-    - 9.5.3
-    - 9.5.4
+  versioning-strategy: increase

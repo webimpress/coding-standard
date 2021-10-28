@@ -68,3 +68,12 @@ $charMap = [
     // Comment
     'c' => 'C', 'd' => 'D',
 ];
+
+$array = [
+    MyClass::class => AliasClass::class,
+
+    Foo::class
+    => Bar::class,
+
+    A::class => Baz::class,
+];

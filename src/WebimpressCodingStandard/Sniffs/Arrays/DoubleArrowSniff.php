@@ -170,7 +170,10 @@ class DoubleArrowSniff extends AbstractArraySniff
                         true
                     );
 
-                    if ($valueEnd && $tokens[$valueEnd]['line'] !== $tokens[$indices[$k]['index_start']]['line'] - 1) {
+                    if (! isset($res[$i])
+                        && $valueEnd
+                        && $tokens[$valueEnd]['line'] !== $tokens[$indices[$k]['index_start']]['line'] - 1
+                    ) {
                         $res[$i] = $current;
                         $min = $length;
                         $current = $length;

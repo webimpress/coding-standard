@@ -21,7 +21,7 @@
    }
    ```
 
-3. Create file `phpcs.xml` on base path of your repository with content:
+3. Create file `phpcs.xml` in base path of your repository with content:
 
    ```xml
    <?xml version="1.0"?>

@@ -35,6 +35,10 @@ class ReferenceSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
+        if (! $phpcsFile->isReference($stackPtr)) {
+            return;
+        }
+
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
         if ($tokens[$next]['code'] === T_NEW) {
             $error = 'Reference operator is redundant before new keyword (objects are always passed by reference)';

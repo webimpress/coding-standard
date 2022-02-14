@@ -18,3 +18,13 @@ $a = &new \DateTime();
 $b = & new \DateTime();
 $c =& new \DateTime();
 $d =&new \DateTime();
+
+class ReferenceClass
+{
+    public int $flag = 1;
+
+    public function isFlagged()
+    {
+        return (bool) ($this->flag & 4);
+    }
+}

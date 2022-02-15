@@ -11,11 +11,9 @@ use PHP_CodeSniffer\Util\Tokens;
 use function in_array;
 
 use const T_BITWISE_AND;
-use const T_COMMA;
 use const T_NEW;
 use const T_OPEN_PARENTHESIS;
 use const T_OPEN_SHORT_ARRAY;
-use const T_STRING;
 use const T_WHITESPACE;
 
 class ReferenceSniff implements Sniff
@@ -35,6 +33,10 @@ class ReferenceSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
+        if (! $phpcsFile->isReference($stackPtr)) {
+            return;
+        }
+
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
         if ($tokens[$next]['code'] === T_NEW) {
             $error = 'Reference operator is redundant before new keyword (objects are always passed by reference)';
@@ -48,16 +50,6 @@ class ReferenceSniff implements Sniff
         }
 
         $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $stackPtr - 1, null, true);
-
-        $tokenCodes = Tokens::$assignmentTokens + [
-            T_COMMA => T_COMMA,
-            T_OPEN_PARENTHESIS => T_OPEN_PARENTHESIS,
-            T_OPEN_SHORT_ARRAY => T_OPEN_SHORT_ARRAY,
-            T_STRING => T_STRING,
-        ];
-        if (! in_array($tokens[$prev]['code'], $tokenCodes, true)) {
-            return;
-        }
 
         // One space before &
         if ($tokens[$prev]['line'] === $tokens[$stackPtr]['line']

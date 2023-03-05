@@ -25,6 +25,7 @@ use function in_array;
 use function ltrim;
 use function preg_grep;
 use function preg_replace;
+use function preg_match;
 use function preg_split;
 use function sprintf;
 use function str_replace;
@@ -974,7 +975,7 @@ class ReturnTypeSniff implements Sniff
                 return 'new';
 
             case T_NULL:
-                if (!$this->hasCorrectTypeRegExp(['/null/', '/mixed/', '/\?\w+/i'])) {
+                if (! $this->hasCorrectTypeRegExp(['/null/', '/mixed/', '/\?\w+/i'])) {
                     $error = 'Function return type is not nullable, but function returns null here';
                     $phpcsFile->addError($error, $ptr, 'ReturnNull');
                 }

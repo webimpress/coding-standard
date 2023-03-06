@@ -25,7 +25,6 @@ use function in_array;
 use function ltrim;
 use function preg_grep;
 use function preg_replace;
-use function preg_match;
 use function preg_split;
 use function sprintf;
 use function str_replace;
@@ -935,14 +934,14 @@ class ReturnTypeSniff implements Sniff
                 return 'bool';
 
             case T_FALSE:
-                if (! $this->hasCorrectTypeRegExp(['/bool/', '/boolean/', '/false/', '/mixed/'])) {
+                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean', 'false', 'mixed'])) {
                     $error = 'Function return type is not bool, but function returns boolean false here';
                     $phpcsFile->addError($error, $ptr, 'ReturnFalse');
                 }
                 return 'false';
 
             case T_TRUE:
-                if (! $this->hasCorrectTypeRegExp(['/bool/', '/boolean/', '/true/', '/mixed/'])) {
+                if (! $this->hasCorrectType(['bool', '?bool'], ['bool', 'boolean', 'true', 'mixed'])) {
                     $error = 'Function return type is not bool, but function returns boolean true here';
                     $phpcsFile->addError($error, $ptr, 'ReturnTrue');
                 }
@@ -975,7 +974,11 @@ class ReturnTypeSniff implements Sniff
                 return 'new';
 
             case T_NULL:
-                if (! $this->hasCorrectTypeRegExp(['/null/', '/mixed/', '/\?\w+/i'])) {
+                if (! $this->hasCorrectType([], ['null'])
+                    || ($this->returnType
+                        && $this->returnTypeIsValid
+                        && strpos($this->returnTypeValue, '?') !== 0)
+                ) {
                     $error = 'Function return type is not nullable, but function returns null here';
                     $phpcsFile->addError($error, $ptr, 'ReturnNull');
                 }
@@ -999,31 +1002,24 @@ class ReturnTypeSniff implements Sniff
 
     /**
      * @param string[] $expectedType
-     */
-    private function hasCorrectTypeRegExp(array $expectedType) : bool
-    {
-        foreach ($expectedType as $value) {
-            if ($this->returnType && $this->returnTypeIsValid && preg_match($value, $this->returnTypeValue)) {
-                return true;
-            }
-            if ($this->returnDoc && $this->returnDocIsValid && preg_match($value, $this->returnDocValue)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string[] $expectedType
      * @param string[] $expectedDoc
      */
     private function hasCorrectType(array $expectedType, array $expectedDoc) : bool
     {
+        $returnTypeValues = $expectedType && $this->returnType && $this->returnTypeIsValid
+            ? explode('|', strtolower(strtr($this->returnTypeValue, [
+                '(' => '',
+                ')' => '',
+                '&' => '|',
+            ])))
+            : [];
+
         if ($expectedType
             && $this->returnType
             && $this->returnTypeIsValid
-            && ! in_array(strtolower($this->returnTypeValue), $expectedType, true)
+            && ! array_filter($returnTypeValues, static function (string $v) use ($expectedType) {
+                return in_array($v, $expectedType, true);
+            })
         ) {
             return false;
         }

@@ -397,4 +397,13 @@ abstract class FunctionCommentReturn
 
         return $a;
     }
+
+    public function insert(array $data): bool|mysqli_result
+    {
+        if (empty($data)) {
+            return false;
+        }
+
+        return new mysqli_result;
+    }
 }

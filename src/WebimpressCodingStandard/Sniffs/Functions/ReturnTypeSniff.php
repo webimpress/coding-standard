@@ -1006,10 +1006,20 @@ class ReturnTypeSniff implements Sniff
      */
     private function hasCorrectType(array $expectedType, array $expectedDoc) : bool
     {
+        $returnTypeValues = $expectedType && $this->returnType && $this->returnTypeIsValid
+            ? explode('|', strtolower(strtr($this->returnTypeValue, [
+                '(' => '',
+                ')' => '',
+                '&' => '|',
+            ])))
+            : [];
+
         if ($expectedType
             && $this->returnType
             && $this->returnTypeIsValid
-            && ! in_array(strtolower($this->returnTypeValue), $expectedType, true)
+            && ! array_filter($returnTypeValues, static function (string $v) use ($expectedType) {
+                return in_array($v, $expectedType, true);
+            })
         ) {
             return false;
         }

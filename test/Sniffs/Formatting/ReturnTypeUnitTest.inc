@@ -98,3 +98,12 @@ class NonFixable
 }
 
 static fn (string $a):int => $a;
+
+abstract class PHP82 {
+    abstract public function union(): Bool|String;
+    abstract public function intersection(): Iterator&Countable;
+    abstract public function boolFalse(): False;
+    abstract public function boolTrue(): TRUE;
+    abstract public function null(): NULL;
+    abstract public function parenthesis(): (Iterator&Countable)|Object;
+}

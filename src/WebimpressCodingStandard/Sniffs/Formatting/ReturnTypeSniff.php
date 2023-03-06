@@ -11,22 +11,29 @@ use PHP_CodeSniffer\Util\Tokens;
 use function in_array;
 use function str_repeat;
 use function strtolower;
-use function trim;
 
+use const T_BITWISE_AND;
+use const T_BITWISE_OR;
 use const T_CALLABLE;
 use const T_CLOSE_PARENTHESIS;
 use const T_CLOSURE;
 use const T_COLON;
+use const T_FALSE;
 use const T_FN;
 use const T_FN_ARROW;
 use const T_FUNCTION;
 use const T_NS_SEPARATOR;
+use const T_NULL;
 use const T_NULLABLE;
 use const T_OPEN_CURLY_BRACKET;
+use const T_OPEN_PARENTHESIS;
 use const T_PARENT;
 use const T_SELF;
 use const T_SEMICOLON;
 use const T_STRING;
+use const T_TRUE;
+use const T_TYPE_INTERSECTION;
+use const T_TYPE_UNION;
 use const T_USE;
 use const T_WHITESPACE;
 
@@ -57,6 +64,9 @@ class ReturnTypeSniff implements Sniff
         'parent',
         'self',
         'bool',
+        'false',
+        'true',
+        'null',
     ];
 
     /**
@@ -91,14 +101,23 @@ class ReturnTypeSniff implements Sniff
         // Check if between the closing parenthesis and return type are only allowed tokens.
         if ($invalid = $phpcsFile->findNext(
             [
+                T_BITWISE_AND,
+                T_BITWISE_OR,
                 T_CALLABLE,
                 T_COLON,
+                T_FALSE,
                 T_NS_SEPARATOR,
+                T_NULL,
                 T_NULLABLE,
                 T_SELF,
                 T_STRING,
+                T_TRUE,
+                T_TYPE_INTERSECTION,
+                T_TYPE_UNION,
                 T_PARENT,
                 T_WHITESPACE,
+                T_OPEN_PARENTHESIS,
+                T_CLOSE_PARENTHESIS,
             ],
             $parenthesisCloser + 1,
             $eol,
@@ -130,20 +149,35 @@ class ReturnTypeSniff implements Sniff
             return;
         }
 
-        $returnType = trim($phpcsFile->getTokensAsString($first, $last - $first + 1));
+        $notTypes = [
+            T_OPEN_PARENTHESIS,
+            T_CLOSE_PARENTHESIS,
+            T_BITWISE_AND,
+            T_BITWISE_OR,
+            T_TYPE_INTERSECTION,
+            T_TYPE_UNION,
+            T_NS_SEPARATOR,
+        ];
 
-        if (in_array(strtolower($returnType), $this->simpleReturnTypes, true)
-            && ! in_array($returnType, $this->simpleReturnTypes, true)
-        ) {
-            $error = 'Simple return type must be lowercase. Found "%s", expected "%s"';
-            $data = [
-                $returnType,
-                strtolower($returnType),
-            ];
-            $fix = $phpcsFile->addFixableError($error, $first, 'LowerCaseSimpleType', $data);
+        $search = $first;
+        while ($returnTypeToken = $phpcsFile->findNext(Tokens::$emptyTokens + $notTypes, $search, $last + 1, true)) {
+            $returnType = $phpcsFile->getTokensAsString($returnTypeToken, 1);
 
-            if ($fix) {
-                $phpcsFile->fixer->replaceToken($first, strtolower($returnType));
+            $search = $returnTypeToken + 1;
+
+            if (in_array(strtolower($returnType), $this->simpleReturnTypes, true)
+                && ! in_array($returnType, $this->simpleReturnTypes, true)
+            ) {
+                $error = 'Simple return type must be lowercase. Found "%s", expected "%s"';
+                $data = [
+                    $returnType,
+                    strtolower($returnType),
+                ];
+                $fix = $phpcsFile->addFixableError($error, $first, 'LowerCaseSimpleType', $data);
+
+                if ($fix) {
+                    $phpcsFile->fixer->replaceToken($returnTypeToken, strtolower($returnType));
+                }
             }
         }
     }

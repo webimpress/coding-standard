@@ -36,7 +36,7 @@ class IntegrationTest extends TestCase
         self::assertFileEquals($file . '.fixed', $tmpname);
     }
 
-    public function files() : Generator
+    public static function files() : Generator
     {
         $files = glob(__DIR__ . '/Integration/*.php');
 

@@ -10,7 +10,7 @@ jobs:
       max-parallel: 15
       matrix:
         dependencies: ['lowest', 'latest']
-        php-versions: ['7.3', '7.4', '8.0', '8.1']
+        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2']
     name: PHP ${{ matrix.php-versions }}, ${{ matrix.dependencies }} dependencies
     steps:
       - name: Checkout

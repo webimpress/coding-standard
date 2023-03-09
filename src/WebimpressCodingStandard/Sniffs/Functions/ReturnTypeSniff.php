@@ -974,10 +974,10 @@ class ReturnTypeSniff implements Sniff
                 return 'new';
 
             case T_NULL:
-                if (! $this->hasCorrectType([], ['null'])
-                    || ($this->returnType
-                        && $this->returnTypeIsValid
-                        && strpos($this->returnTypeValue, '?') !== 0)
+                if (! $this->hasCorrectType(['null', 'mixed'], ['null', 'mixed'])
+                    && (! $this->returnType
+                        || ($this->returnTypeIsValid
+                            && strpos($this->returnTypeValue, '?') !== 0))
                 ) {
                     $error = 'Function return type is not nullable, but function returns null here';
                     $phpcsFile->addError($error, $ptr, 'ReturnNull');

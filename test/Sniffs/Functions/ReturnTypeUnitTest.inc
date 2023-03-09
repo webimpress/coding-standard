@@ -406,4 +406,17 @@ abstract class FunctionCommentReturn
 
         return new mysqli_result;
     }
+
+    public function getStr(string $key): mixed
+    {
+        if (is_string($key)) {
+            return $key;
+        }
+
+        if (is_array($key)) {
+            return json_encode($key);
+        }
+
+        return null;
+    }
 }

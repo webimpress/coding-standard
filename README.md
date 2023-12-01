@@ -27,7 +27,7 @@
    <?xml version="1.0"?>
    <ruleset name="Webimpress Coding Standard"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="./vendor/squizlabs/php_codesniffer/phpcs.xsd">
+            xsi:noNamespaceSchemaLocation="./vendor/phpcsstandards/php_codesniffer/phpcs.xsd">
        <rule ref="./vendor/webimpress/coding-standard/ruleset.xml"/>
 
        <!-- Paths to check -->

@@ -12,7 +12,7 @@
     ],
     "require": {
         "php": "^7.3 || ^8.0",
-        "phpcsstandards/php_codesniffer": "dev-feature/pear-psr2-psr12-functioncallsignature-check-anon-classes as 4.0.0"
+        "phpcsstandards/php_codesniffer": "dev-master as 3.8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6.13"

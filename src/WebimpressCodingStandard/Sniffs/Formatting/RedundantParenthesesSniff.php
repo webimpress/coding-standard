@@ -143,6 +143,11 @@ class RedundantParenthesesSniff implements Sniff
             return;
         }
 
+        // Skip when open parenthesis after closing parenthesis
+        if ($tokens[$next]['code'] === T_OPEN_PARENTHESIS) {
+            return;
+        }
+
         $firstInside = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, $closePtr, true);
         $lastInside = $phpcsFile->findPrevious(Tokens::$emptyTokens, $closePtr - 1, $stackPtr + 1, true);
 
@@ -173,11 +178,6 @@ class RedundantParenthesesSniff implements Sniff
 
         // Skip when operator after the parenthesis
         if (in_array($tokens[$next]['code'], Tokens::$operators + Tokens::$booleanOperators, true)) {
-            return;
-        }
-
-        // Skip when open parenthesis after closing parenthesis
-        if ($tokens[$next]['code'] === T_OPEN_PARENTHESIS) {
             return;
         }
 

@@ -207,4 +207,12 @@ class RedundantParentheses
             default => 0,
         };
     }
+
+    public function closureWithInstanceOf(): void
+    {
+        (static function (): void {
+            $container = require 'config/container.php';
+            assert($container instanceof ContainerInterface);
+        })();
+    }
 }

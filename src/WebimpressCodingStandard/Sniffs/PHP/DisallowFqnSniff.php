@@ -65,13 +65,19 @@ use const T_NAMESPACE;
 use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_NULLABLE;
+use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_PARENTHESIS;
 use const T_PRINT;
 use const T_REQUIRE;
 use const T_REQUIRE_ONCE;
 use const T_RETURN;
+use const T_SEMICOLON;
 use const T_STRING;
 use const T_THROW;
+use const T_TYPE_CLOSE_PARENTHESIS;
+use const T_TYPE_INTERSECTION;
+use const T_TYPE_OPEN_PARENTHESIS;
+use const T_TYPE_UNION;
 use const T_USE;
 use const T_VARIABLE;
 
@@ -332,10 +338,23 @@ class DisallowFqnSniff implements Sniff
         ];
 
         if (in_array($tokens[$prev]['code'], $prevClassTokens, true)
-            || in_array($tokens[$next]['code'], [T_VARIABLE, T_ELLIPSIS, T_DOUBLE_COLON], true)
+            || in_array($tokens[$next]['code'], [
+                T_VARIABLE,
+                T_ELLIPSIS,
+                T_DOUBLE_COLON,
+                // DNF
+                T_TYPE_UNION,
+                T_TYPE_INTERSECTION,
+                T_TYPE_CLOSE_PARENTHESIS,
+                T_OPEN_CURLY_BRACKET,
+            ], true)
         ) {
             $type = 'class';
-        } elseif ($tokens[$next]['code'] === T_OPEN_PARENTHESIS) {
+        } elseif ($tokens[$next]['code'] === T_OPEN_PARENTHESIS
+            // The below condition is temporary due to upstream issue
+            // @see https://github.com/PHPCSStandards/PHP_CodeSniffer/issues/630
+            || $tokens[$next]['code'] === T_TYPE_OPEN_PARENTHESIS
+        ) {
             $type = 'function';
         } else {
             $type = 'const';
@@ -371,6 +390,12 @@ class DisallowFqnSniff implements Sniff
                 );
 
                 if ($tokens[$before]['code'] === T_IMPLEMENTS) {
+                    $type = 'class';
+                }
+            } elseif ($tokens[$next]['code'] === T_SEMICOLON) {
+                $before = $phpcsFile->findPrevious(Tokens::$emptyTokens, $prev, null, true);
+
+                if (in_array($tokens[$before]['code'], [T_TYPE_UNION, T_TYPE_INTERSECTION], true)) {
                     $type = 'class';
                 }
             }

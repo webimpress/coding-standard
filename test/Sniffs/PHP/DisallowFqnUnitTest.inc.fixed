@@ -6,7 +6,7 @@ use ArrayAccess;
 use Countable;
 use DateTime;
 use InClosure\Param;
-use const InClosure\ReturnType;
+use InClosure\ReturnType;
 use const InClosure\CONST_IN_CLOSURE;
 use function InClosure\functionInClosure;
 use RuntimeException;
@@ -29,6 +29,21 @@ use B;
 use InFnClosure\Param1;
 use InFnClosure\ReturnType1;
 use MyNamespace\Foo1\Bar1;
+use DNF\Type1;
+use DNF\Type2;
+use DNF\Type3;
+use DNF\Type4;
+use DNF\Type5;
+use DNF\Type6;
+use DNF\Type7;
+use DNF\Type8;
+use DNF\Type9;
+use DNF\Type10;
+use DNF\Type11;
+use DNF\Type12;
+use DNF\Type13;
+use DNF\Type14;
+use DNF\Type15;
 
 use \ArrayObject as AO;
 use Foo\BarBaz;
@@ -207,4 +222,17 @@ class TheClass extends ParentClass      implements ArrayAccess, Countable
         new Bar1\Bar2();
         new BarBaz\Bar3();
     }
+
+    public function method3(): Type1|(Type2&Type3)
+    {
+    }
+
+    public function method4(): (Type4|Type5)&Type6
+    {
+    }
+
+    abstract public function method5(): (Type7|Type8)&Type9;
+
+    private Type10&(Type11|Type12) $prop1;
+    private (Type13&Type14)|Type15 $prop2;
 }

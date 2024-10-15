@@ -11,6 +11,7 @@ use PHP_CodeSniffer\Util\Tokens;
 use function in_array;
 
 use const T_AS;
+use const T_DECLARE;
 use const T_FN_ARROW;
 use const T_INSTANCEOF;
 use const T_INSTEADOF;
@@ -40,15 +41,29 @@ class OperatorAndKeywordSpacingSniff extends OperatorSpacingSniff
         $tokens[] = T_INSTEADOF;
         $tokens[] = T_FN_ARROW;
 
+        // Also register the contexts we want to specifically skip over.
+        $tokens[] = T_DECLARE;
+
         return $tokens;
     }
 
     /**
      * @param int $stackPtr
+     * @return null|int
      */
-    public function process(File $phpcsFile, $stackPtr) : void
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
+
+        // Skip over declare statements as those should be handled by different sniffs.
+        if ($tokens[$stackPtr]['code'] === T_DECLARE) {
+            if (isset($tokens[$stackPtr]['parenthesis_closer']) === false) {
+                // Parse error / live coding.
+                return $phpcsFile->numTokens;
+            }
+
+            return $tokens[$stackPtr]['parenthesis_closer'];
+        }
 
         $originalValue = $this->ignoreNewlines;
         if (in_array($tokens[$stackPtr]['code'], $this->doNotIgnoreNewLineForTokens, true)) {

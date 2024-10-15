@@ -10,18 +10,22 @@ class OperatorAndKeywordSpacingUnitTest extends AbstractTestCase
 {
     protected function getErrorList(string $testFile = '') : array
     {
+        if ($testFile === 'OperatorAndKeywordSpacingUnitTest.1.inc') {
+            return [];
+        }
+
         return [
-            4 => 1,
             6 => 1,
-            11 => 2,
-            12 => 2,
-            17 => 2,
-            21 => 1,
+            8 => 1,
+            13 => 2,
+            14 => 2,
+            19 => 2,
             23 => 1,
-            27 => 1,
-            31 => 1,
-            35 => 1,
-            39 => 2,
+            25 => 1,
+            29 => 1,
+            33 => 1,
+            37 => 1,
+            41 => 2,
         ];
     }
 

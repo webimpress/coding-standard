@@ -26,13 +26,14 @@ use const T_NS_SEPARATOR;
 use const T_NULL;
 use const T_NULLABLE;
 use const T_OPEN_CURLY_BRACKET;
-use const T_OPEN_PARENTHESIS;
 use const T_PARENT;
 use const T_SELF;
 use const T_SEMICOLON;
 use const T_STRING;
 use const T_TRUE;
+use const T_TYPE_CLOSE_PARENTHESIS;
 use const T_TYPE_INTERSECTION;
+use const T_TYPE_OPEN_PARENTHESIS;
 use const T_TYPE_UNION;
 use const T_USE;
 use const T_WHITESPACE;
@@ -116,8 +117,8 @@ class ReturnTypeSniff implements Sniff
                 T_TYPE_UNION,
                 T_PARENT,
                 T_WHITESPACE,
-                T_OPEN_PARENTHESIS,
-                T_CLOSE_PARENTHESIS,
+                T_TYPE_OPEN_PARENTHESIS,
+                T_TYPE_CLOSE_PARENTHESIS,
             ],
             $parenthesisCloser + 1,
             $eol,
@@ -150,8 +151,8 @@ class ReturnTypeSniff implements Sniff
         }
 
         $notTypes = [
-            T_OPEN_PARENTHESIS,
-            T_CLOSE_PARENTHESIS,
+            T_TYPE_OPEN_PARENTHESIS,
+            T_TYPE_CLOSE_PARENTHESIS,
             T_BITWISE_AND,
             T_BITWISE_OR,
             T_TYPE_INTERSECTION,

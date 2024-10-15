@@ -11,6 +11,7 @@ use PHP_CodeSniffer\Util\Tokens;
 use function in_array;
 
 use const T_AS;
+use const T_DECLARE;
 use const T_FN_ARROW;
 use const T_INSTANCEOF;
 use const T_INSTEADOF;
@@ -48,6 +49,7 @@ class OperatorAndKeywordSpacingSniff extends OperatorSpacingSniff
 
     /**
      * @param int $stackPtr
+     * @return null|int
      */
     public function process(File $phpcsFile, $stackPtr)
     {
@@ -62,7 +64,6 @@ class OperatorAndKeywordSpacingSniff extends OperatorSpacingSniff
 
             return $tokens[$stackPtr]['parenthesis_closer'];
         }
-
 
         $originalValue = $this->ignoreNewlines;
         if (in_array($tokens[$stackPtr]['code'], $this->doNotIgnoreNewLineForTokens, true)) {

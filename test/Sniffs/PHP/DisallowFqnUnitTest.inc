@@ -179,4 +179,17 @@ class TheClass extends \ MyNamespace \ Hello \ ParentClass implements \ArrayAcce
         new \MyNamespace\Foo1\Bar1\Bar2();
         new \Foo\BarBaz\Bar3();
     }
+
+    public function method3(): \DNF\Type1|(\DNF\Type2&\DNF\Type3)
+    {
+    }
+
+    public function method4(): (\DNF\Type4|\DNF\Type5)&\DNF\Type6
+    {
+    }
+
+    abstract public function method5(): (\DNF\Type7|\DNF\Type8)&\DNF\Type9;
+
+    private \DNF\Type10&(\DNF\Type11|\DNF\Type12) $prop1;
+    private (\DNF\Type13&\DNF\Type14)|\DNF\Type15 $prop2;
 }

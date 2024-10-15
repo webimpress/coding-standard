@@ -38,40 +38,33 @@ use const DIRECTORY_SEPARATOR;
 use const GLOB_NOSORT;
 use const T_BITWISE_AND;
 use const T_BITWISE_OR;
-use const T_CASE;
 use const T_CATCH;
 use const T_CLOSE_PARENTHESIS;
 use const T_CLOSURE;
 use const T_COLON;
-use const T_COMMA;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
 use const T_DOUBLE_COLON;
-use const T_ECHO;
 use const T_ELLIPSIS;
 use const T_EXTENDS;
 use const T_FN;
 use const T_FUNCTION;
 use const T_IMPLEMENTS;
-use const T_INCLUDE;
-use const T_INCLUDE_ONCE;
 use const T_INSTANCEOF;
 use const T_INSTEADOF;
-use const T_LOGICAL_AND;
-use const T_LOGICAL_OR;
-use const T_LOGICAL_XOR;
 use const T_NAMESPACE;
 use const T_NEW;
 use const T_NS_SEPARATOR;
 use const T_NULLABLE;
+use const T_OPEN_CURLY_BRACKET;
 use const T_OPEN_PARENTHESIS;
-use const T_PRINT;
-use const T_REQUIRE;
-use const T_REQUIRE_ONCE;
-use const T_RETURN;
+use const T_SEMICOLON;
 use const T_STRING;
-use const T_THROW;
+use const T_TYPE_CLOSE_PARENTHESIS;
+use const T_TYPE_INTERSECTION;
+use const T_TYPE_OPEN_PARENTHESIS;
+use const T_TYPE_UNION;
 use const T_USE;
 use const T_VARIABLE;
 
@@ -332,10 +325,23 @@ class DisallowFqnSniff implements Sniff
         ];
 
         if (in_array($tokens[$prev]['code'], $prevClassTokens, true)
-            || in_array($tokens[$next]['code'], [T_VARIABLE, T_ELLIPSIS, T_DOUBLE_COLON], true)
+            || in_array($tokens[$next]['code'], [
+                T_VARIABLE,
+                T_ELLIPSIS,
+                T_DOUBLE_COLON,
+                // DNF
+                T_TYPE_UNION,
+                T_TYPE_INTERSECTION,
+                T_TYPE_CLOSE_PARENTHESIS,
+                T_OPEN_CURLY_BRACKET,
+            ], true)
         ) {
             $type = 'class';
-        } elseif ($tokens[$next]['code'] === T_OPEN_PARENTHESIS) {
+        } elseif ($tokens[$next]['code'] === T_OPEN_PARENTHESIS
+            // The below condition is temporary due to upstream issue
+            // @see https://github.com/PHPCSStandards/PHP_CodeSniffer/issues/630
+            || $tokens[$next]['code'] === T_TYPE_OPEN_PARENTHESIS
+        ) {
             $type = 'function';
         } else {
             $type = 'const';
@@ -362,15 +368,10 @@ class DisallowFqnSniff implements Sniff
                 ) {
                     $type = 'class';
                 }
-            } elseif ($tokens[$prev]['code'] === T_COMMA) {
-                $before = $phpcsFile->findPrevious(
-                    Tokens::$emptyTokens + [T_STRING => T_STRING, T_NS_SEPARATOR => T_NS_SEPARATOR],
-                    $prev - 1,
-                    null,
-                    true
-                );
+            } elseif ($tokens[$next]['code'] === T_SEMICOLON) {
+                $before = $phpcsFile->findPrevious(Tokens::$emptyTokens, $prev, null, true);
 
-                if ($tokens[$before]['code'] === T_IMPLEMENTS) {
+                if (in_array($tokens[$before]['code'], [T_TYPE_UNION, T_TYPE_INTERSECTION], true)) {
                     $type = 'class';
                 }
             }
@@ -551,29 +552,6 @@ class DisallowFqnSniff implements Sniff
         if ($tokens[$stackPtr]['code'] === T_DOC_COMMENT_STRING) {
             $phpcsFile->fixer->replaceToken($stackPtr, $expected);
             return;
-        }
-
-        if (in_array($tokens[$stackPtr - 1]['code'], [
-            T_NEW,
-            T_USE,
-            T_EXTENDS,
-            T_IMPLEMENTS,
-            T_INSTANCEOF,
-            T_INSTEADOF,
-            T_CASE,
-            T_PRINT,
-            T_ECHO,
-            T_REQUIRE,
-            T_REQUIRE_ONCE,
-            T_INCLUDE,
-            T_INCLUDE_ONCE,
-            T_RETURN,
-            T_LOGICAL_AND,
-            T_LOGICAL_OR,
-            T_LOGICAL_XOR,
-            T_THROW,
-        ], true)) {
-            $expected = ' ' . $expected;
         }
 
         $phpcsFile->fixer->replaceToken($stackPtr, $expected);

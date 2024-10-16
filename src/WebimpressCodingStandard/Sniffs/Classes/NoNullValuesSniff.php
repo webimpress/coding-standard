@@ -9,6 +9,9 @@ use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 use PHP_CodeSniffer\Util\Tokens;
 
 use function in_array;
+use function strpos;
+use function strtolower;
+use function substr;
 
 use const T_EQUAL;
 use const T_NULL;
@@ -31,15 +34,23 @@ class NoNullValuesSniff extends AbstractVariableSniff
         $value = $phpcsFile->findNext(Tokens::$emptyTokens, $next + 1, null, true);
         if ($tokens[$value]['code'] === T_NULL) {
             $props = $phpcsFile->getMemberProperties($stackPtr);
-            if ($props['type'] !== '' && $props['nullable_type'] === true) {
+
+            $type = strtolower($props['type']);
+
+            $nullableType = $props['nullable_type'] === true
+                || strpos($type, '|null|') !== false
+                || strpos($type, 'null|') === 0
+                || substr($type, -5) === '|null';
+
+            if ($type !== '' && $nullableType === true) {
                 return;
             }
 
-            $error = $props['type'] !== '' && $props['nullable_type'] === false
+            $error = $type !== '' && $nullableType === false
                 ? 'Default null value for not-nullable property is invalid'
                 : 'Default null value for the property is redundant';
 
-            $code = $props['type'] !== '' && $props['nullable_type'] === false
+            $code = $type !== '' && $nullableType === false
                 ? 'Invalid'
                 : 'NullValue';
 

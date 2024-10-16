@@ -28,4 +28,8 @@ class NoNullValues
 
         $string = "String $var = null";
     }
+
+    public null|int $a1 = null;
+    public int | null $a2 = null;
+    public \Countable |null | \Iterable $a3 = null;
 }
